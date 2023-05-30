@@ -1,0 +1,27 @@
+language: python
+
+python:
+  - "2.7"
+  - "3.4"
+  - "3.6"
+
+before_install:
+  - pip install --upgrade virtualenv
+  - virtualenv --python=python venv
+  - source venv/bin/activate
+  - python --version
+  - pip --version
+  - pip install nose python-coveralls flake8
+
+install:
+  - pip install -e ./api/python/
+
+script:
+  - nosetests --with-coverage --cover-erase --cover-package=rosa -v -w api/python/tests/
+  - flake8 --statistics --count --config=./api/python/setup.cfg ./api/python/rosa
+
+after_success:
+    - pip uninstall -y rosa
+
+after_failure:
+    - pip uninstall -y rosa

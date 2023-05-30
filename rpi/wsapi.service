@@ -1,0 +1,13 @@
+[Unit]
+Description=WS API service
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+PIDFile=/var/run/rosa-wsapi.pid
+Environment="PATH=$PATH"
+ExecStart=/usr/bin/python3 /home/pi/rpi/ws_server.py
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

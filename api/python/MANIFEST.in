@@ -1,0 +1,3 @@
+include rosa/vision/yolov3/font/FiraMono-Medium.otf
+include rosa/vision/yolov3/classes.txt
+include rosa/vision/yolov3/tiny_yolo_anchors.txt
