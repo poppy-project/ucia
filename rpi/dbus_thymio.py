@@ -5,6 +5,7 @@ import dbus
 import dbus.mainloop.glib
 import sys
 import os
+import numpy as np
 
 
 class ThymioController(object):
@@ -55,16 +56,20 @@ class ThymioController(object):
         print('dbus error: %s' % str(e))
 
     def set_speed(self,left_motor, right_motor):
-        acc = self.asebaNetwork.GetVariable('thymio-II', 'acc')
-
-        print("send")
+        left_speed = np.clip(left_motor, -1, 1)
+        right_speed = np.clip(right_motor, -1, 1)
+        
+        # Need to read one time to send an event !.
+        self.asebaNetwork.GetVariable('thymio-II', 'acc')
+        print(left_speed)
+        print(right_speed)
         self.asebaNetwork.SendEventName(
             'motor.target',
-            [left_motor, right_motor],
+            [500 * left_speed, 500 * right_speed],
             reply_handler=self.dbusReply,
             error_handler=self.dbusError
         )
-        print("sent")
+
 
     # def led_
     #     self.asebaNetwork.SendEventName(

@@ -86,14 +86,14 @@ class WsIOHandler(WebSocket):
                 left_speed = wheels['a']
 
             if 'b' in wheels: 
-                right_speed = wheels['a']
+                right_speed = wheels['b']
 
             thymio_controller.set_speed(left_speed, right_speed)
 
             for m in ('a', 'b'):
                 if m in wheels:
                     if verbose:
-                        print('Set motor {} speed to {}'.format(m, s))
+                        print('Set motor {} speed to {}'.format(m, wheels[m]))
 
         if 'leds' in cmd:
             leds = cmd['leds']
