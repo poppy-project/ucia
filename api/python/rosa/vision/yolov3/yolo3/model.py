@@ -7,8 +7,8 @@ import numpy as np
 import tensorflow as tf
 from keras import backend as K
 from keras.layers import Conv2D, Add, ZeroPadding2D, UpSampling2D, Concatenate, MaxPooling2D
-from keras.layers.advanced_activations import LeakyReLU
-from keras.layers.normalization import BatchNormalization
+from keras.layers import LeakyReLU
+from keras.layers import BatchNormalization
 from keras.models import Model
 from keras.regularizers import l2
 
@@ -138,6 +138,9 @@ def yolo_head(feats, anchors, num_classes, input_shape, calc_loss=False):
                     [grid_shape[0], 1, 1, 1])
     grid = K.concatenate([grid_x, grid_y])
     grid = K.cast(grid, K.dtype(feats))
+    print("feats shape:", K.shape(feats))
+    print("grid_shape:", grid_shape)
+    print("grid shape:", K.shape(grid))
 
     feats = K.reshape(
         feats, [-1, grid_shape[0], grid_shape[1], num_anchors, num_classes + 5])
