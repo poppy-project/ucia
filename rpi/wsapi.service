@@ -4,9 +4,12 @@ Wants=network-online.target
 After=network.target network-online.target
 
 [Service]
-PIDFile=/var/run/rosa-wsapi.pid
+PIDFile=/run/rosa-wsapi.pid
 Environment="PATH=$PATH"
-ExecStart=/usr/bin/python3 /home/pi/rpi/ws_server.py
+User=pi
+#ExecStartPre=/home/pi/rosa-master/rpi/prepare_env.sh
+ExecStart=/home/pi/rosa-master/rpi/start.sh
+#EnvironmentFile=/home/pi/dbus_session
 Type=simple
 
 [Install]

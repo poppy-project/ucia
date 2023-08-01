@@ -12,7 +12,7 @@ class ThymioController(object):
     def __init__(self, filename):
         # initialize asebamedulla in background and wait 0.3s to let
         # asebamedulla startup (!!bad habit to wait...)
-        os.system("(asebamedulla ser:name=Thymio-II &) && sleep 5")
+        os.system("(/usr/bin/asebamedulla ser:name=Thymio-II &) && /bin/sleep 5")
         
         # init the dbus main loop
         dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
