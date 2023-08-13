@@ -7,9 +7,7 @@ After=network.target network-online.target
 PIDFile=/run/rosa-wsapi.pid
 Environment="PATH=$PATH"
 User=pi
-#ExecStartPre=/home/pi/rosa-master/rpi/prepare_env.sh
 ExecStart=/home/pi/rosa-master/rpi/start.sh
-#EnvironmentFile=/home/pi/dbus_session
 Type=simple
 
 [Install]

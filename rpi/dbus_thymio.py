@@ -29,7 +29,7 @@ class ThymioController(object):
 
         # load the file which is run on the thymio
         self.asebaNetwork.LoadScripts(
-            "./thympi.aesl",
+            "/home/pi/rosa-master/rpi/thympi.aesl",
             reply_handler=self.dbusReply,
             error_handler=self.dbusError
         )

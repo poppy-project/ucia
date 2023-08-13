@@ -10,8 +10,6 @@ from collections import deque
 
 from SimpleWebSocketServer import WebSocket, SimpleWebSocketServer
 
-
-import io_controller as io
 from line_tracking import get_line_center
 
 from dbus_thymio import ThymioController
@@ -23,17 +21,10 @@ thymio_controller = ThymioController("./thympi.aesl")
 
 class WsIOHandler(WebSocket):
     pub_period = 1.0 / 50.0
-    init = True
-
-    # def __init__(self):
-    #     super().__init__()
-    #     self.thymio_controller = ThymioController("./thympi.aesl")
 
     def handleConnected(self):
         self._send_loop_running = True
-        # if self.init:
-        #     self.init_thymio_controller()
-        # self.init = False
+        
         def _send_loop():
             state_getter = self.stateGetter()
             last_state = next(state_getter)
