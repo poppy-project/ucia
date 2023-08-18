@@ -9,6 +9,18 @@ import logging
 
 from controllers.base_controller import BaseRobot
 
+LEDS = {
+    "leds.prox.h": 8,
+    "leds.prox.v": 2,
+    "leds.buttons": 8,
+    "leds.circle": 8,
+    "leds.bottom.left": 3,
+    "leds.bottom.right": 3,
+    "leds.temperature": 2,
+    "leds.rc": 1,
+    "leds.sound": 1
+}
+
 class ThymioController(BaseRobot):
     logger = logging.getLogger(__name__)
 
@@ -50,7 +62,30 @@ class ThymioController(BaseRobot):
         # dbus errors can be handled here.
         print('dbus error: %s' % str(e))
 
-    
+    def set_led(self, name, params):
+        if name not in LEDS:
+            self.logger.warning(f"LED '{name}' is not recognize.")
+            return
+
+        if LEDS[name] != len(params):
+            self.logger.warning(f'Expected {LEDS[name]} parameters for {name}, but got {len(params)}')
+            return
+        
+        self.logger.debug(f'Set led {name} with {params}')
+
+        # Ensuring readiness by accessing a known variable ('acc') from the Thymio robot.
+        # This step is required before sending an event.
+        self.asebaNetwork.GetVariable('thymio-II', 'acc')
+        
+        # Sending the motor command
+        self.asebaNetwork.SendEventName(
+            name,
+            params,
+            reply_handler=self.dbusReply,
+            error_handler=self.dbusError
+        )
+
+
     def set_speed(self, left_motor, right_motor):
         self.logger.debug(f'Set left motor speed to {left_motor} and right motor speed to {right_motor}')
 
