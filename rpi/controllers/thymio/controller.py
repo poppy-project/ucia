@@ -5,10 +5,13 @@ import dbus.mainloop.glib
 import sys
 import os
 import numpy as np
+import logging
 
 from controllers.base_controller import BaseRobot
 
 class ThymioController(BaseRobot):
+    logger = logging.getLogger(__name__)
+
     def __init__(self):
         # initialize asebamedulla in background and wait 0.3s to let asebamedulla startup
         os.system("(/usr/bin/asebamedulla ser:name=Thymio-II &) && /bin/sleep 0.3")
@@ -38,11 +41,6 @@ class ThymioController(BaseRobot):
             reply_handler=self.dbusReply,
             error_handler=self.dbusError
         )
-
-        # initialize some variables which can be used in the main loop
-        # to set thymio states
-        # self.ledState = [1, 2, 4, 8, 16, 24, 32, 2]
-        # self.counter = 0
     
     def dbusReply(self):
         # dbus replys can be handled here.
@@ -54,41 +52,32 @@ class ThymioController(BaseRobot):
 
     
     def set_speed(self, left_motor, right_motor):
-        # TODO: See this assumption
-        # Need to read one time to send an event !.
+        self.logger.debug(f'Set left motor speed to {left_motor} and right motor speed to {right_motor}')
+
+        # Ensuring readiness by accessing a known variable ('acc') from the Thymio robot.
+        # This step is required before sending an event.
         self.asebaNetwork.GetVariable('thymio-II', 'acc')
         
+        # Sending the motor command
         self.asebaNetwork.SendEventName(
             'motor.target',
             [500 * np.clip(left_motor, -1, 1), 500 * np.clip(right_motor, -1, 1)],
             reply_handler=self.dbusReply,
             error_handler=self.dbusError
         )
-
+    
     ### Controller part
         
     def fetch_current_state(self):
         pass
 
+    # TODO: Remove a and b motor !
     def process_incoming_commands(self, cmd):
-        print(cmd)
-
         if 'wheels' in cmd:
             wheels = cmd['wheels']
-            left_speed = 0.0
-            right_speed = 0.0
+            self.set_speed(wheels.get('a', 0.0), wheels.get('b', 0.0))
 
-            if 'a' in wheels: 
-                left_speed = wheels['a']
-
-            if 'b' in wheels: 
-                right_speed = wheels['b']
-
-            self.set_speed(left_speed, right_speed)
-
-            for m in ('a', 'b'):
-                if m in wheels:
-                    print('Set motor {} speed to {}'.format(m, wheels[m]))
+        ## Todo : Here continue to work
 
         if 'leds' in cmd:
             leds = cmd['leds']

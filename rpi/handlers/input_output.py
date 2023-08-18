@@ -8,8 +8,6 @@ from settings import use_cam, line_center
 from controllers.thymio.controller import ThymioController
 from controllers.base_controller import BaseRobot
 
-# TODO: Remove a and b motor !
-# TODO: Don't handle robot state and controller.
 class WsIOHandler(WebSocket):
     pub_period = 1.0 / 50.0
     logger = logging.getLogger(__name__)
@@ -60,8 +58,8 @@ class WsIOHandler(WebSocket):
         
         # TODO: Replace print with logger !
         print('Got cmd: {}'.format(cmd))
+        
         self.controller.process_incoming_commands(cmd)
-
 
         if 'camera' in cmd and cmd['camera']:
             use_cam[0] = True
