@@ -1,15 +1,19 @@
 import json
 import time
+import logging
 from threading import Thread
 from SimpleWebSocketServer import WebSocket
 
 from settings import use_cam, line_center
-from dbus_thymio import ThymioController
+from controllers.thymio.controller import ThymioController
+from controllers.base_controller import BaseRobot
 
-thymio_controller = ThymioController("./thympi.aesl")
-
+# TODO: Remove a and b motor !
+# TODO: Don't handle robot state and controller.
 class WsIOHandler(WebSocket):
     pub_period = 1.0 / 50.0
+    logger = logging.getLogger(__name__)
+    controller : BaseRobot = ThymioController()
 
     def handleConnected(self):
         self._send_loop_running = True
@@ -56,40 +60,17 @@ class WsIOHandler(WebSocket):
         
         # TODO: Replace print with logger !
         print('Got cmd: {}'.format(cmd))
+        self.controller.process_incoming_commands(cmd)
 
-        if 'wheels' in cmd:
-            wheels = cmd['wheels']
-            left_speed = 0.0
-            right_speed = 0.0
-
-            if 'a' in wheels: 
-                left_speed = wheels['a']
-
-            if 'b' in wheels: 
-                right_speed = wheels['b']
-
-            thymio_controller.set_speed(left_speed, right_speed)
-
-            for m in ('a', 'b'):
-                if m in wheels:
-                    print('Set motor {} speed to {}'.format(m, wheels[m]))
-
-        if 'leds' in cmd:
-            leds = cmd['leds']
-            for side, led_id in (('left', 3), ('center', 2), ('right', 1)):
-                if side in leds:
-                    io.led_on(led_id) if leds[side] else io.led_off(led_id)
-
-        if 'buzz' in cmd:
-            duration = cmd['buzz']
-            io.buzz(duration)
 
         if 'camera' in cmd and cmd['camera']:
             use_cam[0] = True
 
     def handleClose(self):
-        for m in ('a', 'b'):
-            io.set_motor_speed(m, 0)
+        # TODO: Better message
+        self.logger.debug('[Sender] Disconnect')
+        
+        self.controller.reset_robot_state()
 
         self._send_loop_running = False
         self._sender.join()

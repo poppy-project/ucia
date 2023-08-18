@@ -1,5 +1,4 @@
-#!/usr/bin/python3
-
+import os
 import threading
 import dbus
 import dbus.mainloop.glib
@@ -7,12 +6,12 @@ import sys
 import os
 import numpy as np
 
+from controllers.base_controller import BaseRobot
 
-class ThymioController(object):
-    def __init__(self, filename):
-        # initialize asebamedulla in background and wait 0.3s to let
-        # asebamedulla startup (!!bad habit to wait...)
-        os.system("(/usr/bin/asebamedulla ser:name=Thymio-II &) && /bin/sleep 5")
+class ThymioController(BaseRobot):
+    def __init__(self):
+        # initialize asebamedulla in background and wait 0.3s to let asebamedulla startup
+        os.system("(/usr/bin/asebamedulla ser:name=Thymio-II &) && /bin/sleep 0.3")
         
         # init the dbus main loop
         dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
@@ -27,9 +26,15 @@ class ThymioController(object):
             dbus_interface='ch.epfl.mobots.AsebaNetwork'
         )
 
+        # Determine the directory containing the current script.
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Construct the path to thympi.aesl within that directory.
+        aesl_path = os.path.join(script_dir, "thympi.aesl")
+
         # load the file which is run on the thymio
         self.asebaNetwork.LoadScripts(
-            "/home/pi/rosa-master/rpi/thympi.aesl",
+            aesl_path,
             reply_handler=self.dbusReply,
             error_handler=self.dbusError
         )
@@ -38,40 +43,69 @@ class ThymioController(object):
         # to set thymio states
         # self.ledState = [1, 2, 4, 8, 16, 24, 32, 2]
         # self.counter = 0
-
-    def stopAsebamedulla():
-        # stop the asebamedulla process
-        # !!dbus connection will fail after this call
-        os.system("pkill -n asebamedulla")
-
-
+    
     def dbusReply(self):
         # dbus replys can be handled here.
-        # Currently ignoring
         pass
 
     def dbusError(self, e):
         # dbus errors can be handled here.
-        # Currently only the error is logged. Maybe interrupt the mainloop here
         print('dbus error: %s' % str(e))
 
-    def set_speed(self,left_motor, right_motor):
-        left_speed = np.clip(left_motor, -1, 1)
-        right_speed = np.clip(right_motor, -1, 1)
-        
+    
+    def set_speed(self, left_motor, right_motor):
+        # TODO: See this assumption
         # Need to read one time to send an event !.
         self.asebaNetwork.GetVariable('thymio-II', 'acc')
-        print(left_speed)
-        print(right_speed)
+        
         self.asebaNetwork.SendEventName(
             'motor.target',
-            [500 * left_speed, 500 * right_speed],
+            [500 * np.clip(left_motor, -1, 1), 500 * np.clip(right_motor, -1, 1)],
             reply_handler=self.dbusReply,
             error_handler=self.dbusError
         )
 
+    ### Controller part
+        
+    def fetch_current_state(self):
+        pass
 
-    # def led_
+    def process_incoming_commands(self, cmd):
+        print(cmd)
+
+        if 'wheels' in cmd:
+            wheels = cmd['wheels']
+            left_speed = 0.0
+            right_speed = 0.0
+
+            if 'a' in wheels: 
+                left_speed = wheels['a']
+
+            if 'b' in wheels: 
+                right_speed = wheels['b']
+
+            self.set_speed(left_speed, right_speed)
+
+            for m in ('a', 'b'):
+                if m in wheels:
+                    print('Set motor {} speed to {}'.format(m, wheels[m]))
+
+        if 'leds' in cmd:
+            leds = cmd['leds']
+            for side, led_id in (('left', 3), ('center', 2), ('right', 1)):
+                if side in leds:
+                    io.led_on(led_id) if leds[side] else io.led_off(led_id)
+
+        if 'buzz' in cmd:
+            duration = cmd['buzz']
+            io.buzz(duration)
+
+
+    def reset_robot_state(self):
+        self.set_speed(0,0)
+
+
+# def led_
     #     self.asebaNetwork.SendEventName(
     #         'leds.bottom.right',
     #         [0, self.ledState[0], 0]
