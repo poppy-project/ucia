@@ -57,6 +57,7 @@ api/python/rosa.egg-info
 
 # Build folder
 build/
+dist/
 
 # Code editor
 .vscode/

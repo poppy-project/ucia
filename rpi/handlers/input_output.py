@@ -1,22 +1,11 @@
 import json
 import time
-
-import cv2 as cv
-
-from PIL import Image
-from io import BytesIO
 from threading import Thread
-from collections import deque
+from SimpleWebSocketServer import WebSocket
 
-from SimpleWebSocketServer import WebSocket, SimpleWebSocketServer
-
-from line_tracking import get_line_center
-
+from settings import use_cam, line_center
 from dbus_thymio import ThymioController
 
-verbose = True
-use_cam = [False]
-line_center = [None]
 thymio_controller = ThymioController("./thympi.aesl")
 
 class WsIOHandler(WebSocket):
@@ -64,9 +53,9 @@ class WsIOHandler(WebSocket):
 
     def handleMessage(self):
         cmd = json.loads(self.data)
-
-        if verbose:
-            print('Got cmd: {}'.format(cmd))
+        
+        # TODO: Replace print with logger !
+        print('Got cmd: {}'.format(cmd))
 
         if 'wheels' in cmd:
             wheels = cmd['wheels']
@@ -83,8 +72,7 @@ class WsIOHandler(WebSocket):
 
             for m in ('a', 'b'):
                 if m in wheels:
-                    if verbose:
-                        print('Set motor {} speed to {}'.format(m, wheels[m]))
+                    print('Set motor {} speed to {}'.format(m, wheels[m]))
 
         if 'leds' in cmd:
             leds = cmd['leds']
@@ -107,80 +95,3 @@ class WsIOHandler(WebSocket):
         self._sender.join()
 
         use_cam[0] = False
-
-
-ws = deque([], 1)
-buff = deque([], 1)
-
-
-def grab_frame_loop():
-    cap = cv.VideoCapture(0)
-
-    while True:
-        if not use_cam[0] and not len(ws):
-            time.sleep(0.1)
-            continue
-
-        b, img = cap.read()
-        if not b:
-            continue
-
-        with BytesIO() as bytes:
-            pil_img = Image.fromarray(img)
-            pil_img.save(bytes, 'jpeg')
-            buff.append(bytes.getvalue())
-
-        if use_cam[0]:
-            center = get_line_center(img)
-            if center is not None:
-                center = (center[0] / img.shape[1],
-                          center[1] / img.shape[0])
-            line_center[0] = center
-
-
-def publish_loop():
-    while True:
-        if len(ws) and len(buff):
-            ws[0].sendMessage(buff.pop())
-
-        time.sleep(1.0 / 20)
-
-
-class WsCamServer(WebSocket):
-    def handleConnected(self):
-        ws.append(self)
-
-    def handleClose(self):
-        ws.remove(self)
-
-
-if __name__ == '__main__':
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--verbose', action='store_true')
-    args = parser.parse_args()
-
-    io_server = SimpleWebSocketServer('', 1234, WsIOHandler)
-    cam_server = SimpleWebSocketServer('', 5678, WsCamServer)
-
-    if args.verbose:
-        print('Server up and running.')
-
-    video_loop = Thread(target=grab_frame_loop)
-    video_loop.daemon = True
-    video_loop.start()
-
-    publish_t = Thread(target=publish_loop)
-    publish_t.daemon = True
-    publish_t.start()
-
-    servers = [
-        Thread(target=server.serveforever)
-        for server in (io_server, cam_server)
-    ]
-    for server in servers:
-        server.start()
-
-    for server in servers:
-        server.join()
