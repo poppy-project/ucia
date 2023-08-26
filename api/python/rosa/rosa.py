@@ -25,5 +25,7 @@ class Rosa(object):
     # TODO: Add robot repr here
     def __repr__(self):
         return 'RosaClient(host="{}", connected={})'.format(self._host, self._io.connected)
-
  
+    @property
+    def camera(self):
+        return self._cam
