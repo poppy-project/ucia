@@ -12,7 +12,7 @@ from controllers.base_controller import BaseRobot
 LEDS = {
     "prox.h": 8,
     "prox.v": 2,
-    "buttons": 8,
+    "buttons": 4,
     "circle": 8,
     "top" : 3,
     "bottom.left": 3,
