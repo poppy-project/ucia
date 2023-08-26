@@ -2,6 +2,42 @@ from ...remote_io import RemoteIO
 from ..base_controller import BaseRobot
 from .wheel import Wheel
 
+class DynamicObject:
+    pass
+
+class RGBLed:
+    def __init__(self, remote_io, id):
+        self._io = remote_io
+        self._id = id
+        self._r = 0
+        self._g = 0
+        self._b = 0
+    
+    @property
+    def color(self):
+        return (self._r, self._g, self._b)
+    
+    @color.setter
+    def color(self, value):
+        if not isinstance(value, (list, tuple)) or len(value) != 3:
+            raise ValueError("Color should be a tuple or list of 3 integers: (r, g, b)")
+
+        r, g, b = value
+
+        if not all(isinstance(i, int) and 0 <= i <= 255 for i in (r, g, b)):
+            raise ValueError("Each color component should be an integer between 0 and 255")
+
+        self._r = r
+        self._g = g
+        self._b = b
+
+        self._io.push_cmd({
+            'leds': {
+                self._id : [self._r, self._g, self._b]
+            }
+        })
+
+
 class ThymioRosa(BaseRobot):
     def __init__(self, host):
         """
@@ -14,6 +50,12 @@ class ThymioRosa(BaseRobot):
 
         self._left_wheel = Wheel(id='b', side='left', remote_io=self._io)
         self._right_wheel = Wheel(id='a', side='right', remote_io=self._io, inverse=True)
+        
+        self._leds = DynamicObject()
+        self._leds.bottom = DynamicObject()
+        self._leds.bottom.left = RGBLed(id='bottom.left', remote_io=self._io)
+        self._leds.bottom.right = RGBLed(id='bottom.right', remote_io=self._io)
+
 
         # self._left_led = LED(side='left', remote_io=self._io)
         # self._front_led = LED(side='center', remote_io=self._io)
@@ -26,6 +68,10 @@ class ThymioRosa(BaseRobot):
     @property
     def right_wheel(self):
         return self._right_wheel
+    
+    @property
+    def leds(self):
+        return self._leds
    
 #    @property
 #     def left_led(self):
