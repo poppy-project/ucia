@@ -17,5 +17,8 @@ class Wheel(object):
     @speed.setter
     def speed(self, new_speed):
         self._speed = new_speed
-        self._io.set_speed(self.id,
-                           -self.speed if self._inverse else self.speed)
+        self._io.push_cmd({
+            'wheels': {
+                self.id : -self.speed if self._inverse else self.speed
+            }
+        })

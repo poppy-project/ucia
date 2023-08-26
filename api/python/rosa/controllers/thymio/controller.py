@@ -15,13 +15,10 @@ class ThymioRosa(BaseRobot):
         self._left_wheel = Wheel(id='b', side='left', remote_io=self._io)
         self._right_wheel = Wheel(id='a', side='right', remote_io=self._io, inverse=True)
 
-        # self._cam = Camera(host)
-
         # self._left_led = LED(side='left', remote_io=self._io)
         # self._front_led = LED(side='center', remote_io=self._io)
         # self._right_led = LED(side='right', remote_io=self._io)
 
-    # TODO : Make send with setter here not inside remote io !
     @property
     def left_wheel(self):
         return self._left_wheel

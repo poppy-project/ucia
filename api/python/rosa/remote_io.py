@@ -55,23 +55,6 @@ class RemoteIO(object):
                 self._cmd_event.clear()
             time.sleep(1 / 50)
 
-    def set_speed(self, motor, speed):
-        self.push_cmd({
-            'wheels': {
-                motor: speed
-            }
-        })
-
-    def set_led(self, led, val):
-        self.push_cmd({
-            'leds': {
-                led: val
-            }
-        })
-
-    def buzz(self, duration):
-        self.push_cmd({'buzz': duration})
-
     def _update_state(self):
         while True:
             self.last_state.update(json.loads(self.ws.recv()))
