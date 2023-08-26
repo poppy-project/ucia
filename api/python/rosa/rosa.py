@@ -1,7 +1,5 @@
 import numpy as np
 
-from .led import LED
-from .wheel import Wheel
 from .remote_io import RemoteIO
 from .remote_cam import Camera
 from .controllers.thymio.controller import ThymioRosa
@@ -13,7 +11,7 @@ class Rosa(object):
 
             Host is a string representing the robot address. Can be "rosa.local" when using ZeroConf or directly the IP address such as "192.168.0.45".
         """
-        self.robot = ThymioRosa()
+        self.robot = ThymioRosa(host=host)
 
         self._cam = Camera(host)
     
@@ -24,6 +22,7 @@ class Rosa(object):
         """
         return getattr(self.robot, attr)
 
+    # TODO: Add robot repr here
     def __repr__(self):
         return 'RosaClient(host="{}", connected={})'.format(self._host, self._io.connected)
 

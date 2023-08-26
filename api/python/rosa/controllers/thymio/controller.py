@@ -1,4 +1,6 @@
-from remote_io import RemoteIO
+from ...remote_io import RemoteIO
+from ..base_controller import BaseRobot
+from .wheel import Wheel
 
 class ThymioRosa(BaseRobot):
     def __init__(self, host):
