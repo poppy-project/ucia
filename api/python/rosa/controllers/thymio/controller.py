@@ -29,13 +29,17 @@ class ThymioRosa(BaseRobot):
         self._leds.temperature = RBLed(id='temperature', remote_io=self._io)
 
         self._leds.rc = LED(id='rc', remote_io=self._io)
+        
         self._leds.sound = LED(id='sound', remote_io=self._io)
 
         self._leds.prox = DynamicObject()
         self._leds.prox.h = MultipleLed(id='prox.h', remote_io=self._io, length=8)
         self._leds.prox.v = MultipleLed(id='prox.v', remote_io=self._io, length=2)
 
-        
+        self._leds.buttons = MultipleLed(id='buttons', remote_io=self._io, length=4)
+                
+        self._leds.circle = MultipleLed(id='circle', remote_io=self._io, length=8)
+
 
     @property
     def left_wheel(self):
