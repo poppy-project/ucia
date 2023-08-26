@@ -102,6 +102,37 @@ class ThymioController(BaseRobot):
             error_handler=self.dbusError
         )
     
+    def set_sound_system(self, value):
+        self.logger.debug(f'Set sound system to {value}')
+
+        if not 0 <= value <= 7:
+            self.logger.warning('Value for sound system must be between 0 and 8')
+            return
+
+        # Ensuring readiness by accessing a known variable ('acc') from the Thymio robot.
+        # This step is required before sending an event.
+        self.asebaNetwork.GetVariable('thymio-II', 'acc')
+
+        
+        self.asebaNetwork.SendEventName(
+            'sound.system',
+            [value]
+        )
+    
+    def set_frequency(self, value):
+        # self.logger.debug(f'Set sound system to {value}')
+
+        # Ensuring readiness by accessing a known variable ('acc') from the Thymio robot.
+        # This step is required before sending an event.
+        self.asebaNetwork.GetVariable('thymio-II', 'acc')
+
+        
+        self.asebaNetwork.SendEventName(
+            'sound.freq',
+            value
+        )
+
+    
     ### Controller part
         
     def fetch_current_state(self):
@@ -118,9 +149,12 @@ class ThymioController(BaseRobot):
             for id, value in leds.items():
                 self.set_led(id, value)
 
-        if 'buzz' in cmd:
-            duration = cmd['buzz']
-            io.buzz(duration)
+        if 'sound' in cmd:
+            sound = cmd['sound']
+            if 'system' in sound:
+                self.set_sound_system(sound['system'])
+            elif 'frequency' in sound:
+                self.set_frequency(sound['frequency'])
 
 
     def reset_robot_state(self):
