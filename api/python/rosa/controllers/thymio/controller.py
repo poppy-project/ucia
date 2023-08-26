@@ -2,6 +2,7 @@ from ...remote_io import RemoteIO
 from ..base_controller import BaseRobot
 from .wheel import Wheel
 from .led import RGBLed, RBLed, LED, MultipleLed
+from .sound import Sound
 
 class DynamicObject:
     pass
@@ -16,9 +17,11 @@ class ThymioRosa(BaseRobot):
         self._io = RemoteIO(host)
         self._host = host
 
+        # Wheel
         self._left_wheel = Wheel(id='b', side='left', remote_io=self._io)
         self._right_wheel = Wheel(id='a', side='right', remote_io=self._io, inverse=True)
         
+        # LEDS
         self._leds = DynamicObject()
         self._leds.bottom = DynamicObject()
         self._leds.bottom.left = RGBLed(id='bottom.left', remote_io=self._io)
@@ -40,6 +43,8 @@ class ThymioRosa(BaseRobot):
                 
         self._leds.circle = MultipleLed(id='circle', remote_io=self._io, length=8)
 
+        # SOUND
+        self._sound = Sound(remote_io=self._io)
 
     @property
     def left_wheel(self):
@@ -52,6 +57,10 @@ class ThymioRosa(BaseRobot):
     @property
     def leds(self):
         return self._leds
+    
+    @property
+    def sound(self):
+        return self._sound
    
 #     @property
 #     def front_distance_sensors(self):
