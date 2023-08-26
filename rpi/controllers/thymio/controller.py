@@ -119,8 +119,11 @@ class ThymioController(BaseRobot):
             [value]
         )
     
-    def set_frequency(self, value):
-        # self.logger.debug(f'Set sound system to {value}')
+    def set_frequency(self, value):    
+        frequency_hz = value[0]
+        duration_ds = value[1]
+
+        self.logger.debug(f'Set sound frequency to {frequency_hz} Hz for a duration of {duration_ds} ds')
 
         # Ensuring readiness by accessing a known variable ('acc') from the Thymio robot.
         # This step is required before sending an event.
