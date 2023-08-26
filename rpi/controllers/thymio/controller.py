@@ -10,15 +10,15 @@ import logging
 from controllers.base_controller import BaseRobot
 
 LEDS = {
-    "leds.prox.h": 8,
-    "leds.prox.v": 2,
-    "leds.buttons": 8,
-    "leds.circle": 8,
-    "leds.bottom.left": 3,
-    "leds.bottom.right": 3,
-    "leds.temperature": 2,
-    "leds.rc": 1,
-    "leds.sound": 1
+    "prox.h": 8,
+    "prox.v": 2,
+    "buttons": 8,
+    "circle": 8,
+    "bottom.left": 3,
+    "bottom.right": 3,
+    "temperature": 2,
+    "rc": 1,
+    "sound": 1
 }
 
 class ThymioController(BaseRobot):
@@ -79,7 +79,7 @@ class ThymioController(BaseRobot):
         
         # Sending the motor command
         self.asebaNetwork.SendEventName(
-            name,
+            'leds.' + name,
             params,
             reply_handler=self.dbusReply,
             error_handler=self.dbusError
@@ -112,13 +112,11 @@ class ThymioController(BaseRobot):
             wheels = cmd['wheels']
             self.set_speed(wheels.get('a', 0.0), wheels.get('b', 0.0))
 
-        ## Todo : Here continue to work
-
         if 'leds' in cmd:
             leds = cmd['leds']
-            for side, led_id in (('left', 3), ('center', 2), ('right', 1)):
-                if side in leds:
-                    io.led_on(led_id) if leds[side] else io.led_off(led_id)
+            for id, value in leds.items():
+                self.logger.debug(f"id : {id}, value : {value}")
+                self.set_led(id, value)
 
         if 'buzz' in cmd:
             duration = cmd['buzz']
