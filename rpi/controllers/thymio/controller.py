@@ -14,6 +14,7 @@ LEDS = {
     "prox.v": 2,
     "buttons": 8,
     "circle": 8,
+    "top" : 3,
     "bottom.left": 3,
     "bottom.right": 3,
     "temperature": 2,
@@ -115,7 +116,6 @@ class ThymioController(BaseRobot):
         if 'leds' in cmd:
             leds = cmd['leds']
             for id, value in leds.items():
-                self.logger.debug(f"id : {id}, value : {value}")
                 self.set_led(id, value)
 
         if 'buzz' in cmd:
@@ -125,7 +125,8 @@ class ThymioController(BaseRobot):
 
     def reset_robot_state(self):
         self.set_speed(0,0)
-
+        for id, value in LEDS.items():
+            self.set_led(id, [0] * value)
 
 # def led_
     #     self.asebaNetwork.SendEventName(
