@@ -40,18 +40,8 @@ class WsIOHandler(WebSocket):
         self._sender.start()
 
     def stateGetter(self):
-        def _get(color):
-            state = {
-                'distance' : 0
-            }
-
-            return state
-
         while True:
-            yield _get(color=True)
-
-            for _ in range(19):
-                yield _get(color=False)
+            yield self.controller.get_state()
 
     def handleMessage(self):
         cmd = json.loads(self.data)

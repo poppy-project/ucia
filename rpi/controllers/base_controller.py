@@ -10,6 +10,10 @@ class BaseRobot(ABC):
         pass
 
     @abstractmethod
+    def get_state(self):
+        pass
+
+    @abstractmethod
     def reset_robot_state(self):
         pass
     
