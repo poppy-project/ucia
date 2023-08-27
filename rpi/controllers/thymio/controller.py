@@ -145,7 +145,7 @@ class ThymioController(BaseRobot):
     def process_incoming_commands(self, cmd):
         if 'wheels' in cmd:
             wheels = cmd['wheels']
-            self.set_speed(wheels.get('a', 0.0), wheels.get('b', 0.0))
+            self.set_speed(wheels.get('left', 0.0), wheels.get('right', 0.0))
 
         if 'leds' in cmd:
             leds = cmd['leds']
