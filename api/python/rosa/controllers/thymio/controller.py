@@ -61,45 +61,56 @@ class ThymioRosa(BaseRobot):
     @property
     def sound(self):
         return self._sound
-   
-#     @property
-#     def front_distance_sensors(self):
-#         return ['front-left', 'front-center', 'front-right']
+    
+    @property
+    def acc(self):
+        data = self._io.last_state['acc']
+        return data
 
-#     def get_front_distances(self):
-#         """ Return distance from the front sensors (left, center, right). """
-#         return np.array([self.get_distance(name) for name in self.front_distance_sensors])
+    @property
+    def button_forward(self):
+        return bool(self._io.last_state['button']['forward'][0])
 
-#     @property
-#     def ground_distance_sensors(self):
-#         return [
-#             'ground-front-left', 'ground-front-right',
-#             'ground-rear-left', 'ground-rear-right',
-#         ]
+    @property
+    def button_backward(self):
+        return bool(self._io.last_state['button']['backward'][0])
 
-#     def get_ground_distances(self):
-#         """ Return distance from the ground sensors (front left, front right, rear left, rear right). """
-#         return np.array([self.get_distance(name) for name in self.ground_distance_sensors])
+    @property
+    def button_left(self):
+        return bool(self._io.last_state['button']['left'][0])
 
-#     @property
-#     def distance_sensors(self):
-#         return self.front_distance_sensors + self.ground_distance_sensors
+    @property
+    def button_right(self):
+        return bool(self._io.last_state['button']['right'][0])
 
-#     def get_distance(self, sensor):
-#         """
-#             Return distance from the given sensor.
+    @property
+    def button_center(self):
+        return bool(self._io.last_state['button']['center'][0])
 
-#             See Rosa.distance_sensors for a list of all available sensors.
-#         """
-#         if sensor not in self.distance_sensors:
-#             raise ValueError('sensor should be one of {}!'.format(self.distance_sensors))
+    @property
+    def temperature(self):
+        return self._io.last_state['temperature'][0]
 
-#         return 255 - self._io.last_state['distance'][sensor]
+    @property
+    def prox_horizontal(self):
+        data = self._io.last_state['prox_horizontal']
+        return data
 
-#     def get_color(self):
-#         """ Return RGBAmbient detected from the front center sensor. """
-#         return self._io.last_state['color']['front-center']
+    @property
+    def ground_ambiant(self):
+        data = self._io.last_state['ground_ambiant']
+        return data
 
-#     def buzz(self, duration):
-#         """ Trigger a buzz for duration (in sec). """
-#         self._io.buzz(duration)
+    @property
+    def ground_reflected(self):
+        data = self._io.last_state['ground_reflected']
+        return data
+
+    @property
+    def ground_delta(self):
+        data = self._io.last_state['ground_delta']
+        return data
+
+    @property
+    def mic_intensity(self):
+        return self._io.last_state['mic_intensity'][0]
