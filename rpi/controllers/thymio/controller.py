@@ -27,7 +27,7 @@ class ThymioController(BaseRobot):
 
     def __init__(self):
         # initialize asebamedulla in background and wait 0.3s to let asebamedulla startup
-        os.system("(/usr/bin/asebamedulla ser:name=Thymio-II &) && /bin/sleep 0.3")
+        os.system("(/usr/bin/asebamedulla ser:name=Thymio-II &) && /bin/sleep 3")
         
         # init the dbus main loop
         dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
