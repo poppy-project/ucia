@@ -1,1 +1,9 @@
 numpy
+websocket-client
+opencv-python==3.4
+Pillow
+numpy
+keras==2.3
+tensorflow<2 
+matplotlib
+protobuf==3.20
