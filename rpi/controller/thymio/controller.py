@@ -7,7 +7,7 @@ import os
 import numpy as np
 import logging
 
-from controllers.base_controller import BaseRobot
+from controller.base import BaseController
 
 LEDS = {
     "prox.h": 8,
@@ -22,7 +22,7 @@ LEDS = {
     "sound": 1
 }
 
-class ThymioController(BaseRobot):
+class ThymioController(BaseController):
     logger = logging.getLogger(__name__)
 
     def __init__(self):
@@ -141,7 +141,6 @@ class ThymioController(BaseRobot):
     def fetch_current_state(self):
         pass
 
-    # TODO: Remove a and b motor !
     def process_incoming_commands(self, cmd):
         if 'wheels' in cmd:
             wheels = cmd['wheels']
@@ -165,7 +164,11 @@ class ThymioController(BaseRobot):
         for id, value in LEDS.items():
             self.set_led(id, [0] * value)
     
-    def get_state(self):
+    def get_state(self, id):
+        return self.asebaNetwork.GetVariable('thymio-II', id)
+
+
+    def get_all_state(self):
         return {
             'acc' : self.asebaNetwork.GetVariable('thymio-II', 'acc'),
             'button' : {

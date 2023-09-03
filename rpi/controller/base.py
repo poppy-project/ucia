@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class BaseRobot(ABC):
+class BaseController(ABC):
     @abstractmethod
     def fetch_current_state(self):
         pass
@@ -10,7 +10,11 @@ class BaseRobot(ABC):
         pass
 
     @abstractmethod
-    def get_state(self):
+    def get_state(self, id):
+        pass
+
+    @abstractmethod
+    def get_all_state(self):
         pass
 
     @abstractmethod

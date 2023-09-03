@@ -1,4 +1,1 @@
 numpy
-gpiozero
-apds9960
-smbus
