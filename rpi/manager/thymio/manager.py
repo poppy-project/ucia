@@ -1,61 +1,56 @@
 import logging
 import time
 
-from manager.base import BaseManager
-from enum import Enum, auto
+from tasks.thymio.follow_line import FollowLine
+from tasks.thymio.object_collector import ObjectCollector
+from tasks.api import API
 
+from manager.base import BaseManager
 from controller.thymio.controller import ThymioController
 
-class RobotMode(Enum):
-    TREASURE_HUNTER = 0
-    LINE_FOLLOWER = 1
-    API = 2
-
-
 class ThymioManager(BaseManager):
-    current_mode = RobotMode.API
+    current_mode = 0
     last_mode_change_time = 0  
     mode_change_delay = 0.5
 
     def __init__(self):
         self.controller = ThymioController()
         self.logger = logging.getLogger(__name__)
+        
+        self.tasks = [
+            ObjectCollector(self.controller), 
+            FollowLine(self.controller), 
+            API(self.controller)
+        ]
+
+        self.num_modes = len(self.tasks)
 
     def change_mode(self):
         current_time = time.time()
 
         if current_time - self.last_mode_change_time <  self.mode_change_delay:
-            self.logger.debug("Mode change attempt ignored, waiting for delay to pass.")
             return
         
         button_left = bool(self.controller.get_state('button.left')[0])
         button_right = bool(self.controller.get_state('button.right')[0])
-        
-        enum_length = len(list(RobotMode))
-        
+                
         if button_left or button_right:
+            self.tasks[self.current_mode].close()
             previous_mode = self.current_mode
             self.last_mode_change_time = current_time     
-        
+            
         if button_left:
-            self.current_mode = RobotMode((self.current_mode.value + 1) % enum_length)
+            self.current_mode = (self.current_mode + 1) % self.num_modes
             self.logger.info(f"Mode changed (UP) - Previous mode was {previous_mode}, new mode is {self.current_mode}.")
 
         if button_right:
-            self.current_mode = RobotMode((self.current_mode.value - 1) % enum_length)
+            self.current_mode = (self.current_mode - 1) % self.num_modes
             self.logger.info(f"Mode changed (BACK) - Previous mode was {previous_mode}, new mode is {self.current_mode}.")
 
     def run(self):
         self.change_mode()
 
-        if self.current_mode == RobotMode.TREASURE_HUNTER:
-            self.logger.debug("The robot is in treasure hunter mode.")
-        elif self.current_mode == RobotMode.LINE_FOLLOWER:
-            self.logger.debug("The robot is in line follower mode.")
-        elif self.current_mode == RobotMode.API:
-            self.logger.debug("The robot is in API mode.")
-        else:
-            self.logger.debug("Unknown mode.")
+        self.tasks[self.current_mode].run()
 
     def close():
         pass
