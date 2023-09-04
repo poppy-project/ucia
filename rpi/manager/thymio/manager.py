@@ -11,21 +11,22 @@ from controller.thymio.controller import ThymioController
 class ThymioManager(BaseManager):
     current_mode = 0
     last_mode_change_time = 0  
-    mode_change_delay = 0.5
+    mode_change_delay = 0.2
 
     def __init__(self):
         self.controller = ThymioController()
         self.logger = logging.getLogger(__name__)
         
         self.tasks = [
+            # API(self.controller),
             ObjectCollector(self.controller), 
             FollowLine(self.controller), 
-            API(self.controller)
         ]
 
         self.num_modes = len(self.tasks)
 
     def change_mode(self):
+        print("test")
         current_time = time.time()
 
         if current_time - self.last_mode_change_time <  self.mode_change_delay:

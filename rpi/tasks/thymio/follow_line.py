@@ -7,10 +7,6 @@ class FollowLine(Task):
         self.controller = controller
         self.logger = logging.getLogger(__name__)
 
-    
-    def initialize(self):
-        pass
-
     def run(self):
         self.logger.info("FOLLOW LINE")
 

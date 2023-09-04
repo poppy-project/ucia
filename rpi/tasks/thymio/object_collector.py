@@ -14,9 +14,6 @@ class ObjectCollector(Task):
         self.logger = logging.getLogger(__name__)
         self.cam = Camera()
 
-    def initialize(self):
-        pass
-
     def run(self):
         self.logger.info("OBJECT COLLECTOR")
         img = self.cam.grab_frame_loop()    

@@ -45,7 +45,6 @@ class InputOuputServer():
         self.loop = asyncio.get_event_loop()
         self.loop.run_until_complete(server)
         self.loop.create_task(self.send_to_all_clients())
-        self.loop.run_forever()
 
     def close(self):
         self.loop.close()
