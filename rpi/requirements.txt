@@ -7,3 +7,4 @@ tensorflow<2
 matplotlib
 protobuf==3.20
 h5py==2.10.0
+websockets

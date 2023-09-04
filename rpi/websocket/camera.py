@@ -1,0 +1,2 @@
+class CameraServer():
+    pass

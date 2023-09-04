@@ -137,10 +137,6 @@ class ThymioController(BaseController):
 
     
     ### Controller part
-        
-    def fetch_current_state(self):
-        pass
-
     def process_incoming_commands(self, cmd):
         if 'wheels' in cmd:
             wheels = cmd['wheels']

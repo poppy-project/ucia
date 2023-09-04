@@ -2,10 +2,6 @@ from abc import ABC, abstractmethod
 
 class BaseController(ABC):
     @abstractmethod
-    def fetch_current_state(self):
-        pass
-
-    @abstractmethod
     def process_incoming_commands(self, commands):
         pass
 
