@@ -1,7 +1,7 @@
 import logging
 import cv2 as cv
 
-from controller.base import BaseController
+from controller.thymio.controller import ThymioController
 from vision.camera import Camera
 from tasks.base import Task
 
@@ -9,7 +9,7 @@ from vision import detect_objects
 
 
 class ObjectCollector(Task):
-    def __init__(self, controller: BaseController):
+    def __init__(self, controller: ThymioController):
         self.controller = controller
         self.logger = logging.getLogger(__name__)
         self.cam = Camera()

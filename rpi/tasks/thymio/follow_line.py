@@ -1,9 +1,9 @@
 import logging
 from tasks.base import Task
-from controller.base import BaseController
+from controller.thymio.controller import ThymioController
 
 class FollowLine(Task):
-    def __init__(self, controller: BaseController):
+    def __init__(self, controller: ThymioController):
         self.controller = controller
         self.logger = logging.getLogger(__name__)
 
