@@ -3,7 +3,7 @@ import time
 
 from tasks.thymio.follow_line import FollowLine
 from tasks.thymio.object_collector import ObjectCollector
-from tasks.api import API
+from tasks.thymio.photographer import Photographer
 
 from manager.base import BaseManager
 from controller.thymio.controller import ThymioController
@@ -18,15 +18,14 @@ class ThymioManager(BaseManager):
         self.logger = logging.getLogger(__name__)
         
         self.tasks = [
-            ObjectCollector(self.controller), 
-            FollowLine(self.controller), 
-            API(self.controller),
+            # ObjectCollector(self.controller), 
+            # FollowLine(self.controller), 
+            Photographer(self.controller),
         ]
 
         self.num_modes = len(self.tasks)
 
     def change_mode(self):
-        print("test")
         current_time = time.time()
 
         if current_time - self.last_mode_change_time <  self.mode_change_delay:
