@@ -1,10 +1,11 @@
 import logging
 import time
 
-from tasks.thymio.follow_line import FollowLine
-from tasks.thymio.object_collector import ObjectCollector
-from tasks.thymio.photographer import Photographer
-from tasks.api import API
+from tasks.thymio.follow_line_sensors import FollowLineSensors
+# from tasks.thymio.follow_line import FollowLine
+# from tasks.thymio.object_collector import ObjectCollector
+# from tasks.thymio.photographer import Photographer
+# from tasks.api import API
 
 from manager.base import BaseManager
 from controller.thymio.controller import ThymioController
@@ -18,12 +19,13 @@ class ThymioManager(BaseManager):
         self.controller = ThymioController()
         self.logger = logging.getLogger(__name__)
         
-        self.api = API(self.controller)
+        # self.api = API(self.controller)
                 
         self.tasks = [
             # ObjectCollector(self.controller), 
             # FollowLine(self.controller), 
-            Photographer(self.controller),
+            FollowLineSensors(self.controller)
+            # Photographer(self.controller),
         ]
 
         self.num_modes = len(self.tasks)
