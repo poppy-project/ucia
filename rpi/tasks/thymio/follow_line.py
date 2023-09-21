@@ -11,6 +11,9 @@ class FollowLine(Task):
         self.controller = controller
         self.logger = logging.getLogger(__name__)
         self.cam = Camera()
+        self.init()
+    
+    def init(self):
         self.controller.set_led("top", [0, 32, 32])
 
     def look_around(self, speed=0.15):
@@ -39,8 +42,8 @@ class FollowLine(Task):
         else:
             self.follow_line(center)
 
-        cv.imshow('follow line', img)
-        cv.waitKey(1)
+        # cv.imshow('follow line', img)
+        # cv.waitKey(1)
         
     def close(self):
         pass

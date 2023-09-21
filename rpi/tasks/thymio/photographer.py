@@ -13,6 +13,9 @@ class Photographer(Task):
         self.controller = controller
         self.logger = logging.getLogger(__name__)
         self.cam = Camera()
+        self.init()
+  
+    def init(self):
         self.controller.set_led("top", [0,32,0])
 
     def run(self):

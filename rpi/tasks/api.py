@@ -17,7 +17,10 @@ class API(Task):
         # Création d'un thread pour la boucle d'événements asyncio.
         self.loop_thread = threading.Thread(target=self.start_asyncio_loop, daemon=True)
         self.loop_thread.start()
-
+    
+    def init():
+        pass
+    
     def start_asyncio_loop(self):
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)

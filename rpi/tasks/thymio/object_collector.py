@@ -13,6 +13,9 @@ class ObjectCollector(Task):
         self.controller = controller
         self.logger = logging.getLogger(__name__)
         self.cam = Camera()
+        self.init()
+
+    def init(self):
         self.controller.set_led("top", [32, 32, 0])
 
     def look_around(self, speed=0.2):
