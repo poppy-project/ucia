@@ -18,16 +18,20 @@ class Photographer(Task):
     def run(self):
         self.logger.info("PHOTOGRAPHER")
         img = self.cam.grab_frame_loop()    
-        
+
         if img is None:
             return
 
-        found_obj = detect_objects(img, render=True)
+        found_obj = None
+        try:
+            found_obj = detect_objects(img, render=True)
+        except ValueError:
+            self.logger.warn("COLLECTOR ignore exception in Yolo3 rectangle drawing!")
 
         if found_obj:
             obj = found_obj[0]
             label = obj.label
-        
+
             if label == "cube":
                 self.controller.set_led("bottom.left", [32,0,0])
                 self.controller.set_led("bottom.right", [32,0,0])

@@ -18,8 +18,8 @@ class ThymioManager(BaseManager):
         self.logger = logging.getLogger(__name__)
         
         self.tasks = [
-            # ObjectCollector(self.controller), 
-            # FollowLine(self.controller), 
+            ObjectCollector(self.controller),
+            # FollowLine(self.controller),
             Photographer(self.controller),
         ]
 
