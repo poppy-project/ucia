@@ -12,7 +12,7 @@ setup(
     
     description="Rosa robot Python API",
     author="Poppy Station",
-    url="https://github.com/poppy-project",
+    url="https://github.com/poppy-project/ucia/",
     
     include_package_data=True,
     packages=find_packages(),

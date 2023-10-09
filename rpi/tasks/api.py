@@ -39,3 +39,6 @@ class API(Task):
 
         # Attendez la fin du thread.
         self.loop_thread.join()
+
+    def __exit__(self):
+        self.close()
