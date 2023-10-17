@@ -18,12 +18,11 @@ class InputOuputServer():
             await asyncio.sleep(1)  # Send a message every seconds
             if self.client:
                 self.logger.debug("Sending state to client.")
-                for websocket in self.connected:
-                    try:
-                        await self.client.send(json.dumps(self.robot.get_all_state()))
-                    except:
-                        self.logger.debug("Failed to send state to client.")
-                        self.client = None
+                try:
+                    await self.client.send(json.dumps(self.robot.get_all_state()))
+                except:
+                    self.logger.debug("Failed to send state to client.")
+                    self.client = None
 
 
     async def handler(self, websocket, path):
@@ -31,7 +30,7 @@ class InputOuputServer():
             self.logger.debug("Another client is already connected. Closing the connection.")
             return
         
-        settings.set_status(settings.RobotState.API)
+        settings.status = settings.RobotState.API
         self.client = websocket
         self.logger.debug("New connection added.")
         try:
@@ -51,7 +50,7 @@ class InputOuputServer():
         finally:
             self.client = None
             self.logger.debug("Connection removed.")
-            settings.set_status(settings.RobotState.MODE)
+            settings.status = settings.RobotState.MODE
             self.robot.reset_robot_state()
 
     def run(self):

@@ -1,13 +1,14 @@
 import logging
 import time
 
-from tasks.thymio.follow_line import FollowLine
-from tasks.thymio.object_collector import ObjectCollector
+# from tasks.thymio.follow_line import FollowLine
+# from tasks.thymio.object_collector import ObjectCollector
 from tasks.thymio.photographer import Photographer
 from tasks.api import API
 
 from manager.base import BaseManager
 from controller.thymio.controller import ThymioController
+import settings 
 
 class ThymioManager(BaseManager):
     current_mode = 0
@@ -51,6 +52,10 @@ class ThymioManager(BaseManager):
             self.logger.info(f"Mode changed (BACK) - Previous mode was {previous_mode}, new mode is {self.current_mode}.")
 
     def run(self):
+        self.logger.debug(f"Actual mode {settings.status}")
+        if settings.status != settings.RobotState.MODE:
+            return
+
         self.change_mode()
 
         self.tasks[self.current_mode].run()
