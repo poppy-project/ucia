@@ -22,8 +22,8 @@ class ThymioManager(BaseManager):
         self.api = API(self.controller)
                 
         self.tasks = [
-            # ObjectCollector(self.controller), 
-            # FollowLine(self.controller), 
+            ObjectCollector(self.controller),
+            # FollowLine(self.controller),
             Photographer(self.controller),
         ]
 
