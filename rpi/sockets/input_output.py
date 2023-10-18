@@ -2,49 +2,62 @@ import logging
 import asyncio
 import websockets
 import json
+import settings
 
 from controller.base import BaseController
 
 class InputOuputServer():
     def __init__(self, controller: BaseController):
         self.robot = controller
-        self.connected = set()
+        self.client = None
         self.logger = logging.getLogger(__name__)
 
 
-    async def send_to_all_clients(self):
+    async def send_state(self):
         while True:
-            await asyncio.sleep(1)  # Send a message every 5 seconds
-            self.logger.debug("Sending state to all client.")
-            for websocket in self.connected:
+            await asyncio.sleep(1)  # Send a message every seconds
+            if self.client:
+                self.logger.debug("Sending state to client.")
                 try:
-                    await websocket.send(json.dumps(self.robot.get_all_state()))
+                    await self.client.send(json.dumps(self.robot.get_all_state()))
                 except:
-                    pass  # The client may have disconnected, ignore the exception
+                    self.logger.debug("Failed to send state to client.")
+                    self.client = None
 
 
     async def handler(self, websocket, path):
+        if self.client:
+            self.logger.debug("Another client is already connected. Closing the connection.")
+            return
+        
+        settings.status = settings.RobotState.API
+        self.client = websocket
         self.logger.debug("New connection added.")
-        self.connected.add(websocket)
         try:
-            async for message in websocket:
-                self.logger.debug(f"Receive commands :", message)
+            while True:  # Loop to handle multiple messages and timeouts
+                try:
+                    message = await asyncio.wait_for(websocket.recv(), timeout=10.0)  # Wait for a message for up to 10 seconds
+                except asyncio.TimeoutError:
+                    self.logger.debug("Timeout, no message received for 10 seconds.")
+                    break  # Break the loop and remove the connection on timeout
+
+                self.logger.debug(f"Receive commands: {message}")
                 self.robot.process_incoming_commands(json.loads(message))
         except websockets.ConnectionClosedError:
             self.logger.debug("Connection closed without close frame.")
         except Exception as e:
             self.logger.error(f"An error occurred: {e}")
         finally:
-            self.connected.remove(websocket)
+            self.client = None
             self.logger.debug("Connection removed.")
-            if len(self.connected) == 0:
-                self.robot.reset_robot_state()
+            settings.status = settings.RobotState.MODE
+            self.robot.reset_robot_state()
 
     def run(self):
         server = websockets.serve(self.handler, '0.0.0.0', 1234)
         self.loop = asyncio.get_event_loop()
         self.loop.run_until_complete(server)
-        self.loop.create_task(self.send_to_all_clients())
+        self.loop.create_task(self.send_state())
 
     def close(self):
         self.loop.close()

@@ -2,24 +2,43 @@ import logging
 
 from controller.base import BaseController
 from tasks.base import Task
-# from sockets.input_output import InputOuputServer
+
+from sockets.input_output import InputOuputServer
+from sockets.camera import CameraServer
+import asyncio
+import threading
+
 
 class API(Task):
     def __init__(self, controller: BaseController):
         self.controller = controller
         self.logger = logging.getLogger(__name__)
 
-        # self.input_output = InputOuputServer(self.controller)
-        # self.input_output.run()
+        # Création d'un thread pour la boucle d'événements asyncio.
+        self.loop_thread = threading.Thread(target=self.start_asyncio_loop, daemon=True)
+        self.loop_thread.start()
 
-        # self.camera_server = CameraServer()
-        # self.camera_server.run()
+    def start_asyncio_loop(self):
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        
+        self.input_output = InputOuputServer(self.controller)
+        self.input_output.run()
 
-        # asyncio.get_event_loop().run_forever()
+        self.camera_server = CameraServer()
+        self.camera_server.run()
+
+        self.loop.run_forever()
 
     def run(self):
         self.logger.info("API")
 
     def close(self):
-        # self.input_output.close()
-        pass
+        # Arrêtez la boucle d'événements asyncio depuis le thread principal.
+        self.loop.call_soon_threadsafe(self.loop.stop)
+
+        # Attendez la fin du thread.
+        self.loop_thread.join()
+
+    def __exit__(self):
+        self.close()
