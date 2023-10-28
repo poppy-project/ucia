@@ -1,6 +1,75 @@
 {% extends "base.html" %}
 
-
 {% block content %}
-<h1>Coming Soon !</h1>
+<div class="container mx-auto my-8">
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+        <h2 class="text-xl font-bold mb-4">Paramètres Réseau</h2>
+
+        <!-- Section Hotspot -->
+        <div class="mb-6">
+            <h3 class="text-lg font-bold mb-2">Hotspot</h3>
+            <label for="hotspot-name" class="block text-gray-700">Nom du Hotspot</label>
+            <input type="text" id="hotspot-name" class="w-full p-2 mb-2 border rounded-lg">
+
+            <label for="hotspot-password" class="block text-gray-700">Mot de passe</label>
+            <input type="password" id="hotspot-password" class="w-full p-2 mb-4 border rounded-lg">
+
+            <label for="hotspot-toggle" class="flex items-center cursor-pointer">
+                <div class="relative">
+                    <input type="checkbox" id="hotspot-toggle" class="sr-only hotspot-toggle">
+                    <div class="block bg-gray-600 w-14 h-8 rounded-full toggle-bg"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                </div>
+                <div class="ml-3 text-gray-700 font-medium">
+                    Activer le Hotspot
+                </div>
+            </label>
+        </div>
+
+        <!-- Section WiFi -->
+        <div>
+            <h3 class="text-lg font-bold mb-2">WiFi</h3>
+            <label for="wifi-ssid" class="block text-gray-700">SSID</label>
+            <input type="text" id="wifi-ssid" class="w-full p-2 mb-2 border rounded-lg">
+
+            <label for="wifi-password" class="block text-gray-700">Mot de passe WPA</label>
+            <input type="password" id="wifi-password" class="w-full p-2 mb-4 border rounded-lg">
+
+            <label for="wifi-toggle" class="flex items-center cursor-pointer">
+                <div class="relative">
+                    <input type="checkbox" id="wifi-toggle" class="sr-only wifi-toggle">
+                    <div class="block bg-gray-600 w-14 h-8 rounded-full toggle-bg"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                </div>
+                <div class="ml-3 text-gray-700 font-medium">
+                    Activer le WiFi
+                </div>
+            </label>
+        </div>
+    </div>
+    <div class="flex justify-center mt-6">
+        <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+            id="save-button">
+            Sauvegarder
+        </button>
+    </div>
+</div>
+
+<script>
+    const toggles = document.querySelectorAll('.sr-only');
+    const toggleBgs = document.querySelectorAll('.toggle-bg');
+    const dots = document.querySelectorAll('.dot');
+
+    toggles.forEach((toggle, index) => {
+        toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+                dots[index].style.transform = 'translateX(100%)';
+                toggleBgs[index].style.backgroundColor = 'green';
+            } else {
+                dots[index].style.transform = 'translateX(0)';
+                toggleBgs[index].style.backgroundColor = 'gray';
+            }
+        });
+    });
+</script>
 {% endblock %}
