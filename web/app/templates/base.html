@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>UCIA - {% block title %}Robot{% endblock %}</title>
+    {% block css %}{% endblock %}
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    {% block js %}{% endblock %}
+    {% include 'footer.html' %}
+</body>
+
+</html>
