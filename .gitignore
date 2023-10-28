@@ -55,6 +55,9 @@ dkms.conf
 *.pyc
 api/python/rosa.egg-info
 
+# NodeJS
+node_modules/
+
 # Build folder
 build/
 dist/
