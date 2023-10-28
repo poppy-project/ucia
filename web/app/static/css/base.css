@@ -1,0 +1,56 @@
+footer {
+  width: 100%;
+  background-color: #333;
+  /* Couleur de fond sombre */
+  color: white;
+  /* Couleur du texte blanc */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  margin-bottom: 20px;
+  /* Espacement entre les logos et la section de licence */
+}
+
+.logo-container img {
+  height: 50px;
+  transition: transform 0.3s ease-in-out;
+  /* Animation de zoom lors du survol */
+}
+
+.logo-container img:hover {
+  transform: scale(1.1);
+  /* Zoom sur les logos lors du survol */
+}
+
+.license-container {
+  max-width: 500px;
+  /* Largeur maximale pour le texte de la licence */
+}
+
+.license-container p {
+  margin: 0;
+  /* Supprime les marges autour des paragraphes */
+  padding: 5px 0;
+  /* Ajoute un espacement vertical entre les lignes de texte */
+}
+
+.license-container a {
+  color: #00f;
+  /* Couleur du lien bleu */
+  text-decoration: none;
+  /* Supprime le soulignement du lien */
+}
+
+.license-container a:hover {
+  text-decoration: underline;
+  /* Souligne le lien lors du survol */
+}

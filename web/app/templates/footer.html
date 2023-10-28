@@ -1,9 +1,15 @@
-<footer>
-    <div>
+<footer class="bg-gray-700 text-white p-6">
+    <div class="logo-container flex flex-row justify-center space-x-6 mb-6">
         <img src="{{ url_for('static', filename='images/logo/poppy_station.png') }}" alt="Logo de Poppy Station">
         <img src="{{ url_for('static', filename='images/logo/ligue.jpg') }}" alt="Logo de la Ligue de l'enseignement">
         <img src="{{ url_for('static', filename='images/logo/inria.jpg') }}" alt="Logo de l'INRIA">
-        <img src="{{ url_for('static', filename='images/logo/nouvelle-aquitaine.png') }}"
+        <img src="{{ url_for('static', filename='images/logo/nouvelle-aquitaine.jpg') }}"
             alt="Logo de la région Nouvelle-Aquitaine">
+    </div>
+    <div class="license-container text-center max-w-md mx-auto">
+        <p class="mb-2">
+            &copy; 2023 Poppy Station.
+            Licence : <a href="url_de_votre_licence" class="text-blue-500 hover:underline">GPLv3</a>.
+        </p>
     </div>
 </footer>

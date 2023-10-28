@@ -1,7 +1,9 @@
-<header class="bg-slate-200">
-    <h1>
-        UCIA - Thymio
-    </h1>
+<header class="bg-slate-200 flex justify-between items-center p-4">
+    <a href="{{ url_for('main.index')}}">
+        <h1 class="text-center text-4xl">
+            UCIA - Thymio
+        </h1>
+    </a>
     <div>
         Version - {{ version }}
     </div>
