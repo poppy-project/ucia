@@ -5,10 +5,10 @@ main {
     /* 3 columns */
     grid-template-rows: repeat(3, 1fr);
     /* 3 rows */
-    gap: 1em;
-    width: 80%;
+    gap: 2em 4em;
+    width: 75%;
     /* Adjust width as needed */
-    height: 80vh;
+    height: 60vh;
 }
 
 main div {
@@ -27,6 +27,7 @@ main div {
     /* Smooth hover effect */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     /* Subtle shadow for depth */
+    font-size: 1.5rem;
 }
 
 main div svg {
