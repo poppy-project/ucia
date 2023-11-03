@@ -7,12 +7,11 @@
     const remoteVideo = document.getElementById('remoteVideo');
     const configuration = { iceServers: [] };
     const rtcPeerConnection = new RTCPeerConnection(configuration);
-    const ws = new WebSocket('ws://rosa.local:8080'); // WebSocket connection to your WebRTC server
 
     rtcPeerConnection.onicecandidate = (event) => {
         if (event.candidate) {
             // Send the ICE candidate to the WebRTC server on the Raspberry Pi
-            sendData({ 'ice-candidate': event.candidate });
+            sendData('ice-candidate', { 'ice-candidate': event.candidate });
         }
     };
 
@@ -22,59 +21,35 @@
     };
 
     async function startConnection() {
-        console.log("Test");
-        // Receive the offer from the WebRTC server on the Raspberry Pi
-        const offer = await receiveData();
-        console.log(offer);
+        console.log("Creating and sending offer");
 
-        await rtcPeerConnection.setRemoteDescription(new RTCSessionDescription({ type: 'offer', sdp: offer }));
-        console.log("sending 2")
+        // Create an offer
+        const offer = await rtcPeerConnection.createOffer();
+        await rtcPeerConnection.setLocalDescription(new RTCSessionDescription({ type: 'offer', sdp: offer.sdp }));
 
-        // Create an answer
-        const answer = await rtcPeerConnection.createAnswer();
-        await rtcPeerConnection.setLocalDescription(new RTCSessionDescription({ type: 'answer', sdp: answer.sdp }));
+        // Send the offer to the WebRTC server on the Raspberry Pi
+        const answer = await sendData('offer', { 'sdp': rtcPeerConnection.localDescription.sdp, 'type': 'offer' });
 
-        console.log("sending 2")
-        // Send the answer to the WebRTC server on the Raspberry Pi
-        sendData({ 'sdp-answer': rtcPeerConnection.localDescription.sdp });
+        console.log("Received and setting answer");
+        await rtcPeerConnection.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: answer.sdp }));
     }
 
-    // Function to receive data from the WebSocket
-    async function receiveData() {
-        return new Promise((resolve, reject) => {
-            ws.onmessage = (event) => {
-                console.log(event)
-                const data = JSON.parse(event.data);
-                console.log(data);
-                if (data && data.type === 'offer') {
-                    resolve(data.sdp);
-                } else {
-                    reject('Invalid data received');
-                }
-            };
-
-            ws.onerror = (error) => {
-                reject(error);
-            };
+    async function sendData(endpoint, data) {
+        const response = await fetch(`http://rosa.local:8080/${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
         });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+
+        return await response.json();
     }
-
-    // Function to send data to the WebSocket
-    function sendData(data) {
-        return new Promise((resolve, reject) => {
-            ws.onopen = () => {
-                // Send the data to the WebSocket server
-                print("sending");
-                ws.send(JSON.stringify(data));
-                resolve();
-            };
-
-            ws.onerror = (error) => {
-                reject(error);
-            };
-        });
-    }
-
 
     // Start the WebRTC connection when the page loads
     startConnection();

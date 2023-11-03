@@ -28,10 +28,11 @@ class API(Task):
 
         self.camera_server = CameraServer()
         self.camera_server.run()
-
+        
         self.webrtc_server = WebRTC()
         self.webrtc_server.run()
 
+        
         self.loop.run_forever()
 
     def run(self):

@@ -1,5 +1,10 @@
 import cv2
 import asyncio
+import logging
+import json
+import aiohttp_cors
+
+from aiohttp import web
 from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaBlackhole, MediaPlayer
 from vision.camera import Camera
@@ -38,7 +43,7 @@ class WebRTC():
         offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
 
         pc = RTCPeerConnection()
-        pcs.add(pc)
+        self.rtc_peer_connections.add(pc)
 
         @pc.on("datachannel")
         def on_datachannel(channel):
@@ -65,11 +70,9 @@ class WebRTC():
             @track.on("ended")
             async def on_ended():
                 log_info("Track %s ended", track.kind)
-                await recorder.stop()
 
         # handle offer
         await pc.setRemoteDescription(offer)
-        await recorder.start()
 
         # send answer
         answer = await pc.createAnswer()
@@ -94,23 +97,39 @@ class WebRTC():
             # except Exception as e:
                 # print("Error sending frame:", str(e))
 
-
-
-    def run(self):
+    async def run_server(self):
         # Create HTTP Application
         self.app = web.Application()
 
-        app.router.add_post("/offer", offer)
+        # Configure default CORS settings.
+        cors = aiohttp_cors.setup(self.app, defaults={
+            "*": aiohttp_cors.ResourceOptions(
+                allow_credentials=True,
+                expose_headers="*",
+                allow_headers="*",
+            )
+        })
 
-        self.loop = asyncio.get_event_loop()
-        
+        # Define the /offer route, and enable CORS on it.
+        resource = cors.add(self.app.router.add_resource("/offer"))
+        cors.add(resource.add_route("POST", self.offer))
+
         self.logger.info("Raspberry Pi WebRTC server listening on port 8080...")
 
-        self.server = self.loop.run_until_complete(
-            web.run_app(app, port="8080")
-        )
+        self.runner = web.AppRunner(self.app)
+        await self.runner.setup()
 
-    def close(self):
+        self.site = web.TCPSite(self.runner, '0.0.0.0', 8080)
+        await self.site.start()
+
+    
+    def run(self):
+        self.loop = asyncio.get_event_loop()
+        server_coroutine = self.run_server()  # create coroutine
+        server_task = asyncio.ensure_future(server_coroutine)  # create task from coroutine
+        self.loop.run_until_complete(server_task)  # run the task
+        
+    async def close(self):
         coros = [pc.close() for pc in self.rtc_peer_connections]
         await asyncio.gather(*coros)
-        pcs.clear()
+        self.rtc_peer_connections.clear()
