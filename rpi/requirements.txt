@@ -11,3 +11,4 @@ websockets
 aiortc
 aiohttp
 aiohttp_cors
+av

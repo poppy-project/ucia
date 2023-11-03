@@ -5,8 +5,13 @@
 
 <script>
     const remoteVideo = document.getElementById('remoteVideo');
-    const configuration = { iceServers: [] };
+    const configuration = {
+        iceServers: []
+    };
     const rtcPeerConnection = new RTCPeerConnection(configuration);
+
+    rtcPeerConnection.addTransceiver('video', { 'direction': 'recvonly' })
+
 
     rtcPeerConnection.onicecandidate = (event) => {
         if (event.candidate) {

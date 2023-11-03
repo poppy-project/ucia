@@ -3,19 +3,20 @@ import asyncio
 import logging
 import json
 import aiohttp_cors
+import av
 
 from aiohttp import web
-from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
+from aiortc import VideoStreamTrack, RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaBlackhole, MediaPlayer
 from vision.camera import Camera
 
-class VideoStreamTrack(MediaStreamTrack):
-    kind = "video"
-
-    def __init__(self):
+class VideoCameraPI(VideoStreamTrack):
+    def __init__(self,frame_interval=100):
         super().__init__()
+        self.direction = 'sendonly'
         self.camera = Camera()
         self.logger = logging.getLogger(__name__)
+        self.frame_interval = frame_interval
 
 
     async def recv(self):
@@ -23,14 +24,19 @@ class VideoStreamTrack(MediaStreamTrack):
             ret, frame = self.camera.grab_frame_loop()
             if not ret:
                 break
-            pts, time_base = await self.next_timestamp()
-            frame_time = int(pts * time_base * 1000)
-            self.on_frame(frame, frame_time)
-            await asyncio.sleep(0.01)
 
-    def on_frame(self, frame, timestamp):
-        self.timestamp = timestamp
-        self.frame = frame
+            # Convert the OpenCV frame (a NumPy array) to an aiortc VideoFrame
+            video_frame = av.VideoFrame.from_ndarray(frame, format="bgr24")
+
+            # Update the timestamp of the video frame
+            pts, time_base = await self.next_timestamp()
+            video_frame.pts = pts
+            video_frame.time_base = time_base
+
+            # This line is crucial. Instead of calling self.on_frame(), 
+            # you should return the video frame.
+            await asyncio.sleep(self.frame_interval / 1000)  # Sleep for the frame interval
+            return video_frame  # Return the video frame
 
 class WebRTC():
     def __init__(self):
@@ -44,32 +50,19 @@ class WebRTC():
 
         pc = RTCPeerConnection()
         self.rtc_peer_connections.add(pc)
+        # pc.addTransceiver('video', {'direction': 'recvonly'})
+        # Create a new VideoStreamTrack instance and add it to the RTCPeerConnection
+        video_pi = VideoCameraPI()
+        pc.addTrack(video_pi)
 
-        @pc.on("datachannel")
-        def on_datachannel(channel):
-            @channel.on("message")
-            def on_message(message):
-                if isinstance(message, str) and message.startswith("ping"):
-                    channel.send("pong" + message[4:])
+      
 
         @pc.on("connectionstatechange")
         async def on_connectionstatechange():
-            log_info("Connection state is %s", pc.connectionState)
+            self.logger.info("Connection state is %s", pc.connectionState)
             if pc.connectionState == "failed":
                 await pc.close()
-                pcs.discard(pc)
-
-        @pc.on("track")
-        def on_track(track):
-            log_info("Track %s received", track.kind)
-            
-            video_track = VideoStreamTrack()
-            rtc_peer_connection.addTrack(video_track)
-
-
-            @track.on("ended")
-            async def on_ended():
-                log_info("Track %s ended", track.kind)
+                self.rtc_peer_connections.discard(pc)
 
         # handle offer
         await pc.setRemoteDescription(offer)
