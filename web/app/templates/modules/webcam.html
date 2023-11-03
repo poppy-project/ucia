@@ -1,6 +1,82 @@
 {% extends "base.html" %}
 
-
 {% block content %}
-<h1>Coming Soon !</h1>
+<video id="remoteVideo" autoplay></video>
+
+<script>
+    const remoteVideo = document.getElementById('remoteVideo');
+    const configuration = { iceServers: [] };
+    const rtcPeerConnection = new RTCPeerConnection(configuration);
+    const ws = new WebSocket('ws://rosa.local:8080'); // WebSocket connection to your WebRTC server
+
+    rtcPeerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+            // Send the ICE candidate to the WebRTC server on the Raspberry Pi
+            sendData({ 'ice-candidate': event.candidate });
+        }
+    };
+
+    rtcPeerConnection.ontrack = (event) => {
+        // Receive the video track from the WebRTC server on the Raspberry Pi
+        remoteVideo.srcObject = event.streams[0];
+    };
+
+    async function startConnection() {
+        console.log("Test");
+        // Receive the offer from the WebRTC server on the Raspberry Pi
+        const offer = await receiveData();
+        console.log(offer);
+
+        await rtcPeerConnection.setRemoteDescription(new RTCSessionDescription({ type: 'offer', sdp: offer }));
+        console.log("sending 2")
+
+        // Create an answer
+        const answer = await rtcPeerConnection.createAnswer();
+        await rtcPeerConnection.setLocalDescription(new RTCSessionDescription({ type: 'answer', sdp: answer.sdp }));
+
+        console.log("sending 2")
+        // Send the answer to the WebRTC server on the Raspberry Pi
+        sendData({ 'sdp-answer': rtcPeerConnection.localDescription.sdp });
+    }
+
+    // Function to receive data from the WebSocket
+    async function receiveData() {
+        return new Promise((resolve, reject) => {
+            ws.onmessage = (event) => {
+                console.log(event)
+                const data = JSON.parse(event.data);
+                console.log(data);
+                if (data && data.type === 'offer') {
+                    resolve(data.sdp);
+                } else {
+                    reject('Invalid data received');
+                }
+            };
+
+            ws.onerror = (error) => {
+                reject(error);
+            };
+        });
+    }
+
+    // Function to send data to the WebSocket
+    function sendData(data) {
+        return new Promise((resolve, reject) => {
+            ws.onopen = () => {
+                // Send the data to the WebSocket server
+                print("sending");
+                ws.send(JSON.stringify(data));
+                resolve();
+            };
+
+            ws.onerror = (error) => {
+                reject(error);
+            };
+        });
+    }
+
+
+    // Start the WebRTC connection when the page loads
+    startConnection();
+</script>
 {% endblock %}

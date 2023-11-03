@@ -19,7 +19,8 @@ class CameraServer:
             if len(self.connected) == 0:
                 continue
 
-            img = self.camera.grab_frame_loop()
+            _, img = self.camera.grab_frame_loop()
+            
             if img is None:
                 continue
 

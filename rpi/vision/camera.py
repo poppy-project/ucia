@@ -13,8 +13,7 @@ class Camera:
         self.cap = cv.VideoCapture(0)
 
     def grab_frame_loop(self):
-        _, img = self.cap.read()
-        return img
-
+        return self.cap.read()
+        
     def __del__(self):
         self.cap.release()
