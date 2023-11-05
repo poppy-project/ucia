@@ -4,8 +4,8 @@
 <div class="container mx-auto my-8">
     <div class="flex justify-between items-center mb-4"> <!-- Nouveau div pour Flexbox -->
         <h2 class="text-xl font-bold">Paramètres</h2>
-        <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-            id="save-update-button">
+        <button onclick="update()" type="button"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" id="save-update-button">
             Mettre à jour le robot
         </button>
     </div>
@@ -83,5 +83,11 @@
             }
         });
     });
+
+    async function update() {
+        const response = await fetch('/api/update');
+        console.log(response);
+    }
+
 </script>
 {% endblock %}
