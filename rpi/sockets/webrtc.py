@@ -11,7 +11,7 @@ from aiortc.contrib.media import MediaBlackhole, MediaPlayer
 from vision.camera import Camera
 
 class VideoCameraPI(VideoStreamTrack):
-    def __init__(self,frame_interval=100):
+    def __init__(self,frame_interval=16):
         super().__init__()
         self.direction = 'sendonly'
         self.camera = Camera()
@@ -21,9 +21,9 @@ class VideoCameraPI(VideoStreamTrack):
 
     async def recv(self):
         while True:
-            ret, frame = self.camera.grab_frame_loop()
-            if not ret:
-                break
+            frame = self.camera.grab_frame()
+            if frame is None:
+                continue
 
             # Convert the OpenCV frame (a NumPy array) to an aiortc VideoFrame
             video_frame = av.VideoFrame.from_ndarray(frame, format="bgr24")

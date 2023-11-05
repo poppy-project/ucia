@@ -59,7 +59,6 @@ class Camera:
                 with open(detected_data_path, 'w') as f:
                     json_data = [visual_object_to_dict(vo) for vo in self.last_found_obj]
                     json.dump(json_data, f)
-                    print(json_data)
 
     def grab_frame(self):
         """

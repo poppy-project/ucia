@@ -12,14 +12,6 @@
 
     rtcPeerConnection.addTransceiver('video', { 'direction': 'recvonly' })
 
-
-    rtcPeerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-            // Send the ICE candidate to the WebRTC server on the Raspberry Pi
-            sendData('ice-candidate', { 'ice-candidate': event.candidate });
-        }
-    };
-
     rtcPeerConnection.ontrack = (event) => {
         // Receive the video track from the WebRTC server on the Raspberry Pi
         remoteVideo.srcObject = event.streams[0];
