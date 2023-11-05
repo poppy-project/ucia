@@ -2,19 +2,29 @@
 
 {% block content %}
 <div class="container mx-auto my-8">
+    <div class="flex justify-between items-center mb-4"> <!-- Nouveau div pour Flexbox -->
+        <h2 class="text-xl font-bold">Paramètres</h2>
+        <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+            id="save-update-button">
+            Mettre à jour le robot
+        </button>
+    </div>
+
+    <!-- Network Settings -->
     <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
-        <h2 class="text-xl font-bold mb-4">Paramètres Réseau</h2>
+
+        <h3 class="text-lg font-bold mb-2">Paramètres Réseau</h3>
 
         <!-- Section Hotspot -->
         <div class="mb-6">
-            <h3 class="text-lg font-bold mb-2">Hotspot</h3>
+            <h4 class="text-lg font-bold mb-2">Hotspot</h4>
             <label for="hotspot-name" class="block text-gray-700">Nom du Hotspot</label>
             <input type="text" id="hotspot-name" class="w-full p-2 mb-2 border rounded-lg">
 
             <label for="hotspot-password" class="block text-gray-700">Mot de passe</label>
             <input type="password" id="hotspot-password" class="w-full p-2 mb-4 border rounded-lg">
 
-            <label for="hotspot-toggle" class="flex items-center cursor-pointer">
+            <label for="hotspot-toggle" class="flex items-center cursor-pointer mb-4">
                 <div class="relative">
                     <input type="checkbox" id="hotspot-toggle" class="sr-only hotspot-toggle">
                     <div class="block bg-gray-600 w-14 h-8 rounded-full toggle-bg"></div>
@@ -24,18 +34,22 @@
                     Activer le Hotspot
                 </div>
             </label>
+            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-4"
+                id="save-hotspot-button">
+                Sauvegarder la configuration du Hotspot
+            </button>
         </div>
 
         <!-- Section WiFi -->
-        <div>
-            <h3 class="text-lg font-bold mb-2">WiFi</h3>
+        <div class="mb-6">
+            <h4 class="text-lg font-bold mb-2">WiFi</h4>
             <label for="wifi-ssid" class="block text-gray-700">SSID</label>
             <input type="text" id="wifi-ssid" class="w-full p-2 mb-2 border rounded-lg">
 
             <label for="wifi-password" class="block text-gray-700">Mot de passe WPA</label>
             <input type="password" id="wifi-password" class="w-full p-2 mb-4 border rounded-lg">
 
-            <label for="wifi-toggle" class="flex items-center cursor-pointer">
+            <label for="wifi-toggle" class="flex items-center cursor-pointer mb-4">
                 <div class="relative">
                     <input type="checkbox" id="wifi-toggle" class="sr-only wifi-toggle">
                     <div class="block bg-gray-600 w-14 h-8 rounded-full toggle-bg"></div>
@@ -45,13 +59,11 @@
                     Activer le WiFi
                 </div>
             </label>
+            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-4"
+                id="save-wifi-button">
+                Sauvegarder la configuration du WiFi
+            </button>
         </div>
-    </div>
-    <div class="flex justify-center mt-6">
-        <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-            id="save-button">
-            Sauvegarder
-        </button>
     </div>
 </div>
 
