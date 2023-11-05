@@ -17,12 +17,12 @@ class Photographer(Task):
 
     def run(self):
         self.logger.info("PHOTOGRAPHER")
-        img = self.cam.grab_frame_loop()    
+        _, img = self.cam.grab_frame_loop()    
         
         if img is None:
             return
 
-        found_obj = detect_objects(img, render=True)
+        found_obj = detect_objects(img)
 
         if found_obj:
             obj = found_obj[0]
