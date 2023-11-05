@@ -5,9 +5,6 @@ from controller.thymio.controller import ThymioController
 from vision.camera import Camera
 from tasks.base import Task
 
-from vision import detect_objects
-
-
 class Photographer(Task):
     def __init__(self, controller: ThymioController):
         self.controller = controller
@@ -16,13 +13,11 @@ class Photographer(Task):
         self.controller.set_led("top", [0,32,0])
 
     def run(self):
-        self.logger.info("PHOTOGRAPHER")
-        _, img = self.cam.grab_frame_loop()    
+        self.logger.debug("PHOTOGRAPHER")
+        found_obj = self.cam.grab_detected_data()    
         
-        if img is None:
+        if found_obj is None:
             return
-
-        found_obj = detect_objects(img)
 
         if found_obj:
             obj = found_obj[0]
