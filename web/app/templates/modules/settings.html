@@ -89,5 +89,60 @@
         console.log(response);
     }
 
+    const saveHotspotButton = document.getElementById('save-hotspot-button');
+    // Add a click event listener to the button
+    saveHotspotButton.addEventListener('click', () => {
+        const data = {
+            hotspot_name: document.getElementById('hotspot-name').value,
+            hotspot_password: document.getElementById('hotspot-password').value,
+            hotspot_enabled: document.getElementById('hotspot-toggle').checked
+        };
+
+        // Send a POST request to the '/hotspot' route
+        fetch('/api/hotspot', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+
+    const saveWifiButton = document.getElementById('save-wifi-button');
+
+    // Add a click event listener to the button
+    saveWifiButton.addEventListener('click', () => {
+        const data = {
+            wifi_ssid: document.getElementById('wifi-ssid').value,
+            wifi_password: document.getElementById('wifi-password').value,
+            wifi_enabled: document.getElementById('wifi-toggle').checked
+        };
+
+        console.log(data);
+
+        fetch('/api/wifi', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+
+
 </script>
 {% endblock %}
