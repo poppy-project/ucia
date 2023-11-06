@@ -6,8 +6,8 @@ from .blueprints.api import api
 from .blueprints.programs import programs
 
 main = Blueprint("main", __name__)
-main.register_blueprint(api, url_prefix='/program')
-main.register_blueprint(programs, url_prefix='/api')
+main.register_blueprint(api, url_prefix='/api')
+main.register_blueprint(programs, url_prefix='/program')
 
 @main.context_processor
 def inject_robot_config():
