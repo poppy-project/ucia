@@ -1,18 +1,38 @@
-from flask import Blueprint, jsonify, request
 import os
+import json
+from flask import Blueprint, jsonify, request
+
 
 programs = Blueprint('programs', __name__)
 
-@programs.route('/upload', methods=['POST'])
-def upload():
-    try:
-        uploaded_file = request.files['file']
-        if uploaded_file.filename != '':
-            file_path = os.path.join(os.path.expanduser("~/programs"), uploaded_file.filename)
-            uploaded_file.save(file_path)
-        return redirect(url_for('main.program'))  # Redirigez vers la page des programmes
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+@programs.route('/program/upload', methods=['POST'])
+def upload_program():
+    file = request.files['file']
+    program_name = request.form['program_name']
+    description = request.form['description']
+
+    if file and file.filename.endswith('.py'):
+        program_dir = os.path.expanduser("~/programs")
+        file.save(os.path.join(program_dir, file.filename))
+        
+        # Update program.json
+        data = {'programs': []}
+        program_json_path = os.path.join(program_dir, 'program.json')
+        if os.path.exists(program_json_path):
+            with open(program_json_path, 'r') as f:
+                data = json.load(f)
+        data['programs'].append({
+            "file_name": file.filename,
+            "display_name": program_name,
+            "description": description
+        })
+        
+        with open(program_json_path, 'w') as f:
+            json.dump(data, f, indent=4)
+        return jsonify({"message": "Program uploaded successfully"}), 200
+    else:
+        return jsonify({"error": "Invalid file type"}), 400
+
 
 @programs.route('/run', methods=['POST'])
 def run():

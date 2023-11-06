@@ -1,4 +1,5 @@
 import os
+import json
 
 from flask import Blueprint, render_template
 from .blueprints.api import api
@@ -31,9 +32,27 @@ def logs():
 @main.route("/program")
 def program():
     program_dir = os.path.expanduser("~/programs")
-    program_files = [f for f in os.listdir(program_dir) if f.endswith('.py')]
-    return render_template("modules/program.html", programs=program_files)
 
+    # List all python files in the directory
+    program_files = [f for f in os.listdir(program_dir) if f.endswith('.py')]
+    program_data = {'programs': []}
+    program_json_path = os.path.join(program_dir, 'program.json')
+    
+    # Load existing data from program.json if it exists
+    if os.path.exists(program_json_path):
+        with open(program_json_path, 'r') as f:
+            program_data = json.load(f)
+
+    # Merge the data from program.json and the directory listing
+    for file in program_files:
+        if not any(p['file_name'] == file for p in program_data['programs']):
+            program_data['programs'].append({
+                "file_name": file,
+                "display_name": file.replace('.py', ''),
+                "description": "Pas de description disponible."
+            })
+    
+    return render_template("modules/program.html", programs=program_data['programs'])
 
 @main.route("/settings")
 def settings():
