@@ -1,6 +1,57 @@
 {% extends "base.html" %}
 
-
 {% block content %}
-<h1>Coming Soon !</h1>
+<div class="container mx-auto mt-10 px-4">
+    <h1 class="text-2xl font-bold mb-4 text-center">Programmes</h1>
+
+    <!-- Formulaire de téléchargement -->
+    <form action="/api/program/upload" method="post" enctype="multipart/form-data" class="mb-4 text-center">
+        <input type="file" name="file" accept=".py" required class="mb-2">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Télécharger</button>
+    </form>
+
+    <!-- Liste des programmes -->
+    <ul class="space-y-4">
+        {% for program in programs %}
+        <li class="flex justify-center items-center">
+            <span class="mr-4">{{ program }}</span>
+            <button data-program="{{ program }}"
+                class="run-button bg-green-500 text-white px-4 py-2 rounded flex items-center">
+                <i data-feather="play-circle" class="mr-2"></i> <!-- Icône de lecture -->
+                Lancer
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Bouton d'arrêt -->
+    <div class="text-center mt-4">
+        <button class="kill-button bg-red-500 text-white px-4 py-2 rounded flex items-center mx-auto">
+            <i data-feather="stop-circle" class="mr-2"></i> <!-- Icône d'arrêt -->
+            Arrêter le programme en cours
+        </button>
+    </div>
+</div>
+
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace();  // Cette ligne est nécessaire pour afficher les icônes Feather
+
+    document.querySelectorAll('.run-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const programName = button.getAttribute('data-program');
+            fetch('/api/program/run', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ program_name: programName })
+            });
+        });
+    });
+
+    document.querySelector('.kill-button').addEventListener('click', () => {
+        fetch('/api/program/kill', { method: 'POST' });
+    });
+</script>
 {% endblock %}

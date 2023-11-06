@@ -1,7 +1,12 @@
+import os
+
 from flask import Blueprint, render_template
+from .blueprints.api import api
+from .blueprints.programs import programs
 
 main = Blueprint("main", __name__)
-
+main.register_blueprint(api, url_prefix='/program')
+main.register_blueprint(programs, url_prefix='/api')
 
 @main.context_processor
 def inject_robot_config():
@@ -25,7 +30,9 @@ def logs():
 
 @main.route("/program")
 def program():
-    return render_template("modules/program.html")
+    program_dir = os.path.expanduser("~/programs")
+    program_files = [f for f in os.listdir(program_dir) if f.endswith('.py')]
+    return render_template("modules/program.html", programs=program_files)
 
 
 @main.route("/settings")
