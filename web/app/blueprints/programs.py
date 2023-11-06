@@ -77,7 +77,7 @@ def run():
         return jsonify({'message': f'Program {program_name} started successfully'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-        
+
 @programs.route('/kill', methods=['POST'])
 def kill():
     """
@@ -96,7 +96,6 @@ def delete_program(filename):
     program_dir = os.path.expanduser("~/programs")
     file_path = os.path.join(program_dir, filename)
     
-    print(filename)
     # Supprimer le fichier physique
     if os.path.exists(file_path):
         os.remove(file_path)
