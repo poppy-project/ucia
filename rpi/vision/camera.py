@@ -2,6 +2,7 @@ import cv2 as cv
 import json
 import os
 import threading
+import time
 import numpy as np
 
 def visual_object_to_dict(vo):
@@ -30,30 +31,36 @@ class Camera:
         self.image_dir = "/tmp/rosa/images"
         os.makedirs(self.image_dir, exist_ok=True)
 
-        self.thread = threading.Thread(target=self._save_images)
-        self.thread.start()
+        self.capture_thread = threading.Thread(target=self._capture_frames)
+        self.capture_thread.daemon = True  # Set the thread as a daemon to exit when the main program exits
+        self.capture_thread.start()
 
-    def _save_images(self):
-        """
-        Saves the original and detected images in a loop.
-        """
-        from .object_detector import detect_objects
+        self.detect_thread = threading.Thread(target=self._detect_objects_continuously)
+        self.detect_thread.daemon = True
+        self.detect_thread.start()
 
+    def _capture_frames(self):
         while True:
             ret, frame = self.cap.read()
             if ret:
+                original_img_path = os.path.join(self.image_dir, 'camera.jpg')
+                cv.imwrite(original_img_path, frame)
                 self.last_frame = frame
-                # Define the paths to save the images
-                original_img_path = os.path.join(self.image_dir, 'original_img.jpg')
+            
+            time.sleep(0.010)
+
+    def _detect_objects_continuously(self):
+        from .object_detector import detect_objects
+
+        while True:
+            frame = self.last_frame  # Capture the last available frame
+            if frame is not None:
+                self.last_detected_frame = frame  # Assuming detect_objects does not modify the frame
+                self.last_found_obj = detect_objects(frame, render=True)
+
+                # Save the detected image and data
                 detected_img_path = os.path.join(self.image_dir, 'detected_img.jpg')
                 detected_data_path = os.path.join(self.image_dir, 'detected_data.json')
-
-                # Save the original image
-                cv.imwrite(original_img_path, frame)
-
-                # Process and save the detected image
-                self.last_found_obj = detect_objects(frame)
-                self.last_detected_frame = frame  # Assuming detect_objects does not modify the frame
 
                 cv.imwrite(detected_img_path, frame)
                 with open(detected_data_path, 'w') as f:
@@ -73,8 +80,7 @@ class Camera:
         :return: last_found_obj: dict, detected_frame: ndarray
         """
         return self.last_found_obj, self.last_detected_frame
-        
-    
+
     def grab_detected_data(self):
         """
         Returns the last detected data.
@@ -91,5 +97,3 @@ class Camera:
 
     def __del__(self):
         self.cap.release()
-        self.thread.join()
-
