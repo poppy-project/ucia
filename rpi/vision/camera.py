@@ -62,10 +62,12 @@ class Camera:
                 detected_img_path = os.path.join(self.image_dir, 'detected_img.jpg')
                 detected_data_path = os.path.join(self.image_dir, 'detected_data.json')
 
-                cv.imwrite(detected_img_path, frame)
-                with open(detected_data_path, 'w') as f:
-                    json_data = [visual_object_to_dict(vo) for vo in self.last_found_obj]
-                    json.dump(json_data, f)
+                if self.last_found_obj:
+                    cv.imwrite(detected_img_path, frame)
+                    with open(detected_data_path, 'w') as f:
+                        json_data = [visual_object_to_dict(vo) for vo in self.last_found_obj]
+                        json.dump(json_data, f)
+            time.sleep(0.010) 
 
     def grab_frame(self):
         """

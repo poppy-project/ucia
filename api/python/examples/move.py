@@ -15,16 +15,18 @@ if __name__ == '__main__':
     time.sleep(5)
 
     # Here, we will move backward at max speed for 5s.
-    rosa.left_wheel.speed = -1.0
-    rosa.right_wheel.speed = -1.0
-    time.sleep(5)
+    # rosa.left_wheel.speed = -1.0
+    # rosa.right_wheel.speed = -1.0
+    # time.sleep(5)
 
-    # We can also spot turn
-    rosa.left_wheel.speed = 0.25
-    rosa.right_wheel.speed = -0.25
-    time.sleep(3)
+    # # We can also spot turn
+    # rosa.left_wheel.speed = 0.25
+    # rosa.right_wheel.speed = -0.25
+    # time.sleep(3)
 
-    # And in the other direction
-    rosa.left_wheel.speed = -0.25
-    rosa.right_wheel.speed = 0.25
-    time.sleep(3)
+    # # And in the other direction
+    # rosa.left_wheel.speed = -0.25
+    # rosa.right_wheel.speed = 0.25
+    # time.sleep(3)
+
+    print(rosa.camera.last_detection)
