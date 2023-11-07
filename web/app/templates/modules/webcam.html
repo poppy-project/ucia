@@ -1,34 +1,100 @@
 {% extends "base.html" %}
 
 {% block content %}
-<video id="remoteVideo" autoplay></video>
+<div class="button-container">
+    <button id="cameraButton"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-4 active:bg-blue-700"
+        onclick="showCamera()">Caméra</button>
+    <button id="detectionButton"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-4 active:bg-blue-700"
+        onclick="showDetection()">Détection</button>
+    <button id="bothButton"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
+        onclick="showBoth()">Caméra & Détection</button>
+</div>
+
+<div class="video-container">
+    <video id="remoteVideoCamera" autoplay style="display: block;"></video>
+    <video id="remoteVideoDetection" autoplay style="display: none;"></video>
+</div>
 
 <script>
-    const remoteVideo = document.getElementById('remoteVideo');
+    const remoteVideoCamera = document.getElementById('remoteVideoCamera');
+    const remoteVideoDetection = document.getElementById('remoteVideoDetection');
+    const cameraButton = document.getElementById('cameraButton');
+    const detectionButton = document.getElementById('detectionButton');
+    const bothButton = document.getElementById('bothButton');
+
+    function showCamera() {
+        remoteVideoCamera.style.display = 'block';
+        remoteVideoDetection.style.display = 'none';
+        cameraButton.classList.add("active");
+        detectionButton.classList.remove("active");
+        bothButton.classList.remove("active");
+    }
+
+    function showDetection() {
+        remoteVideoCamera.style.display = 'none';
+        remoteVideoDetection.style.display = 'block';
+        detectionButton.classList.add("active");
+        cameraButton.classList.remove("active");
+        bothButton.classList.remove("active");
+    }
+
+    function showBoth() {
+        remoteVideoCamera.style.display = 'block';
+        remoteVideoDetection.style.display = 'block';
+        bothButton.classList.add("active");
+        cameraButton.classList.remove("active");
+        detectionButton.classList.remove("active");
+    }
+
     const configuration = {
         iceServers: []
     };
-    const rtcPeerConnection = new RTCPeerConnection(configuration);
 
-    rtcPeerConnection.addTransceiver('video', { 'direction': 'recvonly' })
+    const rtcPeerConnectionCamera = new RTCPeerConnection(configuration);
+    const rtcPeerConnectionDetection = new RTCPeerConnection(configuration);
 
-    rtcPeerConnection.ontrack = (event) => {
-        // Receive the video track from the WebRTC server on the Raspberry Pi
-        remoteVideo.srcObject = event.streams[0];
+    rtcPeerConnectionCamera.addTransceiver('video', { 'direction': 'recvonly' });
+    rtcPeerConnectionDetection.addTransceiver('video', { 'direction': 'recvonly' });
+
+    rtcPeerConnectionCamera.ontrack = (event) => {
+        // Receive the camera video track from the WebRTC server on the Raspberry Pi
+        remoteVideoCamera.srcObject = event.streams[0];
     };
 
-    async function startConnection() {
-        console.log("Creating and sending offer");
+    rtcPeerConnectionDetection.ontrack = (event) => {
+        // Receive the detection video track from the WebRTC server on the Raspberry Pi
+        remoteVideoDetection.srcObject = event.streams[0];
+    };
 
-        // Create an offer
-        const offer = await rtcPeerConnection.createOffer();
-        await rtcPeerConnection.setLocalDescription(new RTCSessionDescription({ type: 'offer', sdp: offer.sdp }));
+    async function startCameraConnection() {
+        console.log("Creating and sending camera offer");
 
-        // Send the offer to the WebRTC server on the Raspberry Pi
-        const answer = await sendData('offer', { 'sdp': rtcPeerConnection.localDescription.sdp, 'type': 'offer' });
+        // Create a camera offer
+        const offer = await rtcPeerConnectionCamera.createOffer();
+        await rtcPeerConnectionCamera.setLocalDescription(new RTCSessionDescription({ type: 'offer', sdp: offer.sdp }));
 
-        console.log("Received and setting answer");
-        await rtcPeerConnection.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: answer.sdp }));
+        // Send the camera offer to the WebRTC server on the Raspberry Pi
+        const answer = await sendData('offer_camera', { 'sdp': rtcPeerConnectionCamera.localDescription.sdp, 'type': 'offer' });
+
+        console.log("Received and setting camera answer");
+        await rtcPeerConnectionCamera.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: answer.sdp }));
+    }
+
+    async function startDetectionConnection() {
+        console.log("Creating and sending detection offer");
+
+        // Create a detection offer
+        const offer = await rtcPeerConnectionDetection.createOffer();
+        await rtcPeerConnectionDetection.setLocalDescription(new RTCSessionDescription({ type: 'offer', sdp: offer.sdp }));
+
+        // Send the detection offer to the WebRTC server on the Raspberry Pi
+        const answer = await sendData('offer_detection', { 'sdp': rtcPeerConnectionDetection.localDescription.sdp, 'type': 'offer' });
+
+        console.log("Received and setting detection answer");
+        await rtcPeerConnectionDetection.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: answer.sdp }));
     }
 
     async function sendData(endpoint, data) {
@@ -48,7 +114,22 @@
         return await response.json();
     }
 
-    // Start the WebRTC connection when the page loads
-    startConnection();
+    // Start the camera and detection WebRTC connections by default
+    startCameraConnection();
+    startDetectionConnection();
 </script>
+
+<style>
+    .button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .video-container {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+</style>
 {% endblock %}
