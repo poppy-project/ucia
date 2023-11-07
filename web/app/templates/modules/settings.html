@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto my-8">
+    <div class="flex justify-between items-center mb-4"> <!-- Nouveau div pour Flexbox -->
+        <h2 class="text-xl font-bold">Paramètres</h2>
+        <button onclick="update()" type="button"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" id="save-update-button">
+            Mettre à jour le robot
+        </button>
+    </div>
+
+    <!-- Network Settings -->
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+
+        <h3 class="text-lg font-bold mb-2">Paramètres Réseau</h3>
+
+        <!-- Section Hotspot -->
+        <div class="mb-6">
+            <h4 class="text-lg font-bold mb-2">Hotspot</h4>
+            <label for="hotspot-name" class="block text-gray-700">Nom du Hotspot</label>
+            <input type="text" id="hotspot-name" class="w-full p-2 mb-2 border rounded-lg">
+
+            <label for="hotspot-password" class="block text-gray-700">Mot de passe</label>
+            <input type="password" id="hotspot-password" class="w-full p-2 mb-4 border rounded-lg">
+
+            <label for="hotspot-toggle" class="flex items-center cursor-pointer mb-4">
+                <div class="relative">
+                    <input type="checkbox" id="hotspot-toggle" class="sr-only hotspot-toggle">
+                    <div class="block bg-gray-600 w-14 h-8 rounded-full toggle-bg"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                </div>
+                <div class="ml-3 text-gray-700 font-medium">
+                    Activer le Hotspot
+                </div>
+            </label>
+            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-4"
+                id="save-hotspot-button">
+                Sauvegarder la configuration du Hotspot
+            </button>
+        </div>
+
+        <!-- Section WiFi -->
+        <div class="mb-6">
+            <h4 class="text-lg font-bold mb-2">WiFi</h4>
+            <label for="wifi-ssid" class="block text-gray-700">SSID</label>
+            <input type="text" id="wifi-ssid" class="w-full p-2 mb-2 border rounded-lg">
+
+            <label for="wifi-password" class="block text-gray-700">Mot de passe WPA</label>
+            <input type="password" id="wifi-password" class="w-full p-2 mb-4 border rounded-lg">
+
+            <label for="wifi-toggle" class="flex items-center cursor-pointer mb-4">
+                <div class="relative">
+                    <input type="checkbox" id="wifi-toggle" class="sr-only wifi-toggle">
+                    <div class="block bg-gray-600 w-14 h-8 rounded-full toggle-bg"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                </div>
+                <div class="ml-3 text-gray-700 font-medium">
+                    Activer le WiFi
+                </div>
+            </label>
+            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-4"
+                id="save-wifi-button">
+                Sauvegarder la configuration du WiFi
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const toggles = document.querySelectorAll('.sr-only');
+    const toggleBgs = document.querySelectorAll('.toggle-bg');
+    const dots = document.querySelectorAll('.dot');
+
+    toggles.forEach((toggle, index) => {
+        toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+                dots[index].style.transform = 'translateX(100%)';
+                toggleBgs[index].style.backgroundColor = 'green';
+            } else {
+                dots[index].style.transform = 'translateX(0)';
+                toggleBgs[index].style.backgroundColor = 'gray';
+            }
+        });
+    });
+
+    async function update() {
+        const response = await fetch('/api/update');
+        console.log(response);
+    }
+
+    const saveHotspotButton = document.getElementById('save-hotspot-button');
+    // Add a click event listener to the button
+    saveHotspotButton.addEventListener('click', () => {
+        const data = {
+            hotspot_name: document.getElementById('hotspot-name').value,
+            hotspot_password: document.getElementById('hotspot-password').value,
+            hotspot_enabled: document.getElementById('hotspot-toggle').checked
+        };
+
+        // Send a POST request to the '/hotspot' route
+        fetch('/api/hotspot', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+
+    const saveWifiButton = document.getElementById('save-wifi-button');
+
+    // Add a click event listener to the button
+    saveWifiButton.addEventListener('click', () => {
+        const data = {
+            wifi_ssid: document.getElementById('wifi-ssid').value,
+            wifi_password: document.getElementById('wifi-password').value,
+            wifi_enabled: document.getElementById('wifi-toggle').checked
+        };
+
+        console.log(data);
+
+        fetch('/api/wifi', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+
+
+</script>
+{% endblock %}

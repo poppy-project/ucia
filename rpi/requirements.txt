@@ -8,3 +8,7 @@ matplotlib
 protobuf==3.20
 h5py==2.10.0
 websockets
+aiortc
+aiohttp
+aiohttp_cors
+av

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto mt-10 px-4">
+    <h1 class="text-2xl font-bold mb-4 text-center">Programmes</h1>
+
+    <!-- Bouton d'arrêt -->
+    <!-- <div class="text-center mb-4">
+        <button class="kill-button bg-red-500 text-white px-4 py-2 rounded flex items-center mx-auto">
+            <img src="/static/images/icones/stop.svg" alt="Stop icon" class="mr-2">
+            Arrêter le programme en cours
+        </button>
+    </div> -->
+
+    <!-- Liste des programmes -->
+    {% if programs %}
+    <table class="table-auto w-full mb-8 border-collapse">
+        <thead>
+            <tr>
+                <th class="p-2 border-b-2 border-r-2 border-gray-300">Nom du programme</th>
+                <th class="p-2 border-b-2 border-r-2 border-gray-300">Description</th>
+                <th class="p-2 border-b-2 border-gray-300" style="width: 100px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for program in programs %}
+            <tr>
+                <td class="p-2 border-b border-r border-gray-300">{{ program.display_name }}</td>
+                <td class="p-2 border-b border-r border-gray-300">{{ program.description }}</td>
+                <td class="p-2 text-center border-b border-gray-300 flex flex-col items-center justify-center">
+                    <button data-program="{{ program.file_name }}"
+                        class="run-button bg-green-500 text-white px-8 py-2 rounded flex items-center justify-center w-full mb-2">
+                        <img src="/static/images/icones/play.svg" alt="Run icon" class="mr-2">
+                        Lancer
+                    </button>
+                    <!-- Bouton de suppression -->
+                    <button data-program="{{ program.file_name }}"
+                        class="delete-button bg-red-600 text-white px-8 py-2 rounded flex items-center justify-center w-full">
+                        <img src="/static/images/icones/delete.svg" alt="Delete icon">
+                        Supprimer
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center my-10 mb-4">
+        <p>Aucun programme disponible.</p>
+    </div>
+    {% endif %}
+
+    <!-- Formulaire de téléchargement -->
+    <div class="mb-8 shadow-lg p-6 rounded-lg bg-white max-w-md mx-auto">
+        <form action="/program/upload" method="post" enctype="multipart/form-data">
+            <div class="mb-4">
+                <input type="file" name="file" accept=".py" required id="file" class="hidden"
+                    onchange="this.nextElementSibling.innerText = 'Parcourir les fichiers... (' + this.files[0].name + ')'">
+                <label for="file" class="bg-amber-500 text-white px-4 py-2 rounded cursor-pointer w-full">
+                    Parcourir les fichiers...
+                </label>
+            </div>
+            <div class="mb-4">
+                <input type="text" name="program_name" placeholder="Nom du programme" required
+                    class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <textarea name="description" placeholder="Description" required
+                    class="w-full p-2 border rounded"></textarea>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Télécharger</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    document.querySelectorAll('.run-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const programName = button.getAttribute('data-program');
+            fetch('/program/run', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ program_name: programName })
+            });
+        });
+    });
+
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', () => {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce programme ?')) {
+                const programName = button.getAttribute('data-program');
+                fetch(`/program/delete/${programName}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.reload(); // Recharge la page pour refléter la suppression
+                        } else {
+                            alert('Erreur lors de la suppression du programme');
+                        }
+                    });
+            }
+        });
+    });
+
+    document.querySelector('.kill-button').addEventListener('click', () => {
+        fetch('/api/program/kill', { method: 'POST' });
+    });
+</script>
+{% endblock %}

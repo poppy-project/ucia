@@ -1,0 +1,60 @@
+main {
+    margin: 2% auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 columns */
+    grid-template-rows: repeat(3, 1fr);
+    /* 3 rows */
+    gap: 2em 4em;
+    width: 75%;
+    /* Adjust width as needed */
+    height: 60vh;
+}
+
+main div {
+    color: white;
+    fill: white;
+    background-color: #0d88ec;
+    /* White background for each grid item */
+    border: 3px solid #4faeec;
+    border-radius: 8px;
+    /* Rounded corners */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    /* Smooth hover effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    font-size: 1.5rem;
+}
+
+main div svg {
+    stroke: white;
+}
+
+main div:hover {
+    transform: scale(1.05);
+    /* Slight zoom on hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    /* Increased shadow on hover */
+}
+
+main a {
+    text-decoration: none;
+    /* Remove underline from links */
+    /* Inherit color from parent */
+    width: 100%;
+    /* Full width link area */
+    height: 100%;
+    /* Full height link area */
+    display: flex;
+    /* Flex container for centering */
+    flex-direction: column;
+    /* Stack icon and text vertically */
+    justify-content: center;
+    /* Center content vertically */
+    align-items: center;
+    /* Center content horizontally */
+}
