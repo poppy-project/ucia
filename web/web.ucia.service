@@ -1,0 +1,14 @@
+[Unit]
+Description=Web server API service
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+PIDFile=/run/rosa-wsapi.pid
+Environment="PATH=/usr/bin:/bin:$PATH"
+User=pi
+ExecStart=/home/pi/rosa-master/web/start.sh
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
