@@ -2,6 +2,7 @@ import json
 import time
 import collections
 import websocket as ws
+import logging
 
 from threading import Thread, Event, Lock
 
@@ -20,6 +21,7 @@ class RemoteIO(object):
     def __init__(self, host):
         url = 'ws://{}:1234'.format(host)
         self.ws = ws.create_connection(url)
+        self.logger = logging.getLogger(__name__)
 
         self.last_state = {}
 
@@ -57,5 +59,8 @@ class RemoteIO(object):
 
     def _update_state(self):
         while True:
-            self.last_state.update(json.loads(self.ws.recv()))
-            self._synced.set()
+            try:
+                self.last_state.update(json.loads(self.ws.recv()))
+                self._synced.set()
+            except:
+                self.logger.error("Error to parse receiving state")

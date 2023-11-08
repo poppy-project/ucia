@@ -19,7 +19,7 @@ class CameraServer:
             if len(self.connected) == 0:
                 continue
 
-            _, img = self.camera.grab_frame_loop()
+            img = self.camera.last_frame
             
             if img is None:
                 continue
