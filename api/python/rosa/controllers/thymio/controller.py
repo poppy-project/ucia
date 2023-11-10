@@ -19,7 +19,7 @@ class ThymioRosa(BaseRobot):
 
         # Wheel
         self._left_wheel = Wheel(id='left', side='left', remote_io=self._io)
-        self._right_wheel = Wheel(id='right', side='right', remote_io=self._io, inverse=True)
+        self._right_wheel = Wheel(id='right', side='right', remote_io=self._io)
         
         # LEDS
         self._leds = DynamicObject()
