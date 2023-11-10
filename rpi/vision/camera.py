@@ -4,6 +4,7 @@ import os
 import threading
 import time
 import numpy as np
+import logging
 
 def visual_object_to_dict(vo):
     return {
@@ -15,6 +16,7 @@ def visual_object_to_dict(vo):
 
 class Camera:
     _instance = None
+    logger = logging.getLogger(__name__)
 
     def __new__(cls):
         if cls._instance is None:

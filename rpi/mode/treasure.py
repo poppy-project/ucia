@@ -1,20 +1,33 @@
 import logging
 import cv2 as cv
 
-from controller.thymio.controller import ThymioController
-from vision.camera import Camera
-from tasks.base import Task
-
+# from controller.thymio.controller import ThymioController
+# from vision.camera import Camera
+# from tasks.base import Task
+from rosa import Rosa
 from time import sleep
-from vision import detect_objects
+# from vision import detect_objects
 
 
 chosen = None
 chosen_bonus = 0
 _home_distance = 0.0
 _scan_distance = 0.0
-_scan_speed = 0.03
+_scan_speed = 0.1
 logger = logging.getLogger(__name__)
+
+def flush(rosa):
+    """Reset chosen, flush image buffer."""
+    global _home_distance
+    global chosen
+    global chosen_bonus
+    logger.info(f"COLLECTOR flush buffers")
+    chosen = None
+    chosen_bonus = 0
+    _home_distance = 0.0
+    for i in range(3):
+        # _ = rosa.camera.last_frame
+        sleep(0.2)
 
 def set_speed(rosa, ls, rs):
     rosa.left_wheel.speed = ls
@@ -26,6 +39,10 @@ def choose_object(rosa, threshold=0.4):
     Here, the object with the highest confidence.
     """
     found = None
+    print(rosa.camera.last_detection)
+    if rosa.camera.last_detection is None:
+        return []
+    
     try:
         found = desirable(rosa.camera.last_detection)
     except ValueError:
@@ -40,13 +57,15 @@ def choose_object(rosa, threshold=0.4):
     )
     return object
 
-def desirable(self, objects):
+def desirable(objects):
     """Decide whether we want this kind of object."""
-    return [x for x in objects if x.label == "star"]
+    return [x for x in objects if (x.label == "star" or x.label== "cube" or x.label == "star")]
 
 def scan(rosa):
     """Look around, turning slowly clockwise."""
     # self.logger.info(f"COLLECTOR scanning, dist {self._scan_distance}")
+    global _scan_distance
+    global _scan_speed
     if abs(_scan_distance) > 100:
         _scan_speed = -_scan_speed
     set_speed(rosa, _scan_speed, -_scan_speed * 0.2)
@@ -73,6 +92,7 @@ def track(rosa, object, multiplier=0.6):
 
 def is_close(object, multiplier=0.4, threshold=-10):
     """Do we think this object is close enough to grab?"""
+    global _home_distance
     azimuth = (200 - object.center[0]) * multiplier
     decision = azimuth < threshold or _home_distance > 2
     logger.info(
@@ -99,6 +119,8 @@ def grab(rosa, object, backup=2.0):
 
 def good_candidate(chosen_obj):
     """Remember whether chosen_obj and chosen agree about the object."""
+    global chosen
+    global chosen_bonus
     if chosen:
         if chosen and chosen.label == chosen.label:
             chosen_bonus += 1
@@ -114,26 +136,28 @@ def good_candidate(chosen_obj):
 
 if __name__ == '__main__':
     rosa = Rosa('rosa.local')
+    
     while True:
-        img = rosa.camera.last_frame
-        if img is None:
-            continue
+        # img = rosa.camera.last_frame
+        # if img is None:
+        #     continue
 
         chosen = choose_object(rosa)
+        print(chosen)
         
         if not good_candidate(chosen) or chosen_bonus < 0:
             # Scan clockwise
             scan(rosa)
-            flush()
+            flush(rosa)
             continue
         
         if chosen.confidence > 0.7 or chosen_bonus > 2:
-            logger.info(f"COLLECTOR high confidence for {chosen.label}")
+            print(f"COLLECTOR high confidence for {chosen.label}")
 
             track(rosa, chosen)
             if is_close(chosen):
                 grab(rosa, chosen, backup=_home_distance)
-                flush()
+                flush(rosa)
             else:
                 set_speed(rosa, 0.1, 0.1)
                 # Polling interval imposes backup ~ 1200 ms @

@@ -76,9 +76,11 @@ class IntegratedCamera:
     def last_detection(self):
         # Load the last detection data from the file system
         detected_data_path = os.path.join(self.image_dir, 'detected_data.json')
-        if os.path.exists(detected_data_path):
-            with open(detected_data_path, 'r') as f:
-                detections = json.load(f)
-                visual_objects = [VisualObject(**d) for d in detections]
-            return visual_objects
-        return []
+        try:
+            if os.path.exists(detected_data_path):
+                with open(detected_data_path, 'r') as f:
+                    detections = json.load(f)
+                    visual_objects = [VisualObject(**d) for d in detections]
+                return visual_objects
+        finally:
+            return []
