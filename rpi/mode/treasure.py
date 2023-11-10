@@ -13,7 +13,7 @@ chosen = None
 chosen_bonus = 0
 _home_distance = 0.0
 _scan_distance = 0.0
-_scan_speed = 0.1
+_scan_speed = 0.03
 logger = logging.getLogger(__name__)
 
 def flush(rosa):
@@ -59,7 +59,7 @@ def choose_object(rosa, threshold=0.4):
 
 def desirable(objects):
     """Decide whether we want this kind of object."""
-    return [x for x in objects if (x.label == "star" or x.label== "cube" or x.label == "star")]
+    return [x for x in objects if (x.label == "star" or x.label== "cube" or x.label == "ball")]
 
 def scan(rosa):
     """Look around, turning slowly clockwise."""

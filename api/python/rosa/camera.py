@@ -82,5 +82,6 @@ class IntegratedCamera:
                     detections = json.load(f)
                     visual_objects = [VisualObject(**d) for d in detections]
                 return visual_objects
-        finally:
+        except:
             return []
+        return []
