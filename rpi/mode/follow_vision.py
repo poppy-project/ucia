@@ -72,14 +72,14 @@ def look_around(rosa, speed=0.1):
     rosa.left_wheel.speed = speed
     rosa.right_wheel.speed = -speed
 
-cv.namedWindow('settings')
-cv.createTrackbar('Vmax', 'settings', 75, 255, nothing)
+# cv.namedWindow('settings')
+# cv.createTrackbar('Vmax', 'settings', 75, 255, nothing)
 
 if __name__ == '__main__':
     rosa = Rosa('rosa.local', local_robot=False)
 
     while True:
-        vmax = cv.getTrackbarPos('Vmax', 'settings')
+        vmax = 75
         img = rosa.camera.last_frame
         if img is None:
             continue
@@ -93,8 +93,8 @@ if __name__ == '__main__':
 
         time.sleep(0.16)
 
-        cv.imshow('Line Following', img)
-        if cv.waitKey(1) & 0xFF == ord('q'):
-            break
+        # cv.imshow('Line Following', img)
+        # if cv.waitKey(1) & 0xFF == ord('q'):
+            # break
 
-    cv.destroyAllWindows()
+    # cv.destroyAllWindows()
