@@ -56,8 +56,11 @@ class Camera:
             frame = self.last_frame  # Capture the last available frame
             if frame is not None:
                 self.last_detected_frame = frame  # Assuming detect_objects does not modify the frame
-                self.last_found_obj = detect_objects(frame, render=True)
-
+                try:
+                    self.last_found_obj = detect_objects(frame, render=True)
+                except:
+                    self.logger.error("Error when you call detect_object")
+                    continue
                 # Save the detected image and data
                 detected_img_path = os.path.join(self.image_dir, 'detected_img.jpg')
                 detected_data_path = os.path.join(self.image_dir, 'detected_data.json')
