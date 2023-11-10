@@ -11,15 +11,12 @@ def get_line_centers(img, near_band_center_y, far_band_center_y, band_height, ba
     x1 = (width - band_width) // 2
     x2 = x1 + band_width
 
-    # Adjust the near band to be closer to the bottom of the image (closer to the robot)
     near_y1, near_y2 = (near_band_center_y - band_height // 2, near_band_center_y + band_height // 2)
     near_band = img[near_y1:near_y2, x1:x2]
 
-    # Position the far band closer to the top of the image (closer to the 'wall')
     far_y1, far_y2 = (far_band_center_y - band_height // 2, far_band_center_y + band_height // 2)
     far_band = img[far_y1:far_y2, x1:x2]
 
-    # Draw debugging rectangles
     if render:
         cv.rectangle(img, (x1, near_y1), (x2, near_y2), (255, 0, 0), 2)  # Near band (blue rectangle)
         cv.rectangle(img, (x1, far_y1), (x2, far_y2), (0, 255, 0), 2)    # Far band (green rectangle)
@@ -48,20 +45,15 @@ def get_line_centers(img, near_band_center_y, far_band_center_y, band_height, ba
 
 def follow_line(rosa, near_center, far_center, base_speed=0.1, gain=0.1, img_width=640):
     if near_center is None:
-        # If no near center, stop or look around
         look_around(rosa)
         return
 
-    # Calculate dx for near center
     near_dx = ((near_center[0] / img_width) - 0.5) * 2
 
-    # Start with the base speed
     ls = rs = base_speed
 
-    # If far center is detected, check alignment
     if far_center:
         far_dx = ((far_center[0] / img_width) - 0.5) * 2
-        # Check if far center is aligned with near center
         if abs(far_dx - near_dx) < 0.1:
             # If aligned, maintain or increase speed
             ls += gain * near_dx
@@ -92,7 +84,7 @@ if __name__ == '__main__':
         if img is None:
             continue
 
-        height, width, _ = img.shape  # Get the height and width from the image shape
+        height, width, _ = img.shape 
 
         near_center, far_center = get_line_centers(img, near_band_center_y=height-50, far_band_center_y=height - 150, band_height=50, band_width_ratio=0.75, vmax=vmax, render=True)
         print(f"Near Center: {near_center}, Far Center: {far_center}")
@@ -100,8 +92,6 @@ if __name__ == '__main__':
         follow_line(rosa, near_center, far_center)
 
         time.sleep(0.16)
-        # rosa.left_wheel.speed = 0
-        # rosa.right_wheel.speed = 0
 
         cv.imshow('Line Following', img)
         if cv.waitKey(1) & 0xFF == ord('q'):
