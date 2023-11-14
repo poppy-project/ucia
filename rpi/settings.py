@@ -6,6 +6,8 @@ class RobotState(Enum):
 
 status: RobotState = RobotState.MODE
 
+loading_model = True
+
 def set_status(new_status: RobotState):
     global status
     status = new_status
