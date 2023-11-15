@@ -54,11 +54,12 @@ class Camera:
 
     def _detect_objects_continuously(self):
         from .object_detector import detect_objects
+        last_detection_time = time.time()
 
         while True:
-            frame = self.last_frame  # Capture the last available frame
+            frame = self.last_frame 
             if frame is not None:
-                self.last_detected_frame = frame  # Assuming detect_objects does not modify the frame
+                self.last_detected_frame = frame
                 try:
                     self.last_found_obj = detect_objects(frame, render=True)
                     settings.loading_model = False
@@ -69,8 +70,9 @@ class Camera:
                 detected_img_path = os.path.join(self.image_dir, 'detected_img.jpg')
                 detected_data_path = os.path.join(self.image_dir, 'detected_data.json')
                 
-                if self.last_found_obj:
-                    
+                if self.last_found_obj or time.time() - self.last_detection_time >= 3:
+                    self.last_detection_time = time.time()
+                                        
                     cv.imwrite(detected_img_path, frame)
                     with open(detected_data_path, 'w') as f:
                         json_data = [visual_object_to_dict(vo) for vo in self.last_found_obj]

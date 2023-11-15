@@ -16,6 +16,18 @@ _scan_distance = 0.0
 _scan_speed = 0.03
 logger = logging.getLogger(__name__)
 
+def set_led_color(rosa, color):
+    """Set LED color based on the robot's current state."""
+    if color == 'blue':
+        rosa.leds.bottom.left.color = [0, 0, 32] 
+        rosa.leds.bottom.right.color = [0, 0, 32]
+    elif color == 'red':
+        rosa.leds.bottom.left.color = [32, 0, 0] 
+        rosa.leds.bottom.right.color = [32, 0, 0]
+    elif color == 'green':
+        rosa.leds.bottom.left.color = [0, 32, 0]
+        rosa.leds.bottom.right.color = [0, 32, 0]
+
 def flush(rosa):
     """Reset chosen, flush image buffer."""
     global _home_distance
@@ -39,8 +51,12 @@ def choose_object(rosa, threshold=0.4):
     Here, the object with the highest confidence.
     """
     found = None
-    print(rosa.camera.last_detection)
+    
+    # print(rosa.camera.last_detection)
+    
     if rosa.camera.last_detection is None:
+        set_led_color(rosa, 'red')
+        rosa.sound.system(1)
         return []
     
     try:
@@ -70,6 +86,7 @@ def scan(rosa):
         _scan_speed = -_scan_speed
     set_speed(rosa, _scan_speed, -_scan_speed * 0.2)
     _scan_distance += _scan_speed / 0.03 * 2
+    set_led_color(rosa, 'blue')
 
 def stop(rosa):
     """Stop turning."""
@@ -105,6 +122,7 @@ def grab(rosa, object, backup=2.0):
     logger.info(
         f"COLLECTOR grab {object.label} then back up additional {backup}"
     )
+    set_led_color(rosa, 'green')
     set_speed(rosa, 0.2, 0.2)
     sleep(2.4)
     set_speed(rosa,-0.25, 0.25)
@@ -116,6 +134,9 @@ def grab(rosa, object, backup=2.0):
     set_speed(rosa,0.30, -0.30)
     sleep(3.0)
     set_speed(rosa, 0, 0)
+    rosa.sound.system(4)
+    set_led_color(rosa, 'blue')
+
 
 def good_candidate(chosen_obj):
     """Remember whether chosen_obj and chosen agree about the object."""
