@@ -70,8 +70,8 @@ class Camera:
                 detected_img_path = os.path.join(self.image_dir, 'detected_img.jpg')
                 detected_data_path = os.path.join(self.image_dir, 'detected_data.json')
                 
-                if self.last_found_obj or time.time() - self.last_detection_time >= 3:
-                    self.last_detection_time = time.time()
+                if self.last_found_obj or time.time() - last_detection_time >= 3:
+                    last_detection_time = time.time()
                                         
                     cv.imwrite(detected_img_path, frame)
                     with open(detected_data_path, 'w') as f:

@@ -102,7 +102,7 @@ class ThymioManager(BaseManager):
         print()
 
         script_path = f"/home/pi/rosa-master/rpi/mode/{self.tasks[self.current_mode]}"
-        self.current_process = subprocess.Popen(['python3', script_path])
+        self.current_process = subprocess.Popen(['/usr/bin/python3', script_path])
 
 
     def close(self):
