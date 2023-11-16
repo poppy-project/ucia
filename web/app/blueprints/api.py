@@ -25,20 +25,6 @@ def update():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-def update_hostapd_conf(ssid, passphrase):
-    conf_path = '/etc/hostapd/hostapd.conf'
-    with open(conf_path, 'r') as file:
-        lines = file.readlines()
-
-    with open(conf_path, 'w') as file:
-        for line in lines:
-            if line.startswith('ssid='):
-                file.write(f'ssid={ssid}\n')
-            elif line.startswith('wpa_passphrase='):
-                file.write(f'wpa_passphrase={passphrase}\n')
-            else:
-                file.write(line)
-
 @api.route('/hotspot', methods=['POST'])
 def update_hotspot():
     try:
@@ -52,36 +38,30 @@ def update_hotspot():
             
         if hotspot_enabled:
             subprocess.run(['sudo', 'systemctl', 'restart', 'hostapd'])
+            subprocess.run(['sudo', 'systemctl', 'restart', 'dnsmasq'])
             subprocess.run(['sudo', 'systemctl', 'stop', 'wpa_supplicant'])
         
         return jsonify({'message': 'Hotspot updated successfully'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-def update_wpa_supplicant_conf(ssid, passphrase):
-    conf_path = '/etc/wpa_supplicant/wpa_supplicant.conf'
-    with open(conf_path, 'w') as file:
-        file.write("ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n")
-        file.write("update_config=1\n")
-        file.write(f"network={{\n")
-        file.write(f"    ssid=\"{ssid}\"\n")
-        file.write(f"    psk=\"{passphrase}\"\n")
-        file.write(f"}}\n")
+# @api.route('/wifi', methods=['POST'])
+# def update_wifi():
+#     try:
+#         data = request.get_json()
+#         wifi_ssid = data.get('wifi_ssid')
+#         wifi_password = data.get('wifi_password')
+#         wifi_enabled = data.get('wifi_enabled')
 
-@api.route('/wifi', methods=['POST'])
-def update_wifi():
-    try:
-        data = request.get_json()
-        wifi_ssid = data.get('wifi_ssid')
-        wifi_password = data.get('wifi_password')
-        wifi_enabled = data.get('wifi_enabled')
+#         if wifi_enabled:
+#             script_path = os.path.join(os.getcwd(), 'scripts', 'update_wifi_conf.sh')
+#             subprocess.run(['sudo', script_path, wifi_ssid, wifi_password], check=True)
+#             subprocess.run(['systemctl', 'restart', 'wpa_supplicant'])
+#             subprocess.run(['systemctl', 'stop', 'hostapd'])
+#             subprocess.run(['systemctl', 'stop', 'dnsmasq']) 
+#         else:
+#             subprocess.run(['systemctl', 'stop', 'wpa_supplicant'])
 
-        update_wpa_supplicant_conf(wifi_ssid, wifi_password)
-        
-        if wifi_enabled:
-            subprocess.run(['sudo', 'systemctl', 'restart', 'wpa_supplicant'])
-            subprocess.run(['sudo', 'systemctl', 'stop', 'hostapd'])
-
-        return jsonify({'message': 'Wi-Fi updated successfully'}), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+#         return jsonify({'message': 'Wi-Fi updated successfully'}), 200
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
