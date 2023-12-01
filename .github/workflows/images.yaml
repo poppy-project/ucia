@@ -1,0 +1,35 @@
+name: Release files
+on:
+  push:
+jobs:
+  pre-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: usimd/pi-gen-action@v1
+        with:
+          image-name: ucia
+          verbose-output: true
+          # enable-ssh: 1
+          # keyboard-keymap: fr
+          # # keyboard-layout: 
+          # disable-first-boot-user-rename: 1
+          # hostname: ucia
+          # username: pi
+          # password: 'rosa'
+          # release: buster
+          # wpa-essid: 'ucia'
+          # wpa-password : 'rosa'
+      # runs-on: ubuntu-latest
+      # steps:
+      #   - uses: actions/checkout@v2
+
+      #   # Supprimer l'ancienne pré-release (Pseudo-code)
+      #   - name: Delete previous pre-release
+      #     run: |
+      #       # Utilisez l'API GitHub ou un script pour trouver et supprimer l'ancienne pré-release
+
+      #   # Créer une nouvelle pré-release (Pseudo-code)
+      #   - name: Create new pre-release
+      #     run: |
+      #       # Générer un nouveau tag unique
+      #       # Utilisez l'API GitHub pour créer une nouvelle pré-release avec ce tag
