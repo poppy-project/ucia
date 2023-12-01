@@ -5,6 +5,7 @@ jobs:
   pre-release:
     runs-on: ubuntu-latest
     steps:
+      - run: .github/workflows/copy.sh
       - uses: usimd/pi-gen-action@v1
         with:
           image-name: ucia
@@ -19,6 +20,7 @@ jobs:
           release: buster
           wpa-essid: 'ucia'
           wpa-password : 'rosa-ucia'
+          stage: stage0 stage1 stage2 stage3 stage4 stage-install
       - uses: actions/upload-artifact@v3
         with:
           name: ucia
