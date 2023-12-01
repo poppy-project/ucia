@@ -1,4 +1,4 @@
-name: Release files
+name: Image Builder
 on:
   push:
 jobs:
@@ -9,16 +9,20 @@ jobs:
         with:
           image-name: ucia
           verbose-output: true
-          # enable-ssh: 1
+          enable-ssh: 1
           # keyboard-keymap: fr
           # # keyboard-layout: 
-          # disable-first-boot-user-rename: 1
-          # hostname: ucia
-          # username: pi
-          # password: 'rosa'
-          # release: buster
-          # wpa-essid: 'ucia'
-          # wpa-password : 'rosa'
+          disable-first-boot-user-rename: 1
+          hostname: ucia
+          username: pi
+          password: 'rosa'
+          release: buster
+          wpa-essid: 'ucia'
+          wpa-password : 'rosa'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ucia
+          path: ${{ steps.build.outputs.image-path }}
       # runs-on: ubuntu-latest
       # steps:
       #   - uses: actions/checkout@v2
