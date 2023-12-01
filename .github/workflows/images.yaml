@@ -18,7 +18,7 @@ jobs:
           password: 'rosa'
           release: buster
           wpa-essid: 'ucia'
-          wpa-password : 'rosa'
+          wpa-password : 'rosa-ucia'
       - uses: actions/upload-artifact@v3
         with:
           name: ucia
