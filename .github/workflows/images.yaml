@@ -5,22 +5,24 @@ jobs:
   pre-release:
     runs-on: ubuntu-latest
     steps:
-      - run: .github/workflows/copy.sh
+      - uses: actions/checkout@v3
+      - name: Copy install files in stage
+        run: .github/workflows/copy.sh ${{ github.workspace }}/${{ inputs.custom-pi-gen-dir }}
       - uses: usimd/pi-gen-action@v1
         with:
           image-name: ucia
           verbose-output: true
           enable-ssh: 1
           # keyboard-keymap: fr
-          # # keyboard-layout: 
+          # keyboard-layout: 
           disable-first-boot-user-rename: 1
           hostname: ucia
           username: pi
           password: 'rosa'
-          release: buster
           wpa-essid: 'ucia'
           wpa-password : 'rosa-ucia'
-          stage: stage0 stage1 stage2 stage3 stage4 stage-install
+          # timezone: Europe/Paris
+          stage-list: stage-install stage0 stage1 stage2 stage3 stage4
       - uses: actions/upload-artifact@v3
         with:
           name: ucia
