@@ -18,6 +18,7 @@ jobs:
           disable-first-boot-user-rename: 1
           hostname: ucia
           username: pi
+          release: buster
           password: 'rosa'
           wpa-essid: 'ucia'
           wpa-password : 'rosa-ucia'
