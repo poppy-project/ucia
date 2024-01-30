@@ -8,11 +8,11 @@ jobs:
       - uses: usimd/pi-gen-action@v1
         id: build
         with:
-          compression: zip
-          disable-first-boot-user-rename: 0
+          compression: none
+          disable-first-boot-user-rename: 1
           enable-ssh: 1 
           hostname: ucia
-          image-name: ucia
+          image-name: 'ucia'
           keyboard-layout : "French - French (AZERTY)"
           password: 'rosa'
           release: bookworm
@@ -20,8 +20,8 @@ jobs:
           username: pi
           verbose-output: true
           wpa-essid: 'ucia'
-          wpa-password : 'uciarosa'
+          wpa-password : 'rosaucia'
       - uses: actions/upload-artifact@v4
         with:
-          name: ucia
-          path: ${{ steps.build.outputs.image-path }}
+          name: 'ucia'
+          path: ${{ steps.build.outputs.image-path }}<
