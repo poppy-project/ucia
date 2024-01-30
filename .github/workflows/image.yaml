@@ -1,0 +1,26 @@
+name: Image Creation
+on:
+  push:
+jobs:
+  pre-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: usimd/pi-gen-action@v1
+        with:
+          compression: zip
+          disable-first-boot-user-rename: 0
+          enable-ssh: 1 
+          hostname: ucia
+          image-name: ucia
+          keyboard-layout : "French - French (AZERTY)"
+          password: 'rosa'
+          release: bookworm
+          timezone: Europe/Paris
+          username: pi
+          verbose-output: true
+          wpa-essid: 'ucia'
+          wpa-password : 'rosa'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ucia
+          path: ${{ steps.build.outputs.image-path }}
