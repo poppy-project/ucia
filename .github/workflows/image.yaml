@@ -19,7 +19,7 @@ jobs:
           username: pi
           verbose-output: true
           wpa-essid: 'ucia'
-          wpa-password : 'rosa'
+          wpa-password : 'uciarosa'
       - uses: actions/upload-artifact@v3
         with:
           name: ucia
