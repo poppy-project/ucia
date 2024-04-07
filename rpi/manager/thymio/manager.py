@@ -79,8 +79,6 @@ class ThymioManager(BaseManager):
 
     def run(self):
         self.logger.debug(f"Actual mode {settings.status}")
-        # if settings.status != settings.RobotState.MODE:
-            # return
 
         if settings.loading_model:
             self.controller.set_led("circle", self.H)
@@ -96,10 +94,7 @@ class ThymioManager(BaseManager):
 
     
     def run_process(self):
-        if self.current_process is not None:
-            self.close()
-
-        print()
+        self.close()
 
         script_path = f"/home/pi/rosa-master/rpi/mode/{self.tasks[self.current_mode]}"
         self.current_process = subprocess.Popen(['/usr/bin/python3', script_path])
