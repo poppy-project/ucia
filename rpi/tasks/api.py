@@ -4,8 +4,9 @@ from controller.base import BaseController
 from tasks.base import Task
 
 from sockets.input_output import InputOuputServer
-from sockets.camera import CameraServer
+from sockets.vision import VisionServer
 from sockets.webrtc import WebRTC
+
 import asyncio
 import threading
 
@@ -26,8 +27,10 @@ class API(Task):
         self.input_output = InputOuputServer(self.controller)
         self.input_output.run()
 
-        self.camera_server = CameraServer()
-        self.camera_server.run()
+        self.vision_server = VisionServer()
+
+        # self.camera_server = CameraServer()
+        # self.camera_server.run()
         
         self.webrtc_server = WebRTC()
         self.webrtc_server.run()

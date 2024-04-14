@@ -18,6 +18,25 @@
     <video id="remoteVideoDetection" autoplay style="display: none;"></video>
 </div>
 
+<div class="input-container">
+    <label for="brightness">Brightness:</label>
+    <input type="number" id="brightness" name="brightness" min="0" max="100" value="50">
+
+    <label for="saturation">Saturation:</label>
+    <input type="number" id="saturation" name="saturation" min="0" max="100" value="50">
+
+    <label for="contrast">Contrast:</label>
+    <input type="number" id="contrast" name="contrast" min="0" max="100" value="50">
+
+    <label for="exposure">Exposure:</label>
+    <input type="number" id="exposure" name="exposure" min="0" max="100" value="50">
+</div>
+
+<div class="button-container">
+    <button id="updateButton" class="btn">Mettre à jour la configuration</button>
+</div>
+
+
 <script>
     const remoteVideoCamera = document.getElementById('remoteVideoCamera');
     const remoteVideoDetection = document.getElementById('remoteVideoDetection');
@@ -117,6 +136,27 @@
     // Start the camera and detection WebRTC connections by default
     startCameraConnection();
     startDetectionConnection();
+
+    document.getElementById('updateButton').addEventListener('click', function() {
+    
+    const config = {
+        brightness: parseInt(document.getElementById('brightness').value),
+        saturation: parseInt(document.getElementById('saturation').value),
+        contrast: parseInt(document.getElementById('contrast').value),
+        exposure: parseInt(document.getElementById('exposure').value)
+    };
+
+    fetch('http://localhost/camera/update_config', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(config)
+    })
+    .then(response => response.json())
+    .catch(error => console.error('Error:', error));
+});
+
 </script>
 
 <style>

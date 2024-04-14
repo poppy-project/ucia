@@ -4,11 +4,12 @@ import json
 from flask import Blueprint, render_template
 from .blueprints.api import api
 from .blueprints.programs import programs
+from .blueprints.camera import camera
 
 main = Blueprint("main", __name__)
 main.register_blueprint(api, url_prefix='/api')
 main.register_blueprint(programs, url_prefix='/program')
-
+main.register_blueprint(camera, url_prefix='/camera')
 @main.context_processor
 def inject_robot_config():
     return dict(version="0.1")

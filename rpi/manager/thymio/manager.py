@@ -80,13 +80,13 @@ class ThymioManager(BaseManager):
     def run(self):
         self.logger.debug(f"Actual mode {settings.status}")
 
-        if settings.loading_model:
-            self.controller.set_led("circle", self.H)
-            self.H = self.H[-1:] + self.H[:-1]
-        elif not(settings.loading_model) and self.first:
-            self.H = [0] * 8
-            self.controller.set_led("circle", self.H)
-            self.first = False
+        # if settings.loading_model:
+        #     self.controller.set_led("circle", self.H)
+        #     self.H = self.H[-1:] + self.H[:-1]
+        # elif not(settings.loading_model) and self.first:
+        self.H = [0] * 8
+        self.controller.set_led("circle", self.H)
+        self.first = False
 
         self.change_mode()
 

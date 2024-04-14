@@ -155,7 +155,7 @@ class WebRTC:
         self.runner = web.AppRunner(self.app)
         await self.runner.setup()
 
-        self.site = web.TCPSite(self.runner, '0.0.0.0', 8080)
+        self.site = web.TCPSite(self.runner, 'rosa.local', 8080)
         await self.site.start()
 
     def run(self):

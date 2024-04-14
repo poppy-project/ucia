@@ -1,19 +1,36 @@
-import cv2 as cv
+import cv2
 import json
 import os
 import threading
 import time
 import numpy as np
 import logging
-import settings 
+from settings import Config
+import shutil
+import tempfile
 
-def visual_object_to_dict(vo):
-    return {
-        'label': vo.label,
-        'center': tuple(float(c) for c in vo.center),
-        'box': [float(b) for b in vo.box.tolist()],
-        'confidence': float(vo.confidence)
-    }
+def write_image_safely(frame, target_dir, filename='camera.jpg'):
+    os.makedirs(target_dir, exist_ok=True)
+
+    temp_fd, temp_path = tempfile.mkstemp(suffix='.jpg', dir=target_dir)
+    try:
+        cv2.imwrite(temp_path, frame)
+        os.close(temp_fd)
+        temp_fd = None
+    finally:
+        if temp_fd is not None:
+            os.close(temp_fd)
+            os.remove(temp_path)
+            raise
+
+    final_path = os.path.join(target_dir, filename)
+
+    # Remove the existing file if it exists
+    if os.path.exists(final_path):
+        os.remove(final_path)
+
+    shutil.move(temp_path, final_path)
+    return final_path
 
 class Camera:
     _instance = None
@@ -26,7 +43,10 @@ class Camera:
         return cls._instance
 
     def _init_camera(self):
-        self.cap = cv.VideoCapture(0)
+        self.cap = cv2.VideoCapture(0)
+
+        self.update_camera_settings()
+
         self.last_frame = None
         self.last_detected_frame = None
         self.last_found_obj = np.empty((0, 0))
@@ -42,17 +62,20 @@ class Camera:
         self.detect_thread.daemon = True
         self.detect_thread.start()
 
+    
     def _capture_frames(self):
         while True:
             ret, frame = self.cap.read()
             if ret:
                 original_img_path = os.path.join(self.image_dir, 'camera.jpg')
-                cv.imwrite(original_img_path, frame)
+                #write_image_safely(frame, self.image_dir)
+                cv2.imwrite(original_img_path, frame)
                 self.last_frame = frame
             
-            time.sleep(0.010)
+            time.sleep(0.1)
 
     def _detect_objects_continuously(self):
+        self.last_detected_frame = self.last_frame
         pass
         # from .object_detector import detect_objects
         # last_detection_time = time.time()
@@ -107,6 +130,18 @@ class Camera:
         :return: detected_frame: ndarray
         """
         return self.last_detected_frame
+    
+    def update_camera_settings(self):
+        config = Config()
+        camera_config = config.get_config("camera")
+
+        if camera_config is None:
+            return
+
+        self.cap.set(cv2.CAP_PROP_BRIGHTNESS, camera_config["brightness"])
+        self.cap.set(cv2.CAP_PROP_EXPOSURE, camera_config["exposure"])
+        self.cap.set(cv2.CAP_PROP_CONTRAST, camera_config["contrast"])
+        self.cap.set(cv2.CAP_PROP_SATURATION, camera_config["saturation"])
 
     def __del__(self):
         self.cap.release()
