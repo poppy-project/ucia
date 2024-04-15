@@ -97,7 +97,7 @@ def combined_follow_line(rosa, near_center, reflected):
             following_left_edge = left_sensor > right_sensor
 
 if __name__ == '__main__':
-    rosa = Rosa('rosa.local', local_robot=False)
+    rosa = Rosa('rosa.local', local_robot=True)
     while True:
 
         near_center  = None

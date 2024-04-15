@@ -54,12 +54,14 @@ def choose_object(rosa, threshold=0.4):
     
     # print(rosa.camera.last_detection)
     
+    print(rosa.camera)
     if rosa.camera.last_detection is None:
         set_led_color(rosa, 'red')
         rosa.sound.system(1)
         return []
     
     try:
+        print("last_detection", rosa.camera.last_detection)
         found = desirable(rosa.camera.last_detection)
     except ValueError:
         logger.warn("COLLECTOR ignore exception in Yolo3 rectangle drawing!")
@@ -75,6 +77,7 @@ def choose_object(rosa, threshold=0.4):
 
 def desirable(objects):
     """Decide whether we want this kind of object."""
+    print(objects)
     return [x for x in objects if (x.label == "star" or x.label== "cube" or x.label == "ball")]
 
 def scan(rosa):
@@ -124,7 +127,7 @@ def grab(rosa, object, backup=2.0):
     )
     set_led_color(rosa, 'green')
     set_speed(rosa, 0.2, 0.2)
-    sleep(2.4)
+    sleep(6)
     set_speed(rosa,-0.25, 0.25)
     sleep(3.6)
     set_speed(rosa,0.20, 0.20)

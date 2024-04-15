@@ -7,6 +7,7 @@ import numpy as np
 import logging
 import settings 
 from settings import Config
+from vision.detect import detect_object
 
 def visual_object_to_dict(vo):
     return {
@@ -58,24 +59,23 @@ class Camera:
 
     def _detect_objects_continuously(self):
         last_detection_time = time.time()
+        settings.loading_model = False
 
         while True:
             frame = self.last_frame 
             if frame is not None:
-                self.last_detected_frame = frame
-
-                settings.loading_model = False
+                last_found_obj, self.last_detected_frame = detect_object(self.last_frame)
+                print(last_found_obj)
                 # Save the detected image and data
                 
                 detected_img_path = os.path.join(self.image_dir, 'detected_img.jpg')
                 detected_data_path = os.path.join(self.image_dir, 'detected_data.json')
+                cv2.imwrite(detected_img_path, self.last_detected_frame)
                 
                 if self.last_found_obj or time.time() - last_detection_time >= 3:
                     last_detection_time = time.time()
-                                        
-                    cv2.imwrite(detected_img_path, frame)
                     with open(detected_data_path, 'w') as f:
-                        json_data = [] # TODO: Add detected object
+                        json_data = last_found_obj 
                         json.dump(json_data, f)
             time.sleep(0.010)
 

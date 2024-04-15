@@ -50,10 +50,9 @@ class CameraRemote(object):
             self._buff.append(img)
 
 class VisualObject:
-    def __init__(self, label, center, box, confidence):
+    def __init__(self, label, center, confidence):
         self.label = label
         self.center = center
-        self.box = box
         self.confidence = confidence
 
 class IntegratedCamera:
@@ -80,7 +79,9 @@ class IntegratedCamera:
             if os.path.exists(detected_data_path):
                 with open(detected_data_path, 'r') as f:
                     detections = json.load(f)
+                    print("detection : ", detections)
                     visual_objects = [VisualObject(**d) for d in detections]
+                print("visual", visual_objects)
                 return visual_objects
         except:
             return []
