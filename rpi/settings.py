@@ -26,7 +26,7 @@ class Config:
         return cls._instance
 
     def __init__(self):
-        self.filepath = Path("config_dev.json")
+        self.filepath = Path(__file__).parent / ("config_dev.json")
         # Configuration par défaut
         self.config_data = {
             "camera": {
