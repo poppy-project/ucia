@@ -1,6 +1,7 @@
 import json
 import paho.mqtt.client as mqtt
 from vision.camera import Camera
+from settings import Config
 
 import random
 
@@ -27,7 +28,11 @@ class VisionServer:
 
     def on_message(self, client, userdata, message):
         print("topic :", message.topic)
+
         # Update the camera configuration upon receiving a new message
         new_config = json.loads(message.payload)
-        # self.config.update(new_config)
-        # print("Updated configuration:", self.config)
+
+        config = Config()
+        config.update_config("camera", **new_config)
+
+        self.camera.update_camera_settings()

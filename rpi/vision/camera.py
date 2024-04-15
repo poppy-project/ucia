@@ -1,4 +1,4 @@
-import cv2 as cv
+import cv2
 import json
 import os
 import threading
@@ -6,6 +6,7 @@ import time
 import numpy as np
 import logging
 import settings 
+from settings import Config
 
 def visual_object_to_dict(vo):
     return {
@@ -26,7 +27,10 @@ class Camera:
         return cls._instance
 
     def _init_camera(self):
-        self.cap = cv.VideoCapture(0)
+        self.cap = cv2.VideoCapture(0)
+
+        self.update_camera_settings()
+
         self.last_frame = None
         self.last_detected_frame = None
         self.last_found_obj = np.empty((0, 0))
@@ -47,7 +51,7 @@ class Camera:
             ret, frame = self.cap.read()
             if ret:
                 original_img_path = os.path.join(self.image_dir, 'camera.jpg')
-                cv.imwrite(original_img_path, frame)
+                cv2.imwrite(original_img_path, frame)
                 self.last_frame = frame
             
             time.sleep(0.010)
@@ -69,7 +73,7 @@ class Camera:
                 if self.last_found_obj or time.time() - last_detection_time >= 3:
                     last_detection_time = time.time()
                                         
-                    cv.imwrite(detected_img_path, frame)
+                    cv2.imwrite(detected_img_path, frame)
                     with open(detected_data_path, 'w') as f:
                         json_data = [] # TODO: Add detected object
                         json.dump(json_data, f)
@@ -102,6 +106,18 @@ class Camera:
         :return: detected_frame: ndarray
         """
         return self.last_detected_frame
+    
+    def update_camera_settings(self):
+        config = Config()
+        camera_config = config.get_config("camera")
 
+        if camera_config is None:
+            return
+
+        self.cap.set(cv2.CAP_PROP_BRIGHTNESS, camera_config["brightness"])
+        self.cap.set(cv2.CAP_PROP_EXPOSURE, camera_config["exposure"])
+        self.cap.set(cv2.CAP_PROP_CONTRAST, camera_config["contrast"])
+        self.cap.set(cv2.CAP_PROP_SATURATION, camera_config["saturation"])
+    
     def __del__(self):
         self.cap.release()

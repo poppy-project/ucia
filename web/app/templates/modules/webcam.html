@@ -18,6 +18,38 @@
     <video id="remoteVideoDetection" autoplay style="display: none;"></video>
 </div>
 
+<div>
+    <div class="flex flex-rows p-4 justify-around">
+        <div>
+            <label for="brightness" class="block text-gray-700 text-sm font-bold mb-2">Brightness:</label>
+            <input type="number" id="brightness" name="brightness" min="0" max="100" value="50"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+    
+        <div>
+            <label for="saturation" class="block text-gray-700 text-sm font-bold mb-2">Saturation:</label>
+            <input type="number" id="saturation" name="saturation" min="0" max="100" value="50"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+    
+        <div>
+            <label for="contrast" class="block text-gray-700 text-sm font-bold mb-2">Contrast:</label>
+            <input type="number" id="contrast" name="contrast" min="0" max="100" value="50"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+    
+        <div>
+            <label for="exposure" class="block text-gray-700 text-sm font-bold mb-2">Exposure:</label>
+            <input type="number" id="exposure" name="exposure" min="0" max="100" value="50"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+    </div>
+        
+    <div class="button-container flex justify-start space-x-4 p-4">
+        <button id="updateButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Mettre à jour la configuration</button>
+    </div>
+</div>
+
 <script>
     const remoteVideoCamera = document.getElementById('remoteVideoCamera');
     const remoteVideoDetection = document.getElementById('remoteVideoDetection');
@@ -117,6 +149,28 @@
     // Start the camera and detection WebRTC connections by default
     startCameraConnection();
     startDetectionConnection();
+
+    document.getElementById('updateButton').addEventListener('click', function() {
+    
+        const config = {
+            brightness: parseInt(document.getElementById('brightness').value),
+            saturation: parseInt(document.getElementById('saturation').value),
+            contrast: parseInt(document.getElementById('contrast').value),
+            exposure: parseInt(document.getElementById('exposure').value)
+        };
+
+        console.log(config);
+
+        fetch('webcam/update_config', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(config)
+        })
+        .then(response => response.json())
+        .catch(error => console.error('Error:', error));
+    });
 </script>
 
 <style>
