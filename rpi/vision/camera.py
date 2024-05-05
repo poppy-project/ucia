@@ -20,6 +20,8 @@ def visual_object_to_dict(vo):
 class Camera:
     _instance = None
     logger = logging.getLogger(__name__)
+    width = 1280
+    height = 960
 
     def __new__(cls):
         if cls._instance is None:
@@ -29,6 +31,10 @@ class Camera:
 
     def _init_camera(self):
         self.cap = cv2.VideoCapture(0)
+
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+
 
         self.update_camera_settings()
 
@@ -113,6 +119,10 @@ class Camera:
 
         if camera_config is None:
             return
+
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+
 
         self.cap.set(cv2.CAP_PROP_BRIGHTNESS, camera_config["brightness"])
         self.cap.set(cv2.CAP_PROP_EXPOSURE, camera_config["exposure"])
