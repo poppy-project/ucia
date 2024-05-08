@@ -5,7 +5,7 @@ from rosa.vision import detect_objects
 
 
 if __name__ == '__main__':
-    rosa = Rosa('rosa.local')
+    rosa = Rosa('rosa.local', local_robot=False)
 
     while True:
         img = rosa.camera.last_frame
