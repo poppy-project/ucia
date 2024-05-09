@@ -23,7 +23,7 @@ def detect_aruco(image):
     else:
         print("Aucun marqueur détecté.")
 
-    return image
+    return image, markerCorners, markerIds
 
 if __name__ == '__main__':
     rosa = Rosa('rosa.local', local_robot=False)
@@ -36,7 +36,7 @@ if __name__ == '__main__':
         if img is None:
             continue
 
-        frame_with_markers = detect_aruco(img)
+        frame_with_markers, corners, ids = detect_aruco(img)
 
         cv.imshow('rosa', frame_with_markers)
         cv.waitKey(20)
