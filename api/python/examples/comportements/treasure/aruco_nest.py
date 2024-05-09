@@ -1,10 +1,6 @@
 import cv2 as cv
-
-from rosa import Rosa
-
 import cv2.aruco as aruco
 import numpy as np
-import time
 
 def stop_robot(rosa):
     rosa.left_wheel.speed = 0.0
@@ -93,16 +89,3 @@ def go_to_aruco(rosa, img):
         change_state = follow_marker(rosa, target, marker_size, stop_size=220)
     
     return change_state
-
-if __name__ == '__main__':
-    rosa = Rosa('rosa.local', local_robot=False)
-
-    while True:
-        img = rosa.camera.last_frame
-
-        if img is None:
-            continue
-        
-        go_to_aruco(rosa, img)
-        time.sleep(0.016)
-        cv.waitKey(20)
