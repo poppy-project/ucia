@@ -10,6 +10,7 @@ from rosa.vision import detect_objects
 import cv2.aruco as aruco
 
 from treasure.aruco_nest import go_to_aruco, turn_behind
+from treasure.leds import set_led_color
 
 class StateTreasure(Enum):
     SEARCH_CUBE = 1
@@ -38,16 +39,23 @@ if __name__ == '__main__':
     rosa = Rosa('rosa.local', local_robot=False)
     state = StateTreasure.SEARCH_CUBE
     timer = time.time()
+    
+    set_led_color(rosa, 'yellow')
 
     while True:
         img = rosa.camera.last_frame
 
         if img is None:
             continue
-
+        #state = StateTreasure.PUT_CUBE_LINE
         
-
-        if state == StateTreasure.SEARCH_CUBE:
+        if state == StateTreasure.PUT_CUBE_LINE:
+            if go_to_aruco(rosa, img):
+                state = StateTreasure.GO_BEHIND
+                timer = time.time()
+                set_led_color(rosa, 'purple')
+            time.sleep(0.2)
+        elif state == StateTreasure.SEARCH_CUBE:
             try:
                 found_obj = detect_objects(img, render=True)
             except:
@@ -57,18 +65,17 @@ if __name__ == '__main__':
             if not cubes:  # We can't find a cube so we have to look around
                 look_around(rosa)
             else:
-                has_gathered_cube = any([c for c in cubes if c.center[1] > 220 and 150 < c.center[0] < 200])
+                has_gathered_cube = any([c for c in cubes if c.center[1] > 220 and 100 < c.center[0] < 200])
                 if has_gathered_cube:
                     state = StateTreasure.GRAB_CUBE
+                    set_led_color(rosa, 'blue')
                     rosa.left_wheel.speed = 0
                     rosa.right_wheel.speed = 0
                     timer = time.time()
                 else:
                     (x, y) = cubes[0].center
                     height, width = 256, 320
-                    # height, width = 480, 640
-                    target = (((x / width) * 2 - 1), -((y / height) * 2 - 1))
-    
+                    target = (((x / width) * 2 - 1), -((y / height) * 2 - 1))    
                     follow_cube(rosa, target)
                 
         elif state == StateTreasure.GRAB_CUBE:
@@ -76,21 +83,18 @@ if __name__ == '__main__':
                 rosa.left_wheel.speed = 0
                 rosa.right_wheel.speed = 0
                 state = StateTreasure.PUT_CUBE_LINE
+                set_led_color(rosa, 'green')
             else:
                 rosa.left_wheel.speed = 0.25
                 rosa.right_wheel.speed = 0.25
-        elif state == StateTreasure.PUT_CUBE_LINE:
-            if go_to_aruco(rosa, img):
-                state = StateTreasure.GO_BEHIND
-                timer = time.time()
-        elif state == StateTreasure.PUT_CUBE_LINE:
-            stop(rosa)
-        else:        
+        elif state == StateTreasure.GO_BEHIND:  
             if time.time() - timer < 3.0:
                 turn_behind(rosa)
             else:
                 timer = time.time()
                 state = StateTreasure.SEARCH_CUBE
+                set_led_color(rosa, 'yellow')
+
         try:
             cv.imshow('get cube', img)
             cv.waitKey(1)

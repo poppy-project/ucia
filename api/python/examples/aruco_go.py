@@ -16,12 +16,12 @@ def turn_behind(rosa):
 
 def set_speed_aruco(rosa,turn, speed):
     base_speed = speed
-    turn_adjustment = -turn * 2.0
+    turn_adjustment = -turn * 1.0
     
     left_speed = base_speed - turn_adjustment
     right_speed = base_speed + turn_adjustment
     
-    max_motor_speed = 0.2
+    max_motor_speed = 0.25
     left_speed = max(min(left_speed, max_motor_speed), -max_motor_speed)
     right_speed = max(min(right_speed, max_motor_speed), -max_motor_speed)
 
@@ -47,7 +47,7 @@ def follow_marker(rosa, target, marker_size, width=320, max_speed=0.2, stop_size
     turn = target_x
 
     if marker_size < stop_size:
-        if abs(target_x) > 0.2:  # Seulement si le marqueur n'est pas assez centré
+        if abs(target_x) > 0.25:  # Seulement si le marqueur n'est pas assez centré
             #print("Non centré")
             set_speed_aruco(rosa, turn, speed)
         else:  # Si le marqueur est centré, ajuster seulement l'avancée
@@ -90,7 +90,7 @@ def go_to_aruco(rosa, img):
         center = corners[0][0].mean(axis=0)
         marker_size = calculate_marker_size(corners[0][0])  
         target = calculate_target_aruco(center, (320, 256)) 
-        change_state = follow_marker(rosa, target, marker_size, stop_size=220)
+        change_state = follow_marker(rosa, target, marker_size, stop_size=200)
     
     return change_state
 
