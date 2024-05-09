@@ -98,6 +98,9 @@ def combined_follow_line(rosa, near_center, reflected):
 
 if __name__ == '__main__':
     rosa = Rosa('rosa.local', local_robot=False)
+    rosa.leds.bottom.left.color = [0, 0, 16] 
+    rosa.leds.bottom.right.color = [0, 0, 16]
+
     while True:
 
         near_center  = None
