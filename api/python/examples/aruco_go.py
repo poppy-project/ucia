@@ -21,7 +21,7 @@ def set_speed(rosa,turn, speed):
     left_speed = base_speed - turn_adjustment
     right_speed = base_speed + turn_adjustment
     
-    max_motor_speed = 0.25
+    max_motor_speed = 0.2
     left_speed = max(min(left_speed, max_motor_speed), -max_motor_speed)
     right_speed = max(min(right_speed, max_motor_speed), -max_motor_speed)
 
