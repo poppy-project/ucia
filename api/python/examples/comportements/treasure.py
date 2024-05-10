@@ -17,6 +17,7 @@ class StateTreasure(Enum):
     GRAB_CUBE = 2
     PUT_CUBE_LINE = 3
     GO_BEHIND = 4
+    TURN = 5
 
 def stop(rosa):
     rosa.left_wheel.speed = 0
@@ -26,6 +27,9 @@ def look_around(rosa, speed=0.2):
     rosa.left_wheel.speed = speed
     rosa.right_wheel.speed = 0
 
+def turn_right(rosa):
+    rosa.left_wheel.speed = 0.0
+    rosa.right_wheel.speed = -0.4
 
 def follow_cube(rosa, center, gain=0.4):
     dx, _ = center
@@ -65,7 +69,7 @@ if __name__ == '__main__':
             if not cubes:  # We can't find a cube so we have to look around
                 look_around(rosa)
             else:
-                has_gathered_cube = any([c for c in cubes if c.center[1] > 220 and 100 < c.center[0] < 200])
+                has_gathered_cube = any([c for c in cubes if c.center[1] > 220 and 130 < c.center[0] < 190])
                 if has_gathered_cube:
                     state = StateTreasure.GRAB_CUBE
                     set_led_color(rosa, 'blue')
@@ -88,8 +92,14 @@ if __name__ == '__main__':
                 rosa.left_wheel.speed = 0.25
                 rosa.right_wheel.speed = 0.25
         elif state == StateTreasure.GO_BEHIND:  
-            if time.time() - timer < 3.0:
+            if time.time() - timer < 4.0:
                 turn_behind(rosa)
+            else:
+                timer = time.time()
+                state = StateTreasure.TURN
+        elif state == StateTreasure.TURN:
+            if time.time() - timer < 3.0:
+                turn_right(rosa)
             else:
                 timer = time.time()
                 state = StateTreasure.SEARCH_CUBE

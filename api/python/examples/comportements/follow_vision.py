@@ -4,10 +4,10 @@ import time
 
 base_speed = 0.1
 turn_ratio = 0.9
-THRESHOLD_DIFFERENCE = 50
-following_left_edge = True
+THRESHOLD_DIFFERENCE = 250
+following_left_edge = False
 
-def get_line_centers(img, near_band_center_y, band_height, band_width_ratio, vmax, render=False):
+def get_line_centers(img, near_band_center_y, band_height, band_width_ratio, vmax, render=True):
     height, width, _ = img.shape
     band_width = int(width * band_width_ratio)
     x1 = (width - band_width) // 2
@@ -16,17 +16,14 @@ def get_line_centers(img, near_band_center_y, band_height, band_width_ratio, vma
     near_y1, near_y2 = (near_band_center_y - band_height // 2, near_band_center_y + band_height // 2)
     near_band = img[near_y1:near_y2, x1:x2]
 
-    # far_y1, far_y2 = (far_band_center_y - band_height // 2, far_band_center_y + band_height // 2)
-    # far_band = img[far_y1:far_y2, x1:x2]
 
     if render:
         cv.rectangle(img, (x1, near_y1), (x2, near_y2), (255, 0, 0), 2)  # Near band (blue rectangle)
-        # cv.rectangle(img, (x1, far_y1), (x2, far_y2), (0, 255, 0), 2)    # Far band (green rectangle)
 
     def process_band(band, offset_y):
         _, _, v = cv.split(cv.cvtColor(band, cv.COLOR_BGR2HSV))
         v[v > vmax] = 0
-        _, contours, _ = cv.findContours(v, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv.findContours(v, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         if len(contours) == 0:
             return None
         contours = sorted(contours, key=cv.contourArea, reverse=True)
@@ -41,13 +38,12 @@ def get_line_centers(img, near_band_center_y, band_height, band_width_ratio, vma
         return None
 
     near_center = process_band(near_band, near_y1)
-    # far_center = process_band(far_band, far_y1)
 
     return near_center
 
-def follow_line(rosa, near_center, base_speed=0.1, gain=0.1, img_width=640):
+def follow_line(rosa, near_center, base_speed=0.15, gain=0.2, img_width=320):
     # Calculate the deviation from the center
-    near_dx = ((near_center[0] / img_width) - 0.5) * 2
+    near_dx = ((near_center[0] / img_width)) - 1
 
     print(f"near_dx: {near_dx}")  # Debug
 
@@ -66,14 +62,14 @@ def set_straight(rosa):
     set_speed(rosa, base_speed, base_speed)
 
 def set_right(rosa):
-    left_wheel_speed = base_speed * (1 + turn_ratio)
-    right_wheel_speed = base_speed * (1 - turn_ratio)
+    left_wheel_speed = base_speed * (1 - turn_ratio)
+    right_wheel_speed = base_speed * (1 + turn_ratio)
 
     set_speed(rosa,left_wheel_speed, right_wheel_speed)
 
 def set_left(rosa):
-    left_wheel_speed = base_speed * (1 - turn_ratio)
-    right_wheel_speed = base_speed * (1 + turn_ratio)
+    left_wheel_speed = base_speed * (1 + turn_ratio)
+    right_wheel_speed = base_speed * (1 - turn_ratio)
     
     set_speed(rosa,left_wheel_speed, right_wheel_speed)
 
@@ -106,9 +102,10 @@ if __name__ == '__main__':
         near_center  = None
         # Mise à jour des données de la caméra
         img = rosa.camera.last_frame
+        
         if img is not None:
             height, width, _ = img.shape
-            near_center = get_line_centers(img, near_band_center_y=height - 10, band_height=30, band_width_ratio=0.6, vmax=75, render=True)
+            near_center = get_line_centers(img, near_band_center_y=height - 10, band_height=70, band_width_ratio=0.5, vmax=70, render=True)
 
         # Mise à jour des données des capteurs
         reflected = rosa.ground_reflected
@@ -116,10 +113,10 @@ if __name__ == '__main__':
         # Combinaison des méthodes de suivi de ligne
         combined_follow_line(rosa, near_center, reflected)
 
-        time.sleep(0.16)
-    #     if img is not None:
-    #         cv.imshow('Line Following', img)
-    #         if cv.waitKey(1) & 0xFF == ord('q'):
-    #             break
+        time.sleep(0.1)
+        if img is not None:
+            cv.imshow('Line Following', img)
+        if cv.waitKey(1) & 0xFF == ord('q'):
+            break
 
-    # cv.destroyAllWindows()
+    cv.destroyAllWindows()
