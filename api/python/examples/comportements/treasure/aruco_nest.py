@@ -32,18 +32,19 @@ def look_around(rosa, speed=0.2):
 def calculate_target_aruco(center, image_dimensions):
     width, height = image_dimensions
     # Normalise x,y between [-1,1] 
-    target_x = (center[0] / width) - 1
-    target_y = -(center[1] / height) + 1
+    target_x = ((center[0] / width) * 2) - 1
+    target_y = -((center[1] / height) * 2 - 1)
     return (target_x, target_y)
 
-def follow_marker(rosa, target, marker_size, width=320, max_speed=0.2, stop_size=300):
+def follow_marker(rosa, target, marker_size, max_speed=0.3, stop_size=700):
     target_x, target_y = target
+    print(target_x)
 
     speed = max_speed * (1 - abs(target_x))  # Reduce speed if we approach center
     turn = target_x
 
     if marker_size < stop_size:
-        if abs(target_x) > 0.3:  # Seulement si le marqueur n'est pas assez centré
+        if abs(target_x) > 0.4:  # Seulement si le marqueur n'est pas assez centré
             print("Non centré")
             set_speed_aruco(rosa, turn, speed)
         else:  # Si le marqueur est centré, ajuster seulement l'avancée
@@ -85,8 +86,8 @@ def go_to_aruco(rosa, img):
     else:
         center = corners[0][0].mean(axis=0)
         marker_size = calculate_marker_size(corners[0][0])  
-        target = calculate_target_aruco(center, (320, 256))
+        target = calculate_target_aruco(center, (1280, 960))
         print(target)
-        change_state = follow_marker(rosa, target, marker_size, stop_size=200)
+        change_state = follow_marker(rosa, target, marker_size, stop_size=350)
     
     return change_state

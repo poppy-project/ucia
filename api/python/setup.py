@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-import imp
+import importlib.util
 from setuptools import setup, find_packages
 
-version = imp.load_source("rosa.version", "rosa/version.py")
-
+spec = importlib.util.spec_from_file_location("rosa.version", "rosa/version.py")
+version = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(version)
 
 setup(
     name="rosa",
@@ -20,9 +21,8 @@ setup(
         "websocket-client",
         "Pillow",
         "numpy",
-        "keras==2.3",
-        "tensorflow<2",  # can be replaced by tensorflow-gpu
         "matplotlib",
         "protobuf==3.20",
+        "ultralytics"
     ],
 )

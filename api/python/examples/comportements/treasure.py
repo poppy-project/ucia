@@ -11,6 +11,7 @@ import cv2.aruco as aruco
 
 from treasure.aruco_nest import go_to_aruco, turn_behind
 from treasure.leds import set_led_color
+from treasure.get_cube import grab_object
 
 class StateTreasure(Enum):
     SEARCH_CUBE = 1
@@ -60,27 +61,10 @@ if __name__ == '__main__':
                 set_led_color(rosa, 'purple')
             time.sleep(0.2)
         elif state == StateTreasure.SEARCH_CUBE:
-            try:
-                found_obj = detect_objects(img, render=True)
-            except:
-                continue
-            cubes = [obj for obj in found_obj if obj.label == 'cube']
-
-            if not cubes:  # We can't find a cube so we have to look around
-                look_around(rosa)
-            else:
-                has_gathered_cube = any([c for c in cubes if c.center[1] > 220 and 130 < c.center[0] < 190])
-                if has_gathered_cube:
-                    state = StateTreasure.GRAB_CUBE
-                    set_led_color(rosa, 'blue')
-                    rosa.left_wheel.speed = 0
-                    rosa.right_wheel.speed = 0
-                    timer = time.time()
-                else:
-                    (x, y) = cubes[0].center
-                    height, width = 256, 320
-                    target = (((x / width) * 2 - 1), -((y / height) * 2 - 1))    
-                    follow_cube(rosa, target)
+            if grab_object(rosa, img, labels=['cube', 'star', 'triangle']):
+                state = StateTreasure.GRAB_CUBE
+                set_led_color(rosa, 'blue')
+                timer = time.time()
                 
         elif state == StateTreasure.GRAB_CUBE:
             if time.time() - timer > 3.0:
@@ -92,7 +76,7 @@ if __name__ == '__main__':
                 rosa.left_wheel.speed = 0.25
                 rosa.right_wheel.speed = 0.25
         elif state == StateTreasure.GO_BEHIND:  
-            if time.time() - timer < 4.0:
+            if time.time() - timer < 2.0:
                 turn_behind(rosa)
             else:
                 timer = time.time()

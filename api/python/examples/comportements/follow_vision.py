@@ -6,6 +6,7 @@ base_speed = 0.1
 turn_ratio = 0.9
 THRESHOLD_DIFFERENCE = 250
 following_left_edge = False
+timer = time.time()
 
 def get_line_centers(img, near_band_center_y, band_height, band_width_ratio, vmax, render=True):
     height, width, _ = img.shape
@@ -41,9 +42,9 @@ def get_line_centers(img, near_band_center_y, band_height, band_width_ratio, vma
 
     return near_center
 
-def follow_line(rosa, near_center, base_speed=0.15, gain=0.2, img_width=320):
+def follow_line(rosa, near_center, base_speed=0.1, gain=0.2, img_width=1280):
     # Calculate the deviation from the center
-    near_dx = ((near_center[0] / img_width)) - 1
+    near_dx = (((near_center[0] / img_width)) * 2) - 1
 
     print(f"near_dx: {near_dx}")  # Debug
 
@@ -75,6 +76,7 @@ def set_left(rosa):
 
 def combined_follow_line(rosa, near_center, reflected):
     global following_left_edge
+    global timer
     if near_center is not None:
         # Utiliser le suivi de ligne par caméra
         follow_line(rosa, near_center)
@@ -92,6 +94,12 @@ def combined_follow_line(rosa, near_center, reflected):
             set_straight(rosa)
             following_left_edge = left_sensor > right_sensor
 
+    if time.time() - timer > 3:
+        left_sensor, right_sensor = reflected
+        following_left_edge = left_sensor > right_sensor
+        timer = time.time()
+
+
 if __name__ == '__main__':
     rosa = Rosa('rosa.local', local_robot=False)
     rosa.leds.bottom.left.color = [0, 0, 16] 
@@ -105,7 +113,7 @@ if __name__ == '__main__':
         
         if img is not None:
             height, width, _ = img.shape
-            near_center = get_line_centers(img, near_band_center_y=height - 10, band_height=70, band_width_ratio=0.5, vmax=70, render=True)
+            near_center = get_line_centers(img, near_band_center_y=height - 10, band_height=200, band_width_ratio=0.5, vmax=70, render=True)
 
         # Mise à jour des données des capteurs
         reflected = rosa.ground_reflected
