@@ -7,6 +7,7 @@ from tasks.api import API
 from manager.base import BaseManager
 from controller.thymio.controller import ThymioController
 import settings 
+import time
 
 class ThymioManager(BaseManager):
     current_mode = 0
@@ -17,7 +18,6 @@ class ThymioManager(BaseManager):
     launch_change_delay = 2
     current_process = None
     H = [20,0,0,0,0,0,0,0]
-    first = True
 
     def __init__(self):
         self.controller = ThymioController()
@@ -39,6 +39,16 @@ class ThymioManager(BaseManager):
 
         self.num_modes = len(self.tasks)
         self.last_launch_change_time = time.time()
+
+        self.start_time = time.time()
+        while time.time() - self.start_time < 3:
+            self.controller.set_led("circle", self.H)
+            self.H = self.H[-1:] + self.H[:-1]
+            time.sleep(0.05)
+
+        self.H = [0] * 8
+        self.controller.set_led("circle", self.H)
+        
 
     def change_mode(self):
         current_time = time.time()
@@ -79,18 +89,7 @@ class ThymioManager(BaseManager):
 
     def run(self):
         self.logger.debug(f"Actual mode {settings.status}")
-        # if settings.status != settings.RobotState.MODE:
-            # return
-
-        if settings.loading_model:
-            self.controller.set_led("circle", self.H)
-            self.H = self.H[-1:] + self.H[:-1]
-        elif not(settings.loading_model) and self.first:
-            self.H = [0] * 8
-            self.controller.set_led("circle", self.H)
-            self.first = False
-
-        self.change_mode()
+        
 
         time.sleep(0.016)
 

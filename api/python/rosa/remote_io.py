@@ -6,11 +6,12 @@ import logging
 
 from threading import Thread, Event, Lock
 
+from collections.abc import Mapping
 
 # See https://stackoverflow.com/questions/3232943/update-value-of-a-nested-dictionary-of-varying-depth
 def update_cmd(d, u):
     for k, v in u.items():
-        if isinstance(v, collections.Mapping):
+        if isinstance(v, Mapping):
             d[k] = update_cmd(d.get(k, {}), v)
         else:
             d[k] = v
