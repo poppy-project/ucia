@@ -113,7 +113,7 @@ if __name__ == '__main__':
         
         if img is not None:
             height, width, _ = img.shape
-            near_center = get_line_centers(img, near_band_center_y=height - 10, band_height=200, band_width_ratio=0.5, vmax=70, render=True)
+            near_center = get_line_centers(img, near_band_center_y=height - 10, band_height=100, band_width_ratio=0.4, vmax=70, render=True)
 
         # Mise à jour des données des capteurs
         reflected = rosa.ground_reflected
