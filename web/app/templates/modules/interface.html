@@ -5,19 +5,29 @@
     <meta charset="UTF-8">
     <title>ROSA contrôleur</title>
     <link rel="stylesheet" href="./interface.css">
+    <link rel="stylesheet" href="../../static/css/tailwind.css">
+
 </head>
 
 <body>
     <div class="header_controle">
         <p class="txt-title">Contrôleur ROSA</p>
     </div>
-    <div class="mode_display">
+    <div class="mode_line">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700">
+            Pilotage automatique
+        </button>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700">
+            Pilotage manuel
+        </button>
+    </div>
+    <!--div class="mode_display">
         <div class="modes">
-            <div class="title_mode">
-                <p class="txt-subtitle">Pilotage automatique :</p>
-            </div>
             <div class="mode_selected">
-                <p class="txt">Chasseur de trésor</p>
+                <p>
+                    <span>Mode sélectionné :</span>
+                    <span>Chasseur de trésor</span>
+                </p>
             </div>
             <div class="mode_selection">
                 <div class="button-mode">
@@ -52,44 +62,51 @@
         <div class="sep">
             <div class="line"></div>
         </div>
-        <div class="manuel">
-            <div class="title_mode">
-                <p class="txt-subtitle">Pilotage manuel :</p>
+        <div class="cam_zone">
+            <div class="video-container">
+                <video id="remoteVideoDetection" autoplay></video>
             </div>
-            <div class="manuel-controle">
-                <div class="bot-zone">
-                    <div class="video-container">
-                        <video id="remoteVideoDetection" autoplay style="display: none;"></video>
-                    </div>
-                    <div class="bot-shema">
-                        <img src="../../static/images/thymio.svg" alt="">
+        </div>
+    </div-->
+    <div class="manuel-controle">
+        <div class="bot-zone">
+            <div class="video-container">
+                <video id="remoteVideoDetection" autoplay style="display: none;"></video>
+            </div>
+            <div class="bot-shema">
+                <img src="../../static/images/thymio.svg" alt="">
+            </div>
+        </div>
+        <div class="move-btn">
+            <div class="speed">
+                <div class="speed-box">
+                    <p class="txt">Vitesse :</p>
+                    <div class="speed-range">
+                        <input id="motorLeft" type="range" orient="vertical">
+                        <input id="motorRigth" type="range" orient="vertical">
                     </div>
                 </div>
-                <div class="move-btn">
-                    <div class="speed">
-                        <div class="speed-box">
-                            <p class="txt">Vitesse :</p>
-                            <div class="speed-range">
-                                <input id="motorLeft" type="range" orient="vertical">
-                                <input id="motorRigth" type="range" orient="vertical">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="direction">
-                        <div class="direction-box">
-                            <p class="txt">Mouvements :</p>
-                            <div class="arrow">
-                                <button class="btn-av" onclick="sendData('mode', { 'dir': 'av', 'speedL': 100, 'speedR': 200 })"></button>
-                                <button class="btn-g" onclick="sendData('mode', { 'dir': 'g', 'speedL': 100, 'speedR': 200 })"></button>
-                                <button class="btn-ar" onclick="sendData('mode', { 'dir': 'ar', 'speedL': 100, 'speedR': 200 })"></button>
-                                <button class="btn-d" onclick="sendData('mode', { 'dir': 'd', 'speedL': 100, 'speedR': 200 })"></button>
-                                <button class="btn-stop" onclick="sendData('mode', { 'dir': 'stop', 'speedL': 100, 'speedR': 200 })"></button>
-                            </div>
-                        </div>
+            </div>
+            <div class="direction">
+                <div class="direction-box">
+                    <p class="txt">Mouvements :</p>
+                    <div class="arrow">
+                        <button class="btn-av"
+                            onclick="sendData('mode', { 'dir': 'av', 'speedL': 100, 'speedR': 200 })"></button>
+                        <button class="btn-g"
+                            onclick="sendData('mode', { 'dir': 'g', 'speedL': 100, 'speedR': 200 })"></button>
+                        <button class="btn-ar"
+                            onclick="sendData('mode', { 'dir': 'ar', 'speedL': 100, 'speedR': 200 })"></button>
+                        <button class="btn-d"
+                            onclick="sendData('mode', { 'dir': 'd', 'speedL': 100, 'speedR': 200 })"></button>
+                        <button class="btn-stop"
+                            onclick="sendData('mode', { 'dir': 'stop', 'speedL': 100, 'speedR': 200 })"></button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+
     </div>
 </body>
 

@@ -69,17 +69,26 @@
 
 .header_controle {
     background: var(--head);
-    height: 12vh;
+    height: 10vh;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.mode_line {
+    height: 10vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: orange;
 }
 
 .mode_display {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: calc(100vh - 12vh);
+    height: calc(100vh - 20vh);
 }
 
 .modes {
@@ -87,21 +96,13 @@
     height: 100%;
 }
 
-.title_mode {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    height: 10dvh;
-    width: 100%;
-}
-
 .mode_selected {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 5dvh ;
+    height: 7dvh ;
+    background-color: red;
 }
 
 .mode_selection {
@@ -122,23 +123,36 @@
 }
 
 .line {
-    height: 65%;
+    height: 70%;
     width: 20%;
     border-radius: 5px;
     background-color: black;
     margin-top: 10vh;
 }
 
-.manuel {
+.cam_zone {
     width: 63%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: gray;
+}
+
+.video-container {
+    height: 70%;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: green;
 }
 
 .manuel-controle {
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: calc(100vh - 22vh);
+    height: calc(100vh - 20vh);
 }
 
 .bot-zone {
@@ -148,15 +162,6 @@
     justify-content: center;
     flex-direction: column;
     background-color: red;
-}
-
-.video-container {
-    width: 70%;
-    height: 30%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    background-color: #0D88EC;
 }
 
 .bot-shema {
