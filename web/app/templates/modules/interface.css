@@ -3,6 +3,7 @@
     --txt : #00000;
     --txt-mode : #e6e6e6;
     --main-blue : #0D88EC;
+    --main-grey :  #c9c9c9;
 }
 
 *{
@@ -82,7 +83,7 @@
 }
 
 .automatic-mode {
-    display: flex;
+    display: none;
     justify-content: space-around;
     align-items: center;
     height: calc(100vh - 20vh);
@@ -151,7 +152,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: grey;
+    background-color: var(--main-grey);
     border: black solid 2px;
 }
 
@@ -170,12 +171,36 @@
     flex-direction: column;
 }
 
+.value-front {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+}
+
 .bot-lat {
     width: 40%;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
+    flex-direction: row;
+    background-color: red;
+}
+
+.value-lat1 {
+    width: 50%;
+    display: flex;
+    justify-content: start;
+    gap: 2vw;
+    margin-left: 4vw;
+}
+
+.value-lat2 {
+    width: 50%;
+    display: flex;
+    justify-content: start;
+    background-color: orange;
+    gap: 2vw;
+    margin-left: 4vw;
 }
 
 .bot-shema {
@@ -239,7 +264,7 @@
 
 }
 
-.arrow {
+.arrow-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
@@ -254,6 +279,7 @@
     cursor: pointer;
     border: none;
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%); 
+    background-color: var(--main-grey);
 
 }
 
@@ -263,6 +289,8 @@
     cursor: pointer;
     border: none;
     clip-path: polygon(100% 0%, 0% 50%, 100% 100%);
+    background-color: var(--main-grey);
+
 }
 
 .btn-ar { 
@@ -271,6 +299,8 @@
     cursor: pointer;   
     border: none;
     clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+    background-color: var(--main-grey);
+
 }
 
 .btn-d { 
@@ -279,6 +309,8 @@
     cursor: pointer;
     border: none;
     clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+    background-color: var(--main-grey);
+
 }
 
 .btn-stop {
