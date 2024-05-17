@@ -17,8 +17,6 @@
     color: var(--txt);
     font-family: "Inter", sans-serif;
     font-size: large;
-    font-weight: 500;
-    margin-bottom: 5%;
 }
 
 .txt-title {
@@ -27,10 +25,10 @@
     font-size: xx-large;
 }
 
-.txt-subtitle {
+.txt-bold {
     color: var(--txt);
     font-family: "Inter", sans-serif;
-    font-size: x-large;
+    font-size: large;
     font-weight: bold;
 }
 
@@ -47,7 +45,7 @@
     align-items: center;
     justify-content: center;
     width: 40%;
-    height: 15vh;
+    height: 17vh;
     padding: 12px 24px;
     font-size: 16px;
     text-align: center;
@@ -81,10 +79,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    background-color: orange;
 }
 
-.mode_display {
+.automatic-mode {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -102,7 +99,6 @@
     justify-content: center;
     flex-direction: column;
     height: 7dvh ;
-    background-color: red;
 }
 
 .mode_selection {
@@ -123,7 +119,7 @@
 }
 
 .line {
-    height: 70%;
+    height: 75%;
     width: 20%;
     border-radius: 5px;
     background-color: black;
@@ -136,32 +132,50 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: gray;
+}
+
+.cam_txt {
+    height: 75%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cam_txt p {
+    margin-bottom: 2vh;
 }
 
 .video-container {
-    height: 70%;
-    width: 60%;
+    height: 100%;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: green;
+    background-color: grey;
+    border: black solid 2px;
 }
 
-.manuel-controle {
+.manuel-mode {
     display: flex;
     flex-direction: row;
     width: 100%;
     height: calc(100vh - 20vh);
 }
 
-.bot-zone {
-    flex: 1;
+.bot-front {
+    width: 40%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: red;
+}
+
+.bot-lat {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .bot-shema {
@@ -175,7 +189,7 @@
     width: 70%;
 }
 
-.move-btn {
+.move-controleur {
     width: 50%;
     height: 100%;
 }

@@ -14,19 +14,19 @@
         <p class="txt-title">Contrôleur ROSA</p>
     </div>
     <div class="mode_line">
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700">
+        <button id="autonomeButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700" onclick="showAutonome()">
             Pilotage automatique
         </button>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700">
+        <button id="manualButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700" onclick="showManual()">
             Pilotage manuel
         </button>
     </div>
-    <!--div class="mode_display">
+    <div class="automatic-mode" id="autonomeInt">
         <div class="modes">
             <div class="mode_selected">
-                <p>
+                <p class="txt">
                     <span>Mode sélectionné :</span>
-                    <span>Chasseur de trésor</span>
+                    <span class="txt-bold">Chasseur de trésor</span>
                 </p>
             </div>
             <div class="mode_selection">
@@ -63,21 +63,26 @@
             <div class="line"></div>
         </div>
         <div class="cam_zone">
-            <div class="video-container">
-                <video id="remoteVideoDetection" autoplay></video>
+            <div class="cam_txt">
+                <p class="txt-bold">Vision :</p>
+                <div class="video-container">
+                    <video id="remoteVideoDetection" autoplay></video>
+                </div>
             </div>
         </div>
-    </div-->
-    <div class="manuel-controle">
-        <div class="bot-zone">
-            <div class="video-container">
-                <video id="remoteVideoDetection" autoplay style="display: none;"></video>
-            </div>
+    </div>
+    <div class="manuel-mode" id="manualInt">
+        <div class="bot-front">
             <div class="bot-shema">
-                <img src="../../static/images/thymio.svg" alt="">
+                <img src="../../static/images/rosa_front.svg" alt="">
             </div>
         </div>
-        <div class="move-btn">
+        <div class="bot-lat">
+            <div class="bot-shema">
+                <img src="../../static/images/rosa_lateral.svg" alt="">
+            </div>
+        </div>
+        <div class="move-controleur">
             <div class="speed">
                 <div class="speed-box">
                     <p class="txt">Vitesse :</p>
@@ -106,11 +111,24 @@
             </div>
         </div>
     </div>
-
-    </div>
 </body>
 
 <script>
+    const autonomeInt = document.getElementById('autonomeInt');
+    const manualInt = document.getElementById('manualInt');
+    const autonomeButton = document.getElementById('autonomeButton');
+    const manualButton = document.getElementById('manualButton');
+
+    function showAutonome() {
+        autonomeInt.style.display = 'flex';
+        manualInt.style.display = 'none';
+    }
+
+    function showManual() {
+        autonomeInt.style.display = 'none';
+        manualInt.style.display = 'flex';
+    }
+
     async function sendData(endpoint, data) {
         const response = await fetch(`http://rosa.local:8080/${endpoint}`, {
             method: 'POST',
