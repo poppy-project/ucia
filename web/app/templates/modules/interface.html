@@ -6,7 +6,6 @@
     <title>ROSA contrôleur</title>
     <link rel="stylesheet" href="./interface.css">
     <link rel="stylesheet" href="../../static/css/tailwind.css">
-
 </head>
 
 <body>
@@ -105,8 +104,7 @@
                 <div class="speed-box">
                     <p class="txt">Vitesse :</p>
                     <div class="speed-range">
-                        <input id="motorLeft" type="range" orient="vertical">
-                        <input id="motorRigth" type="range" orient="vertical">
+                        <input min="0" max="100" value="20" id="speedSlider" type="range" orient="vertical">
                     </div>
                 </div>
             </div>
@@ -115,15 +113,24 @@
                     <p class="txt">Mouvements :</p>
                     <div class="arrow-grid">
                         <button class="btn-av"
-                            onclick="sendData('mode', { 'dir': 'av', 'speedL': 100, 'speedR': 200 })"></button>
+                            onmousedown="sendData('manuel', { 'dir': 'forward '})"
+                            onmouseup="sendData('manuel', { 'dir': 'stop' })">
+                        </button>
                         <button class="btn-g"
-                            onclick="sendData('mode', { 'dir': 'g', 'speedL': 100, 'speedR': 200 })"></button>
+                            onmousedown="sendData('manuel', { 'dir': 'g' })">
+                            onmouseup="sendData('manuel', { 'dir': 'stop' })">
+                        </button>
                         <button class="btn-ar"
-                            onclick="sendData('mode', { 'dir': 'ar', 'speedL': 100, 'speedR': 200 })"></button>
+                            onmousedown="sendData('manuel', { 'dir': 'ar' })">
+                            onmouseup="sendData('manuel', { 'dir': 'stop' })">
+                        </button>
                         <button class="btn-d"
-                            onclick="sendData('mode', { 'dir': 'd', 'speedL': 100, 'speedR': 200 })"></button>
+                            onmousedown="sendData('manuel', { 'dir': 'd' })"
+                            onmouseup="sendData('manuel', { 'dir': 'stop' })">
+                        </button>
                         <button class="btn-stop"
-                            onclick="sendData('mode', { 'dir': 'stop', 'speedL': 100, 'speedR': 200 })"></button>
+                            onmousedown="sendData('manuel', { 'dir': 'stop' })">
+                        </button>
                     </div>
                 </div>
             </div>
@@ -148,21 +155,24 @@
     }
 
     async function sendData(endpoint, data) {
-        const response = await fetch(`http://rosa.local:8080/${endpoint}`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
+    data.speed = document.getElementById('speedSlider').value / 100;
+    let url = new URL(`http://rosa.local:8080/${endpoint}`);
+    Object.keys(data).forEach(key => url.searchParams.append(key, data[key]));
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    });
 
-        return await response.json();
+    if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
     }
-</script>
 
+    return await response.json();
+}
+
+</script>
 </html>
