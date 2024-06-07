@@ -102,7 +102,7 @@
         <div class="move-controleur">
             <div class="speed">
                 <div class="speed-box">
-                    <p class="txt">Vitesse :</p>
+                    <p class="txt">Vitesse : <span id="slider-value">50</span></p>
                     <div class="speed-range">
                         <input min="0" max="100" value="20" id="speedSlider" type="range" orient="vertical">
                     </div>
@@ -117,11 +117,11 @@
                             onmouseup="sendData('manuel', { 'dir': 'stop' })">
                         </button>
                         <button class="btn-g"
-                            onmousedown="sendData('manuel', { 'dir': 'g' })">
+                            onmousedown="sendData('manuel', { 'dir': 'g' })"
                             onmouseup="sendData('manuel', { 'dir': 'stop' })">
                         </button>
                         <button class="btn-ar"
-                            onmousedown="sendData('manuel', { 'dir': 'ar' })">
+                            onmousedown="sendData('manuel', { 'dir': 'ar' })"
                             onmouseup="sendData('manuel', { 'dir': 'stop' })">
                         </button>
                         <button class="btn-d"
@@ -143,6 +143,14 @@
     const manualInt = document.getElementById('manualInt');
     const autonomeButton = document.getElementById('autonomeButton');
     const manualButton = document.getElementById('manualButton');
+
+    const slider = document.getElementById('speedSlider');
+    const sliderValue = document.getElementById('slider-value');
+
+    sliderValue.textContent = slider.value;
+    slider.addEventListener('input', function() {
+        sliderValue.textContent = slider.value;
+    });
 
     function showAutonome() {
         autonomeInt.style.display = 'flex';
@@ -172,6 +180,7 @@
     }
 
     return await response.json();
+
 }
 
 </script>

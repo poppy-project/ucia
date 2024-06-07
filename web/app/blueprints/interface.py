@@ -1,6 +1,7 @@
 import subprocess
 import os
 import sys
+import threading
 from rosa import Rosa
 from flask import Blueprint, jsonify, request
 
@@ -41,6 +42,20 @@ try:
             subprocess.Popen(['/usr/bin/python3', script_path])
 
             return jsonify({'message': 'Mode ' + mode_name + ' activate'}), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+
+    @interface.route('/program', methods=['POST'])
+    def execute_code():
+        try:
+            data = request.get_json()
+            code = data.get('code')
+
+            exec_thread = threading.Thread(target=exec, args=(code, globals()))
+            exec_thread.start()
+
+            return jsonify({'message': 'Code execution started'}), 200
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Programmation du Robot</title>
+  <!-- Chargez Blockly et le générateur Python -->
+  <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+  <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+  <!-- Chargez les définitions des blocs personnalisés et les générateurs -->
+  <script src="lib_interface/blocks.js"></script>
+  <script src="lib_interface/python_generators.js"></script>
+  <style>
+    #blocklyDiv {
+        height: 480px;
+        width: 600px;
+    }
+    #codeDiv {
+        height: 200px;
+        width: 600px;
+        border: 1px solid #ccc;
+        overflow: auto;
+    }
+</style>
+</head>
+<body>
+  <h1>Programmation du Robot</h1>
+  <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+  <pre id="codeDisplay"></pre>
+  <xml id="toolbox" style="display: none">
+    <category name="Control">
+      <block type="move_forward"></block>
+      <block type="move_backward"></block>
+      <block type="turn_left"></block>
+      <block type="turn_right"></block>
+      <block type="stop_robot"></block>
+      <block type="sleep"></block>
+    </category>
+    <category name="Logic">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+    </category>
+    <category name="Loops">
+      <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <block type="math_number">
+            <field name="NUM">10</field>
+          </block>
+        </value>
+      </block>
+      <block type="controls_whileUntil"></block>
+      <block type="controls_for">
+        <value name="FROM">
+          <block type="math_number">
+            <field name="NUM">1</field>
+          </value>
+        <value name="TO">
+          <block type="math_number">
+            <field name="NUM">10</field>
+          </value>
+        <value name="BY">
+          <block type="math_number">
+            <field name="NUM">1</field>
+          </value>
+      </block>
+      <block type="controls_forEach"></block>
+    </category>
+    <category name="Math">
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
+      <block type="math_single"></block>
+      <block type="math_trig"></block>
+      <block type="math_constant"></block>
+      <block type="math_number_property"></block>
+      <block type="math_round"></block>
+      <block type="math_on_list"></block>
+      <block type="math_modulo"></block>
+      <block type="math_constrain"></block>
+      <block type="math_random_int"></block>
+      <block type="math_random_float"></block>
+    </category>
+    <category name="Text">
+      <block type="text"></block>
+      <block type="text_join"></block>
+      <block type="text_append">
+        <value name="TEXT">
+          <block type="text"></block>
+        </value>
+      </block>
+      <block type="text_length"></block>
+      <block type="text_isEmpty"></block>
+      <block type="text_indexOf">
+        <value name="VALUE">
+          <block type="text"></block>
+        </value>
+      </block>
+      <block type="text_charAt">
+        <value name="VALUE">
+          <block type="text"></block>
+        </value>
+      </block>
+      <block type="text_getSubstring">
+        <value name="STRING">
+          <block type="text"></block>
+        </value>
+      </block>
+      <block type="text_changeCase"></block>
+      <block type="text_trim"></block>
+      <block type="text_print"></block>
+    </category>
+    <category name="Variables" custom="VARIABLE"></category>
+    <category name="Functions" custom="PROCEDURE"></category>
+  </xml>
+    <button onclick="runCode()">Exécuter le Code</button>
+    <h2>Code Généré:</h2>
+    <div id="codeDiv"></div>
+    <script>
+        var workspace = Blockly.inject('blocklyDiv', {
+            toolbox: document.getElementById('toolbox')
+        });
+
+
+        Blockly.Python['move_forward'] = function(block) {
+            return 'forward(rosa, speed)\n';
+        };
+
+        Blockly.Python['move_backward'] = function(block) {
+            return 'backward(rosa, speed)\n';
+        };
+
+        Blockly.Python['turn_left'] = function(block) {
+            return 'turn_left(rosa, speed)\n';
+        };
+
+        Blockly.Python['turn_right'] = function(block) {
+            return 'turn_right(rosa, speed)\n';
+        };
+
+        function runCode() {
+            var code = Blockly.Python.workspaceToCode(workspace);
+            document.getElementById('codeDiv').innerText = code;
+
+            // Send the code to the robot
+            sendData('execute', { code: code });
+        }
+
+        workspace.addChangeListener(function(event) {
+            var code = Blockly.Python.workspaceToCode(workspace);
+            document.getElementById('codeDiv').innerText = code;
+        });
+
+        async function sendData(endpoint, data) {
+            const response = await fetch(`http://rosa.local:8080/${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+
+            return await response.json();
+        }
+    </script>
+</body>
+</html>
