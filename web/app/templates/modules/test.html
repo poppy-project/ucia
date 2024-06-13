@@ -6,9 +6,10 @@
   <!-- Chargez Blockly et le générateur Python -->
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
   <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+  <script src="https://unpkg.com/blockly/msg/fr.js"></script> 
   <!-- Chargez les définitions des blocs personnalisés et les générateurs -->
-  <script src="lib_interface/blocks.js"></script>
-  <script src="lib_interface/python_generators.js"></script>
+  <script src="./lib_interface/blocks.js"></script>
+  <script src="./lib_interface/python_generators.js"></script>
   <style>
     #blocklyDiv {
         height: 480px;
@@ -24,10 +25,16 @@
 </head>
 <body>
   <h1>Programmation du Robot</h1>
+  <label for="languageSelect">Choisissez la langue:</label>
+  <select id="languageSelect" onchange="changeLanguage()">
+    <option value="fr">Français</option>
+    <option value="en">English</option>
+  </select>
   <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
   <pre id="codeDisplay"></pre>
   <xml id="toolbox" style="display: none">
     <category name="Control">
+      <block type="move"></block>
       <block type="move_forward"></block>
       <block type="move_backward"></block>
       <block type="turn_left"></block>
@@ -120,23 +127,6 @@
         var workspace = Blockly.inject('blocklyDiv', {
             toolbox: document.getElementById('toolbox')
         });
-
-
-        Blockly.Python['move_forward'] = function(block) {
-            return 'forward(rosa, speed)\n';
-        };
-
-        Blockly.Python['move_backward'] = function(block) {
-            return 'backward(rosa, speed)\n';
-        };
-
-        Blockly.Python['turn_left'] = function(block) {
-            return 'turn_left(rosa, speed)\n';
-        };
-
-        Blockly.Python['turn_right'] = function(block) {
-            return 'turn_right(rosa, speed)\n';
-        };
 
         function runCode() {
             var code = Blockly.Python.workspaceToCode(workspace);
