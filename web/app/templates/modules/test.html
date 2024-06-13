@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
   <meta charset="utf-8">
   <title>Programmation du Robot</title>
   <!-- Chargez Blockly et le générateur Python -->
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
   <script src="https://unpkg.com/blockly/python_compressed.js"></script>
-  <script src="https://unpkg.com/blockly/msg/fr.js"></script> 
+    <!-- Chargez langue Blockly -->
+  <script src="https://unpkg.com/blockly/msg/fr.js" id="blockly-msg-en" defer></script>
+  <script src="https://unpkg.com/blockly/msg/en.js" id="blockly-msg-fr" defer></script>
   <!-- Chargez les définitions des blocs personnalisés et les générateurs -->
   <script src="./lib_interface/blocks.js"></script>
   <script src="./lib_interface/python_generators.js"></script>
@@ -26,13 +28,13 @@
 <body>
   <h1>Programmation du Robot</h1>
   <label for="languageSelect">Choisissez la langue:</label>
-  <select id="languageSelect" onchange="changeLanguage()">
-    <option value="fr">Français</option>
+  <select id="languageSelector" onchange="changeLanguage()">
     <option value="en">English</option>
+    <option value="fr" selected>Français</option>
   </select>
   <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
   <pre id="codeDisplay"></pre>
-  <xml id="toolbox" style="display: none">
+  <xml id="toolbox-fr" style="display: none">
     <category name="ROSA">
       <block type="move"></block>
       <block type="turn"></block>
@@ -41,14 +43,14 @@
       <block type="led"></block>
       <block type="buzzer"></block>
     </category>
-    <category name="Logic">
+    <category name="Logique">
       <block type="controls_if"></block>
       <block type="logic_compare"></block>
       <block type="logic_operation"></block>
       <block type="logic_negate"></block>
       <block type="logic_boolean"></block>
     </category>
-    <category name="Loops">
+    <category name="Boucles">
       <block type="controls_repeat_ext">
         <value name="TIMES">
           <block type="math_number">
@@ -73,7 +75,94 @@
       </block>
       <block type="controls_forEach"></block>
     </category>
-    <category name="Math">
+    <category name="Mathématiques">
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
+      <block type="math_single"></block>
+      <block type="math_trig"></block>
+      <block type="math_constant"></block>
+      <block type="math_number_property"></block>
+      <block type="math_round"></block>
+      <block type="math_on_list"></block>
+      <block type="math_modulo"></block>
+      <block type="math_constrain"></block>
+      <block type="math_random_int"></block>
+      <block type="math_random_float"></block>
+    </category>
+    <category name="Texte">
+      <block type="text"></block>
+      <block type="text_join"></block>
+      <block type="text_append">
+        <value name="TEXT">
+          <block type="text"></block>
+        </value>
+      </block>
+      <block type="text_length"></block>
+      <block type="text_isEmpty"></block>
+      <block type="text_indexOf">
+        <value name="VALUE">
+          <block type="text"></block>
+        </value>
+      </block>
+      <block type="text_charAt">
+        <value name="VALUE">
+          <block type="text"></block>
+        </value>
+      </block>
+      <block type="text_getSubstring">
+        <value name="STRING">
+          <block type="text"></block>
+        </value>
+      </block>
+      <block type="text_changeCase"></block>
+      <block type="text_trim"></block>
+      <block type="text_print"></block>
+    </category>
+    <category name="Variables" custom="VARIABLE"></category>
+    <category name="Fonctions" custom="PROCEDURE"></category>
+  </xml>
+  <xml id="toolbox-fr" style="display: none">
+    <category name="ROSA">
+      <block type="move"></block>
+      <block type="turn"></block>
+      <block type="stop_rosa"></block>
+      <block type="sleep"></block>
+      <block type="led"></block>
+      <block type="buzzer"></block>
+    </category>
+    <category name="Logical">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+    </category>
+    <category name="Loo">
+      <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <block type="math_number">
+            <field name="NUM">10</field>
+          </block>
+        </value>
+      </block>
+      <block type="controls_whileUntil"></block>
+      <block type="controls_for">
+        <value name="FROM">
+          <block type="math_number">
+            <field name="NUM">1</field>
+          </value>
+        <value name="TO">
+          <block type="math_number">
+            <field name="NUM">10</field>
+          </value>
+        <value name="BY">
+          <block type="math_number">
+            <field name="NUM">1</field>
+          </value>
+      </block>
+      <block type="controls_forEach"></block>
+    </category>
+    <category name="Maths">
       <block type="math_number"></block>
       <block type="math_arithmetic"></block>
       <block type="math_single"></block>
@@ -119,13 +208,22 @@
     <category name="Variables" custom="VARIABLE"></category>
     <category name="Functions" custom="PROCEDURE"></category>
   </xml>
-    <button onclick="runCode()">Exécuter le Code</button>
-    <h2>Code Généré:</h2>
-    <div id="codeDiv"></div>
-    <script>
+
+  <button onclick="runCode()">Exécuter le Code</button>
+  <h2>Code Généré:</h2>
+  <div id="codeDiv"></div>
+  <script>
         var workspace = Blockly.inject('blocklyDiv', {
             toolbox: document.getElementById('toolbox')
         });
+
+        function changeLanguage() {
+          var languageSelect = document.getElementById('languageSelect');
+          var langCode = languageSelect.value;
+
+          var blocklyMsgScript = document.getElementById('blockly-msg-fr');
+          blocklyMsgScript.src = `./lib_interface/msg/${langCode}.js`;
+        }
 
         function runCode() {
             var code = Blockly.Python.workspaceToCode(workspace);

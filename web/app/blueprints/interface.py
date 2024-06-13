@@ -3,7 +3,7 @@ import os
 import sys
 import threading
 from rosa import Rosa
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request,  send_from_directory
 
 import sys
 sys.path.append("/home/pi/rosa-master/rpi/mode/manuel/")
@@ -45,6 +45,14 @@ try:
             return jsonify({'message': 'Code execution started'}), 200
         except Exception as e:
             return jsonify({'error': str(e)}), 500
+        
+    # Route pour servir les fichiers Blockly en fonction de la langue
+    @interface.route('/lib_interface<lang_code>.js')
+    def send_blockly_msg(lang_code):
+        filename = f"{lang_code}.js"
+        return send_from_directory('static/blockly/msg', filename)
+
+
 
 except ImportError as e:
     print(f"Error importing module 'manuel': {e}")
