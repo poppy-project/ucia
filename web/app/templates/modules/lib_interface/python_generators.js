@@ -1,16 +1,4 @@
-python.pythonGenerator.forBlock['move_forward'] = function(block, generator) {
-  var value_speed = Blockly.Python.valueToCode(block, 'SPEED', Blockly.Python.ORDER_ATOMIC);
-  var value_duration = Blockly.Python.valueToCode(block, 'DURATION', Blockly.Python.ORDER_ATOMIC);
-  if (value_duration) {
-    var code = `forward(rosa, ${value_speed}, ${value_duration})\n`;
-  } else {
-    var code = `forward(rosa, ${value_speed})\n`;
-  }
-  return code;
-};
-
-python.pythonGenerator.forBlock['move'] = function(block, generator) {
-  var dropdown_direction = block.getFieldValue('DIRECTION');
+python.pythonGenerator.forBlock['move'] = function(block) {  var dropdown_direction = block.getFieldValue('DIRECTION');
   var value_speed = Blockly.Python.valueToCode(block, 'SPEED', Blockly.Python.ORDER_ATOMIC);
   var value_duration = Blockly.Python.valueToCode(block, 'DURATION', Blockly.Python.ORDER_ATOMIC);
 
@@ -26,46 +14,46 @@ python.pythonGenerator.forBlock['move'] = function(block, generator) {
 };
 
 
-Blockly.Python['move_backward'] = function(block) {
+python.pythonGenerator.forBlock['turn'] = function(block) {  var dropdown_direction = block.getFieldValue('DIRECTION');
   var value_speed = Blockly.Python.valueToCode(block, 'SPEED', Blockly.Python.ORDER_ATOMIC);
   var value_duration = Blockly.Python.valueToCode(block, 'DURATION', Blockly.Python.ORDER_ATOMIC);
+
+  var directionFunction = dropdown_direction === 'LEFT' ? 'turn_left' : 'turn_right';
+
   if (value_duration) {
-    var code = `backward(rosa, ${value_speed}, ${value_duration})\n`;
+    var code = `${directionFunction}(rosa, ${value_speed}, ${value_duration})\n`;
   } else {
-    var code = `backward(rosa, ${value_speed})\n`;
+    var code = `${directionFunction}(rosa, ${value_speed})\n`;
   }
   return code;
 };
 
-Blockly.Python['turn_left'] = function(block) {
-  var value_speed = Blockly.Python.valueToCode(block, 'SPEED', Blockly.Python.ORDER_ATOMIC);
-  var value_duration = Blockly.Python.valueToCode(block, 'DURATION', Blockly.Python.ORDER_ATOMIC);
-  if (value_duration) {
-    var code = `turn_left(rosa, ${value_speed}, ${value_duration})\n`;
-  } else {
-    var code = `turn_left(rosa, ${value_speed})\n`;
-  }
-  return code;
-};
-
-Blockly.Python['turn_right'] = function(block) {
-  var value_speed = Blockly.Python.valueToCode(block, 'SPEED', Blockly.Python.ORDER_ATOMIC);
-  var value_duration = Blockly.Python.valueToCode(block, 'DURATION', Blockly.Python.ORDER_ATOMIC);
-  if (value_duration) {
-    var code = `turn_right(rosa, ${value_speed}, ${value_duration})\n`;
-  } else {
-    var code = `turn_right(rosa, ${value_speed})\n`;
-  }
-  return code;
-};
-
-Blockly.Python['stop_robot'] = function(block) {
+python.pythonGenerator.forBlock['stop_rosa'] = function(block) {
   var code = `stop(rosa)\n`;
   return code;
 };
 
-Blockly.Python['sleep'] = function(block) {
+python.pythonGenerator.forBlock['sleep'] = function(block) {
   var value_duration = Blockly.Python.valueToCode(block, 'DURATION', Blockly.Python.ORDER_ATOMIC);
   var code = `sleep(${value_duration})\n`;
+  return code;
+};
+
+
+python.pythonGenerator.forBlock['led'] = function(block) {
+  var dropdown_led = block.getFieldValue('LED');
+  var dropdown_state = block.getFieldValue('STATE');
+  var code = `active_led(rosa, '${dropdown_led}', '${dropdown_state}')\n`;
+  return code;
+};
+
+python.pythonGenerator.forBlock['buzzer'] = function(block) {
+  var value_duration = Blockly.Python.valueToCode(block, 'DURATION', Blockly.Python.ORDER_ATOMIC);
+  var code;
+  if (value_duration) {
+      code = `active_buzz(rosa, ${value_duration})\n`;
+  } else {
+      code = `active_buzz(rosa)\n`;
+  }
   return code;
 };
