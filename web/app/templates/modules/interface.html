@@ -10,7 +10,6 @@
     <script src="./lib_interface/blockly/blockly.min.js"></script>
     <script src="./lib_interface/blockly/python_compressed.js"></script>
     <!-- Chargez langue Blockly -->
-    <script src="./lib_interface/blockly/msg/fr.js" id="blockly-msg-fr" defer></script>
     <!-- Chargez les définitions des blocs personnalisés et les générateurs -->
     <script src="./lib_interface/blocks.js"></script>
     <script src="./lib_interface/python_generators.js"></script>
@@ -35,10 +34,11 @@
     <div class="prog-mode" id="progInt">
         <div class="block-side">
             <div class="langue-selection">
-                <label for="languageSelect">Choisissez la langue : </label>
-                <select id="languageSelector">
+                <label for="languageSelect">Choississez la langue des blocs :</label>
+                <select id="languageSelect">
+                    <option value="fr">Français</option>
                     <option value="en">English</option>
-                    <option value="fr" selected>Français</option>
+                    <!-- Ajoutez d'autres options de langue si nécessaire -->
                 </select>
             </div>
             <div class="blockWtitle">
@@ -227,6 +227,9 @@
     </div>
 </body>
 
+<script src="./lib_interface/blockly/msg/fr.js" id="blockly-msg" defer></script>
+
+
 <script>
     const progInt = document.getElementById('progInt');
     const manualInt = document.getElementById('manualInt');
@@ -248,6 +251,33 @@
     workspace.addChangeListener(function (event) {
         var code = Blockly.Python.workspaceToCode(workspace);
         document.getElementById('codeDiv').innerText = code;
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const selectElement = document.getElementById('languageSelect');
+        const scriptId = 'blockly-msg';
+
+        selectElement.addEventListener('change', (event) => {
+            const selectedLanguage = event.target.value;
+            const newScriptSrc = `./lib_interface/blockly/msg/${selectedLanguage}.js`;
+
+            // Supprimez l'ancien script s'il existe
+            const oldScript = document.getElementById(scriptId);
+            if (oldScript) {
+                oldScript.remove();
+            }
+
+            // Créez un nouveau script avec la nouvelle source
+            const newScript = document.createElement('script');
+            newScript.id = scriptId;
+            newScript.src = newScriptSrc;
+            newScript.defer = true;
+
+            // Ajoutez le nouveau script au document
+            document.body.appendChild(newScript);
+
+            console.log(`Script source changed to: ${newScriptSrc}`);
+        });
     });
 
 
