@@ -7,8 +7,7 @@
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
   <script src="https://unpkg.com/blockly/python_compressed.js"></script>
     <!-- Chargez langue Blockly -->
-  <script src="https://unpkg.com/blockly/msg/fr.js" id="blockly-msg-en" defer></script>
-  <script src="https://unpkg.com/blockly/msg/en.js" id="blockly-msg-fr" defer></script>
+  <script src="https://unpkg.com/blockly/msg/fr.js" id="blockly-msg-fr" defer></script>
   <!-- Chargez les définitions des blocs personnalisés et les générateurs -->
   <script src="./lib_interface/blocks.js"></script>
   <script src="./lib_interface/python_generators.js"></script>
@@ -28,195 +27,113 @@
 <body>
   <h1>Programmation du Robot</h1>
   <label for="languageSelect">Choisissez la langue:</label>
-  <select id="languageSelector" onchange="changeLanguage()">
+  <select id="languageSelector">
     <option value="en">English</option>
     <option value="fr" selected>Français</option>
   </select>
   <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
   <pre id="codeDisplay"></pre>
-  <xml id="toolbox-fr" style="display: none">
+  <xml id="toolbox" style="display: none">
     <category name="ROSA">
-      <block type="move"></block>
-      <block type="turn"></block>
-      <block type="stop_rosa"></block>
-      <block type="sleep"></block>
-      <block type="led"></block>
-      <block type="buzzer"></block>
+        <block type="move"></block>
+        <block type="turn"></block>
+        <block type="stop_rosa"></block>
+        <block type="sleep"></block>
+        <block type="led"></block>
+        <block type="buzzer"></block>
     </category>
     <category name="Logique">
-      <block type="controls_if"></block>
-      <block type="logic_compare"></block>
-      <block type="logic_operation"></block>
-      <block type="logic_negate"></block>
-      <block type="logic_boolean"></block>
+        <block type="controls_if"></block>
+        <block type="logic_compare"></block>
+        <block type="logic_operation"></block>
+        <block type="logic_negate"></block>
+        <block type="logic_boolean"></block>
     </category>
     <category name="Boucles">
-      <block type="controls_repeat_ext">
-        <value name="TIMES">
-          <block type="math_number">
-            <field name="NUM">10</field>
-          </block>
-        </value>
-      </block>
-      <block type="controls_whileUntil"></block>
-      <block type="controls_for">
-        <value name="FROM">
-          <block type="math_number">
-            <field name="NUM">1</field>
-          </value>
-        <value name="TO">
-          <block type="math_number">
-            <field name="NUM">10</field>
-          </value>
-        <value name="BY">
-          <block type="math_number">
-            <field name="NUM">1</field>
-          </value>
-      </block>
-      <block type="controls_forEach"></block>
+        <block type="controls_repeat_ext">
+            <value name="TIMES">
+                <block type="math_number">
+                    <field name="NUM">10</field>
+                </block>
+            </value>
+        </block>
+        <block type="controls_whileUntil"></block>
+        <block type="controls_for">
+            <value name="FROM">
+                <block type="math_number">
+                    <field name="NUM">1</field>
+                </block>
+            </value>
+            <value name="TO">
+                <block type="math_number">
+                    <field name="NUM">10</field>
+                </block>
+            </value>
+            <value name="BY">
+                <block type="math_number">
+                    <field name="NUM">1</field>
+                </block>
+            </value>
+        </block>
+        <block type="controls_forEach"></block>
     </category>
     <category name="Mathématiques">
-      <block type="math_number"></block>
-      <block type="math_arithmetic"></block>
-      <block type="math_single"></block>
-      <block type="math_trig"></block>
-      <block type="math_constant"></block>
-      <block type="math_number_property"></block>
-      <block type="math_round"></block>
-      <block type="math_on_list"></block>
-      <block type="math_modulo"></block>
-      <block type="math_constrain"></block>
-      <block type="math_random_int"></block>
-      <block type="math_random_float"></block>
+        <block type="math_number"></block>
+        <block type="math_arithmetic"></block>
+        <block type="math_single"></block>
+        <block type="math_trig"></block>
+        <block type="math_constant"></block>
+        <block type="math_number_property"></block>
+        <block type="math_round"></block>
+        <block type="math_on_list"></block>
+        <block type="math_modulo"></block>
+        <block type="math_constrain"></block>
+        <block type="math_random_int"></block>
+        <block type="math_random_float"></block>
     </category>
     <category name="Texte">
-      <block type="text"></block>
-      <block type="text_join"></block>
-      <block type="text_append">
-        <value name="TEXT">
-          <block type="text"></block>
-        </value>
-      </block>
-      <block type="text_length"></block>
-      <block type="text_isEmpty"></block>
-      <block type="text_indexOf">
-        <value name="VALUE">
-          <block type="text"></block>
-        </value>
-      </block>
-      <block type="text_charAt">
-        <value name="VALUE">
-          <block type="text"></block>
-        </value>
-      </block>
-      <block type="text_getSubstring">
-        <value name="STRING">
-          <block type="text"></block>
-        </value>
-      </block>
-      <block type="text_changeCase"></block>
-      <block type="text_trim"></block>
-      <block type="text_print"></block>
+        <block type="text"></block>
+        <block type="text_join"></block>
+        <block type="text_append">
+            <value name="TEXT">
+                <block type="text"></block>
+            </value>
+        </block>
+        <block type="text_length"></block>
+        <block type="text_isEmpty"></block>
+        <block type="text_indexOf">
+            <value name="VALUE">
+                <block type="text"></block>
+            </value>
+        </block>
+        <block type="text_charAt">
+            <value name="VALUE">
+                <block type="text"></block>
+            </value>
+        </block>
+        <block type="text_getSubstring">
+            <value name="STRING">
+                <block type="text"></block>
+            </value>
+        </block>
+        <block type="text_changeCase"></block>
+        <block type="text_trim"></block>
+        <block type="text_print"></block>
     </category>
     <category name="Variables" custom="VARIABLE"></category>
     <category name="Fonctions" custom="PROCEDURE"></category>
-  </xml>
-  <xml id="toolbox-fr" style="display: none">
-    <category name="ROSA">
-      <block type="move"></block>
-      <block type="turn"></block>
-      <block type="stop_rosa"></block>
-      <block type="sleep"></block>
-      <block type="led"></block>
-      <block type="buzzer"></block>
-    </category>
-    <category name="Logical">
-      <block type="controls_if"></block>
-      <block type="logic_compare"></block>
-      <block type="logic_operation"></block>
-      <block type="logic_negate"></block>
-      <block type="logic_boolean"></block>
-    </category>
-    <category name="Loo">
-      <block type="controls_repeat_ext">
-        <value name="TIMES">
-          <block type="math_number">
-            <field name="NUM">10</field>
-          </block>
-        </value>
-      </block>
-      <block type="controls_whileUntil"></block>
-      <block type="controls_for">
-        <value name="FROM">
-          <block type="math_number">
-            <field name="NUM">1</field>
-          </value>
-        <value name="TO">
-          <block type="math_number">
-            <field name="NUM">10</field>
-          </value>
-        <value name="BY">
-          <block type="math_number">
-            <field name="NUM">1</field>
-          </value>
-      </block>
-      <block type="controls_forEach"></block>
-    </category>
-    <category name="Maths">
-      <block type="math_number"></block>
-      <block type="math_arithmetic"></block>
-      <block type="math_single"></block>
-      <block type="math_trig"></block>
-      <block type="math_constant"></block>
-      <block type="math_number_property"></block>
-      <block type="math_round"></block>
-      <block type="math_on_list"></block>
-      <block type="math_modulo"></block>
-      <block type="math_constrain"></block>
-      <block type="math_random_int"></block>
-      <block type="math_random_float"></block>
-    </category>
-    <category name="Text">
-      <block type="text"></block>
-      <block type="text_join"></block>
-      <block type="text_append">
-        <value name="TEXT">
-          <block type="text"></block>
-        </value>
-      </block>
-      <block type="text_length"></block>
-      <block type="text_isEmpty"></block>
-      <block type="text_indexOf">
-        <value name="VALUE">
-          <block type="text"></block>
-        </value>
-      </block>
-      <block type="text_charAt">
-        <value name="VALUE">
-          <block type="text"></block>
-        </value>
-      </block>
-      <block type="text_getSubstring">
-        <value name="STRING">
-          <block type="text"></block>
-        </value>
-      </block>
-      <block type="text_changeCase"></block>
-      <block type="text_trim"></block>
-      <block type="text_print"></block>
-    </category>
-    <category name="Variables" custom="VARIABLE"></category>
-    <category name="Functions" custom="PROCEDURE"></category>
-  </xml>
+</xml>
+
 
   <button onclick="runCode()">Exécuter le Code</button>
   <h2>Code Généré:</h2>
   <div id="codeDiv"></div>
+  <pre id="output" style="height: 200px; width: 600px; border: 1px solid #000; overflow: auto;"></pre>
   <script>
         var workspace = Blockly.inject('blocklyDiv', {
             toolbox: document.getElementById('toolbox')
         });
-
+/*
         function changeLanguage() {
           var languageSelect = document.getElementById('languageSelect');
           var langCode = languageSelect.value;
@@ -224,36 +141,31 @@
           var blocklyMsgScript = document.getElementById('blockly-msg-fr');
           blocklyMsgScript.src = `./lib_interface/msg/${langCode}.js`;
         }
-
-        function runCode() {
-            var code = Blockly.Python.workspaceToCode(workspace);
-            document.getElementById('codeDiv').innerText = code;
-
-            // Send the code to the robot
-            sendData('execute', { code: code });
-        }
+*/
 
         workspace.addChangeListener(function(event) {
             var code = Blockly.Python.workspaceToCode(workspace);
             document.getElementById('codeDiv').innerText = code;
         });
+        
+        async function executeBlocklyCode() {
+          var workspace = Blockly.getMainWorkspace();
+          var code = document.getElementById('codeDiv').innerText;
+          try {
+              const response = await fetch('http://rosa.local:8080/execute_code', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ code: code })
+              });
+              const result = await response.json();
+              document.getElementById('output').textContent = 'stdout:\n' + result.stdout + '\nstderr:\n' + result.stderr;
+          } catch (error) {
+              document.getElementById('output').textContent = 'Error: ' + error;
+          }
+      }
 
-        async function sendData(endpoint, data) {
-            const response = await fetch(`http://rosa.local:8080/${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-
-            return await response.json();
-        }
     </script>
 </body>
 </html>

@@ -1,14 +1,14 @@
 Blockly.Blocks['move'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("Move")
-        .appendField(new Blockly.FieldDropdown([["forward", "FORWARD"], ["backward", "BACKWARD"]]), "DIRECTION");
+        .appendField("Déplacement vers l'")
+        .appendField(new Blockly.FieldDropdown([["avant", "FORWARD"], ["arrière", "BACKWARD"]]), "DIRECTION");
     this.appendValueInput("SPEED")
         .setCheck("Number")
-        .appendField("with speed");
+        .appendField("à la vitesse");
     this.appendValueInput("DURATION")
         .setCheck("Number")
-        .appendField("for duration (seconds, optional)");
+        .appendField("attendre pendant (seconds, optionnel)");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(30);
@@ -21,14 +21,14 @@ Blockly.Blocks['move'] = {
 Blockly.Blocks['turn'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("Turn")
-        .appendField(new Blockly.FieldDropdown([["left", "LEFT"], ["right", "RIGHT"]]), "DIRECTION");
+        .appendField("Tourner vers la")
+        .appendField(new Blockly.FieldDropdown([["gauche", "LEFT"], ["droite", "RIGHT"]]), "DIRECTION");
     this.appendValueInput("SPEED")
         .setCheck("Number")
-        .appendField("with speed");
+        .appendField("à la vitesse");
     this.appendValueInput("DURATION")
         .setCheck("Number")
-        .appendField("for duration (seconds, optional)");
+        .appendField("attendre pendant (seconds, optionnel)");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(30);
@@ -54,7 +54,7 @@ Blockly.Blocks['sleep'] = {
   init: function() {
     this.appendValueInput("DURATION")
         .setCheck("Number")
-        .appendField("Sleep for duration (seconds)");
+        .appendField("Attendre pendant (seconds)");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(30);

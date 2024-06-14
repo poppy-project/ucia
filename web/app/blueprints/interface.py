@@ -35,24 +35,23 @@ try:
 
     @interface.route('/execute', methods=['POST'])
     def execute_code():
+        code = request.json.get('code', '')
         try:
-            data = request.get_json()
-            code = data.get('code')
-
-            exec_thread = threading.Thread(target=exec, args=(code, globals()))
-            exec_thread.start()
-
-            return jsonify({'message': 'Code execution started'}), 200
+            # Exécutez le code et capturez la sortie
+            process = subprocess.Popen(
+                ['python3', '-c', code],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            stdout, stderr = process.communicate()
+            
+            return jsonify({
+                'stdout': stdout.decode('utf-8'),
+                'stderr': stderr.decode('utf-8')
+            })
         except Exception as e:
             return jsonify({'error': str(e)}), 500
         
-    # Route pour servir les fichiers Blockly en fonction de la langue
-    @interface.route('/lib_interface<lang_code>.js')
-    def send_blockly_msg(lang_code):
-        filename = f"{lang_code}.js"
-        return send_from_directory('static/blockly/msg', filename)
-
-
 
 except ImportError as e:
     print(f"Error importing module 'manuel': {e}")

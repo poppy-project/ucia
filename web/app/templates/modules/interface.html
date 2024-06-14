@@ -13,14 +13,18 @@
         <p class="txt-title">Contrôleur ROSA</p>
     </div>
     <div class="mode_line">
-        <button id="autonomeButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700" onclick="showAutonome()">
+        <button id="progButton"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
+            onclick="showProg()">
             Pilotage automatique
         </button>
-        <button id="manualButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700" onclick="showManual()">
+        <button id="manualButton"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
+            onclick="showManual()">
             Pilotage manuel
         </button>
     </div>
-    <div class="automatic-mode" id="autonomeInt">
+    <div class="automatic-mode" id="progInt">
         <div class="modes">
             <div class="mode_selected">
                 <p class="txt">
@@ -112,24 +116,19 @@
                 <div class="direction-box">
                     <p class="txt">Mouvements :</p>
                     <div class="arrow-grid">
-                        <button class="btn-av"
-                            onmousedown="sendData('manuel', { 'dir': 'forward '})"
+                        <button class="btn-av" onmousedown="sendData('manuel', { 'dir': 'forward '})"
                             onmouseup="sendData('manuel', { 'dir': 'stop' })">
                         </button>
-                        <button class="btn-g"
-                            onmousedown="sendData('manuel', { 'dir': 'g' })"
+                        <button class="btn-g" onmousedown="sendData('manuel', { 'dir': 'g' })"
                             onmouseup="sendData('manuel', { 'dir': 'stop' })">
                         </button>
-                        <button class="btn-ar"
-                            onmousedown="sendData('manuel', { 'dir': 'ar' })"
+                        <button class="btn-ar" onmousedown="sendData('manuel', { 'dir': 'ar' })"
                             onmouseup="sendData('manuel', { 'dir': 'stop' })">
                         </button>
-                        <button class="btn-d"
-                            onmousedown="sendData('manuel', { 'dir': 'd' })"
+                        <button class="btn-d" onmousedown="sendData('manuel', { 'dir': 'd' })"
                             onmouseup="sendData('manuel', { 'dir': 'stop' })">
                         </button>
-                        <button class="btn-stop"
-                            onmousedown="sendData('manuel', { 'dir': 'stop' })">
+                        <button class="btn-stop" onmousedown="sendData('manuel', { 'dir': 'stop' })">
                         </button>
                     </div>
                 </div>
@@ -139,49 +138,83 @@
 </body>
 
 <script>
-    const autonomeInt = document.getElementById('autonomeInt');
+    var workspace = Blockly.inject('blocklyDiv', {
+        toolbox: document.getElementById('toolbox')
+    });
+
+    const progInt = document.getElementById('progInt');
     const manualInt = document.getElementById('manualInt');
-    const autonomeButton = document.getElementById('autonomeButton');
+    const progButton = document.getElementById('progButton');
     const manualButton = document.getElementById('manualButton');
 
     const slider = document.getElementById('speedSlider');
     const sliderValue = document.getElementById('slider-value');
 
     sliderValue.textContent = slider.value;
-    slider.addEventListener('input', function() {
+    slider.addEventListener('input', function () {
         sliderValue.textContent = slider.value;
     });
 
-    function showAutonome() {
-        autonomeInt.style.display = 'flex';
+    function showProg() {
+        progInt.style.display = 'flex';
         manualInt.style.display = 'none';
     }
 
     function showManual() {
-        autonomeInt.style.display = 'none';
+        progInt.style.display = 'none';
         manualInt.style.display = 'flex';
     }
 
-    async function sendData(endpoint, data) {
-    data.speed = document.getElementById('speedSlider').value / 100;
-    let url = new URL(`http://rosa.local:8080/${endpoint}`);
-    Object.keys(data).forEach(key => url.searchParams.append(key, data[key]));
+    function runCode() {
+        var code = Blockly.Python.workspaceToCode(workspace);
+        document.getElementById('codeDiv').innerText = code;
 
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-    });
-
-    if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
+        // Send the code to the robot
+        sendData('execute', { code: code });
     }
 
-    return await response.json();
+    workspace.addChangeListener(function(event) {
+        var code = Blockly.Python.workspaceToCode(workspace);
+        document.getElementById('codeDiv').innerText = code;
+    });
 
-}
+    async function sendDataGet(endpoint, data) {
+        data.speed = document.getElementById('speedSlider').value / 100;
+        let url = new URL(`http://rosa.local:8080/${endpoint}`);
+        Object.keys(data).forEach(key => url.searchParams.append(key, data[key]));
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+
+        return await response.json();
+
+    }
+    async function sendDataPost(endpoint, data) {
+        const response = await fetch(`http://rosa.local:8080/${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+
+        return await response.json();
+    }
 
 </script>
+
 </html>
