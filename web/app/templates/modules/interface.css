@@ -33,29 +33,6 @@
     font-weight: bold;
 }
 
-.txt-btn {
-    color: var(--txt-mode);
-    font-family: "Inter", sans-serif;
-    font-size:large;
-    font-weight:500;
-}
-
-.button-mode {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 40%;
-    height: 17vh;
-    padding: 12px 24px;
-    font-size: 16px;
-    text-align: center;
-    color: #ffffff;
-    background: var(--main-blue);
-    border-radius: 15px;
-    border: none;
-    gap: 10px;
-}
 
 .button-mode select {
     cursor: pointer;
@@ -82,33 +59,57 @@
     justify-content: space-evenly;
 }
 
-.automatic-mode {
-    display: none;
-    justify-content: space-around;
+
+.prog-mode{
+    display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
+    width: 100%;
     height: calc(100vh - 20vh);
 }
 
-.modes {
-    width: 35%;
-    height: 100%;
-}
-
-.mode_selected {
+.langue-selection {
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    height: 7dvh ;
+    height: 10%;
+    margin-left: 10%;
 }
 
-.mode_selection {
+
+.block-side {
     display: flex;
-    height: calc(100vh - 27vh);
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap: 5vh;
+    justify-content: center;
+    width: 50%;
+    height: calc(100vh - 20vh);
+}
+
+.blockWtitle {
+    width: 100%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.code-side{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: calc(100vh - 20vh);
+    width: 50%;
+}
+
+.blockBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .sep {
@@ -120,44 +121,46 @@
 }
 
 .line {
-    height: 75%;
+    height: 80%;
     width: 20%;
     border-radius: 5px;
     background-color: black;
-    margin-top: 10vh;
+    margin-top: 5vh;
 }
 
-.cam_zone {
-    width: 63%;
-    height: 100%;
+#blocklyDiv {
+    height: 480px;
+    width: 600px;
+}
+
+
+.output{
+    height: 25vh;
+    width: 30vw;
+    border: 2px solid #000000;
+    overflow: auto;
+    white-space: pre-wrap;
+}
+
+.codeWbtn{
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
+    gap: 2%;
 }
 
-.cam_txt {
-    height: 75%;
-    width: 60%;
-    display: flex;
-    flex-direction: column;
+.generated-code{
+    background-color: none;
 }
 
-.cam_txt p {
-    margin-bottom: 2vh;
+.output-code {
+    background-color: none;
 }
 
-.video-container {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--main-grey);
-    border: black solid 2px;
-}
 
 .manuel-mode {
-    display: flex;
+    display: none;
     flex-direction: row;
     width: 100%;
     height: calc(100vh - 20vh);

@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
     <title>ROSA contrôleur</title>
     <link rel="stylesheet" href="./interface.css">
     <link rel="stylesheet" href="../../static/css/tailwind.css">
+    <!-- Chargez Blockly et le générateur Python -->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+    <!-- Chargez langue Blockly -->
+    <script src="https://unpkg.com/blockly/msg/fr.js" id="blockly-msg-fr" defer></script>
+    <!-- Chargez les définitions des blocs personnalisés et les générateurs -->
+    <script src="./lib_interface/blocks.js"></script>
+    <script src="./lib_interface/python_generators.js"></script>
 </head>
 
 <body>
@@ -16,7 +24,7 @@
         <button id="progButton"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
             onclick="showProg()">
-            Pilotage automatique
+            Programmation
         </button>
         <button id="manualButton"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
@@ -24,55 +32,137 @@
             Pilotage manuel
         </button>
     </div>
-    <div class="automatic-mode" id="progInt">
-        <div class="modes">
-            <div class="mode_selected">
-                <p class="txt">
-                    <span>Mode sélectionné :</span>
-                    <span class="txt-bold">Chasseur de trésor</span>
-                </p>
+    <div class="prog-mode" id="progInt">
+        <div class="block-side">
+            <div class="langue-selection">
+                <label for="languageSelect">Choisissez la langue : </label>
+                <select id="languageSelector">
+                    <option value="en">English</option>
+                    <option value="fr" selected>Français</option>
+                </select>
             </div>
-            <div class="mode_selection">
-                <div class="button-mode">
-                    <p class="txt-btn">Chasseur de trésor</p>
-                    <select name="" id="">
-                        <option value="CB">Cube bleu</option>
-                        <option value="SR">Sphere rouge</option>
-                        <option value="TV">Triangle vert</option>
-                    </select>
-                    <button class="button-go" onclick="sendData('mode', { 'name': 'treasure.py' })">Go</button>
-                </div>
-                <div class="button-mode">
-                    <p class="txt-btn">La Pie TALGO</p>
-                    <select name="" id="">
-                        <option value="CB">Cube bleu</option>
-                        <option value="SR">Sphere rouge</option>
-                        <option value="TV">Triangle vert</option>
-                    </select>
-                    <button class="button-go" onclick="sendData('mode', { 'name': 'follow_no_vision.py' })">Go</button>
-                </div>
-                <div class="button-mode">
-                    <p class="txt-btn"> L'Hirondelle LIA</p>
-                    <select name="" id="">
-                        <option value="CB">Cube bleu</option>
-                        <option value="SR">Sphere rouge</option>
-                        <option value="TV">Triangle vert</option>
-                    </select>
-                    <button class="button-go" onclick="sendData('mode', { 'name': 'follow_vision.py' })">Go</button>
+            <div class="blockWtitle">
+                <div class="blockBox">
+                    <h1>Blocs :</h1>
+                    <div id="blocklyDiv"></div>
+                    <pre id="codeDisplay"></pre>
+                    <xml id="toolbox" style="display: none">
+                        <category name="ROSA">
+                            <block type="move"></block>
+                            <block type="turn"></block>
+                            <block type="stop_rosa"></block>
+                            <block type="sleep"></block>
+                            <block type="buzzer"></block>
+                        </category>
+                        <category name="Logique">
+                            <block type="controls_if"></block>
+                            <block type="logic_compare"></block>
+                            <block type="logic_operation"></block>
+                            <block type="logic_negate"></block>
+                            <block type="logic_boolean"></block>
+                        </category>
+                        <category name="Boucles">
+                            <block type="controls_repeat_ext">
+                                <value name="TIMES">
+                                    <block type="math_number">
+                                        <field name="NUM">10</field>
+                                    </block>
+                                </value>
+                            </block>
+                            <block type="controls_whileUntil"></block>
+                            <block type="controls_for">
+                                <value name="FROM">
+                                    <block type="math_number">
+                                        <field name="NUM">1</field>
+                                    </block>
+                                </value>
+                                <value name="TO">
+                                    <block type="math_number">
+                                        <field name="NUM">10</field>
+                                    </block>
+                                </value>
+                                <value name="BY">
+                                    <block type="math_number">
+                                        <field name="NUM">1</field>
+                                    </block>
+                                </value>
+                            </block>
+                            <block type="controls_forEach"></block>
+                        </category>
+                        <category name="Mathématiques">
+                            <block type="math_number"></block>
+                            <block type="math_arithmetic"></block>
+                            <block type="math_single"></block>
+                            <block type="math_trig"></block>
+                            <block type="math_constant"></block>
+                            <block type="math_number_property"></block>
+                            <block type="math_round"></block>
+                            <block type="math_on_list"></block>
+                            <block type="math_modulo"></block>
+                            <block type="math_constrain"></block>
+                            <block type="math_random_int"></block>
+                            <block type="math_random_float"></block>
+                        </category>
+                        <category name="Texte">
+                            <block type="text"></block>
+                            <block type="text_join"></block>
+                            <block type="text_append">
+                                <value name="TEXT">
+                                    <block type="text"></block>
+                                </value>
+                            </block>
+                            <block type="text_length"></block>
+                            <block type="text_isEmpty"></block>
+                            <block type="text_indexOf">
+                                <value name="VALUE">
+                                    <block type="text"></block>
+                                </value>
+                            </block>
+                            <block type="text_charAt">
+                                <value name="VALUE">
+                                    <block type="text"></block>
+                                </value>
+                            </block>
+                            <block type="text_getSubstring">
+                                <value name="STRING">
+                                    <block type="text"></block>
+                                </value>
+                            </block>
+                            <block type="text_changeCase"></block>
+                            <block type="text_trim"></block>
+                            <block type="text_print"></block>
+                        </category>
+                        <category name="Variables" custom="VARIABLE"></category>
+                        <category name="Fonctions" custom="PROCEDURE"></category>
+                    </xml>
                 </div>
             </div>
         </div>
+
         <div class="sep">
             <div class="line"></div>
         </div>
-        <div class="cam_zone">
-            <div class="cam_txt">
-                <p class="txt-bold">Vision :</p>
-                <div class="video-container">
-                    <video id="remoteVideoDetection" autoplay></video>
+
+        <div class="code-side">
+            
+            <div class="codeWbtn">
+                <div class="generated-code">
+                    <h2>Code : </h2>
+                    <div class="output" id="codeDiv"></div>
                 </div>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
+                onclick="runCode()">Exécuter
+                </button>
             </div>
+           
+
+            <div class="output-code">
+                <h2>Sortie : </h2>
+                <pre class="output" id="output"></pre>
+            </div>
+
         </div>
+    </div>
     </div>
     <div class="manuel-mode" id="manualInt">
         <div class="bot-front">
@@ -116,19 +206,19 @@
                 <div class="direction-box">
                     <p class="txt">Mouvements :</p>
                     <div class="arrow-grid">
-                        <button class="btn-av" onmousedown="sendData('manuel', { 'dir': 'forward '})"
-                            onmouseup="sendData('manuel', { 'dir': 'stop' })">
+                        <button class="btn-av" onmousedown="sendDataGet('manuel', { 'dir': 'forward '})"
+                            onmouseup="sendDataGet('manuel', { 'dir': 'stop' })">
                         </button>
-                        <button class="btn-g" onmousedown="sendData('manuel', { 'dir': 'g' })"
-                            onmouseup="sendData('manuel', { 'dir': 'stop' })">
+                        <button class="btn-g" onmousedown="sendDataGet('manuel', { 'dir': 'g' })"
+                            onmouseup="sendDataGet('manuel', { 'dir': 'stop' })">
                         </button>
-                        <button class="btn-ar" onmousedown="sendData('manuel', { 'dir': 'ar' })"
-                            onmouseup="sendData('manuel', { 'dir': 'stop' })">
+                        <button class="btn-ar" onmousedown="sendDataGEt('manuel', { 'dir': 'ar' })"
+                            onmouseup="sendDataGet('manuel', { 'dir': 'stop' })">
                         </button>
-                        <button class="btn-d" onmousedown="sendData('manuel', { 'dir': 'd' })"
-                            onmouseup="sendData('manuel', { 'dir': 'stop' })">
+                        <button class="btn-d" onmousedown="sendDataGet('manuel', { 'dir': 'd' })"
+                            onmouseup="sendDataGet('manuel', { 'dir': 'stop' })">
                         </button>
-                        <button class="btn-stop" onmousedown="sendData('manuel', { 'dir': 'stop' })">
+                        <button class="btn-stop" onmousedown="sendDataGet('manuel', { 'dir': 'stop' })">
                         </button>
                     </div>
                 </div>
@@ -138,10 +228,6 @@
 </body>
 
 <script>
-    var workspace = Blockly.inject('blocklyDiv', {
-        toolbox: document.getElementById('toolbox')
-    });
-
     const progInt = document.getElementById('progInt');
     const manualInt = document.getElementById('manualInt');
     const progButton = document.getElementById('progButton');
@@ -155,6 +241,16 @@
         sliderValue.textContent = slider.value;
     });
 
+    var workspace = Blockly.inject('blocklyDiv', {
+        toolbox: document.getElementById('toolbox')
+    });
+
+    workspace.addChangeListener(function (event) {
+        var code = Blockly.Python.workspaceToCode(workspace);
+        document.getElementById('codeDiv').innerText = code;
+    });
+
+
     function showProg() {
         progInt.style.display = 'flex';
         manualInt.style.display = 'none';
@@ -167,16 +263,8 @@
 
     function runCode() {
         var code = Blockly.Python.workspaceToCode(workspace);
-        document.getElementById('codeDiv').innerText = code;
-
-        // Send the code to the robot
-        sendData('execute', { code: code });
+        sendDataPost('execute', { code: code });
     }
-
-    workspace.addChangeListener(function(event) {
-        var code = Blockly.Python.workspaceToCode(workspace);
-        document.getElementById('codeDiv').innerText = code;
-    });
 
     async function sendDataGet(endpoint, data) {
         data.speed = document.getElementById('speedSlider').value / 100;
@@ -198,23 +286,30 @@
         return await response.json();
 
     }
+
     async function sendDataPost(endpoint, data) {
-        const response = await fetch(`http://rosa.local:8080/${endpoint}`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
+        try {
+            const response = await fetch(`http://rosa.local:8080/${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+
+            const result = await response.json();
+            document.getElementById('output').textContent = 'stdout:\n' + result.stdout + '\nstderr:\n' + result.stderr;
+            return result;
+        } catch (error) {
+            document.getElementById('output').textContent = 'Error: ' + error;
+            throw error;
         }
-
-        return await response.json();
     }
-
 </script>
 
 </html>

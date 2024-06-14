@@ -31,7 +31,7 @@
     <option value="en">English</option>
     <option value="fr" selected>Français</option>
   </select>
-  <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+  <div id="blocklyDiv"></div>
   <pre id="codeDisplay"></pre>
   <xml id="toolbox" style="display: none">
     <category name="ROSA">
@@ -125,7 +125,7 @@
 </xml>
 
 
-  <button onclick="runCode()">Exécuter le Code</button>
+  <button onclick="executeBlocklyCode()">Exécuter le Code</button>
   <h2>Code Généré:</h2>
   <div id="codeDiv"></div>
   <pre id="output" style="height: 200px; width: 600px; border: 1px solid #000; overflow: auto;"></pre>
@@ -149,10 +149,9 @@
         });
         
         async function executeBlocklyCode() {
-          var workspace = Blockly.getMainWorkspace();
           var code = document.getElementById('codeDiv').innerText;
           try {
-              const response = await fetch('http://rosa.local:8080/execute_code', {
+              const response = await fetch('http://rosa.local:8080/execute', {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json'
