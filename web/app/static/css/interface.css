@@ -186,7 +186,6 @@
     align-items: center;
     justify-content: center;
     flex-direction: row;
-    background-color: red;
 }
 
 .value-lat1 {
@@ -201,7 +200,6 @@
     width: 50%;
     display: flex;
     justify-content: start;
-    background-color: orange;
     gap: 2vw;
     margin-left: 4vw;
 }

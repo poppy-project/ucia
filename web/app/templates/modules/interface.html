@@ -1,21 +1,9 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>ROSA contrôleur</title>
-    <link rel="stylesheet" href="./interface.css">
-    <link rel="stylesheet" href="../../static/css/tailwind.css">
-    <!-- Chargez Blockly et le générateur Python -->
-    <script src="./lib_interface/blockly/blockly.min.js"></script>
-    <script src="./lib_interface/blockly/python_compressed.js"></script>
-    <!-- Chargez langue Blockly -->
-    <!-- Chargez les définitions des blocs personnalisés et les générateurs -->
-    <script src="./lib_interface/blocks.js"></script>
-    <script src="./lib_interface/python_generators.js"></script>
-</head>
+{% block content %}
+<div>
+    <h1 class="text-2xl font-bold mb-4 text-center">Interface</h1>
 
-<body>
     <div class="header_controle">
         <p class="txt-title">Contrôleur ROSA</p>
     </div>
@@ -167,7 +155,7 @@
     <div class="manuel-mode" id="manualInt">
         <div class="bot-front">
             <div class="bot-shema">
-                <img src="../../static/images/rosa_front.svg" alt="">
+                <img src="/static/images/rosa_front.svg" alt="Image du Rosa de face">
             </div>
             <p class="value-front">
                 <span>200</span>
@@ -189,7 +177,7 @@
                     <span>200</span>
                 </p>
                 <div class="bot-shema">
-                    <img src="../../static/images/rosa_lateral.svg" alt="">
+                    <img src="/static/images/rosa_lateral.svg" alt="Image du Rosa de côté">
                 </div>
             </div>
         </div>
@@ -225,7 +213,7 @@
             </div>
         </div>
     </div>
-</body>
+</div>
 
 <script src="./lib_interface/blockly/msg/fr.js" id="blockly-msg" defer></script>
 
@@ -342,4 +330,4 @@
     }
 </script>
 
-</html>
+{% endblock %}
