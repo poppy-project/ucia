@@ -10,11 +10,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/interface.css') }}">
     <!-- Chargez Blockly et le générateur Python -->
-    <script src="{ url_for('templates', filename=modules/lib_interface/blockly/blockly.min.js )}"></script>
-    <script src="{ url_for('templates', filename=modules/lib_interface/blockly/python_compressed.js )}"></script>
+    <script src="{{ url_for('static', filename='lib_interface/blockly/blockly.min.js' ) }}"></script>
+    <script src="{{ url_for('static', filename='lib_interface/blockly/python_compressed.js' ) }}"></script>
     <!-- Chargez les définitions des blocs personnalisés et les générateurs -->
-    <script src="{ url_for('templates', filename=modules/lib_interface/blocks.js )}"></script>
-    <script src="{ url_for('templates', filename=modules/lib_interface/python_generators.js )}"></script>
+    <script src="{{ url_for('static', filename='lib_interface/blocks.js' ) }}"></script>
+    <script src="{{ url_for('static', filename='lib_interface/python_generators.js' ) }}"></script>
 
 </head>
 

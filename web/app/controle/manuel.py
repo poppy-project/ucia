@@ -1,49 +1,64 @@
 from time import sleep
+from rosa import Rosa
 
-def set_speed(rosa, ls, rs):
+# Définition de la variable globale
+rosa = None
+
+def define_rosa():
+    global rosa
+    if rosa is None:
+        rosa = Rosa('rosa.local', local_robot=False)  # Initialisez Rosa correctement
+    return rosa
+
+def set_speed(ls, rs):
     """Réglez la vitesse des roues gauche et droite."""
+    global rosa
+    define_rosa()
     rosa.left_wheel.speed = ls
     rosa.right_wheel.speed = rs
 
-def stop(rosa):
+def stop():
     """Arrêtez le ROSA."""
-    set_speed(rosa, 0, 0)
+    set_speed(0, 0)
 
-def forward(rosa, speed, duration=None):
+def forward(speed, duration=None):
     """Fait avancer le ROSA à la vitesse donnée pendant une durée donnée ou indéfiniment."""
-    set_speed(rosa, speed, speed)
+    set_speed(speed, speed)
     if duration:
         sleep(duration)
-        stop(rosa)
+        stop()
 
-def backward(rosa, speed, duration=None):
+def backward(speed, duration=None):
     """Fait reculer le ROSA à la vitesse donnée pendant une durée donnée ou indéfiniment."""
-    set_speed(rosa, -speed, -speed)
+    set_speed(-speed, -speed)
     if duration:
         sleep(duration)
-        stop(rosa)
+        stop()
 
-def turn_left(rosa, speed, duration=None):
+def turn_left(speed, duration=None):
     """Fait tourner le ROSA à gauche à la vitesse donnée pendant une durée donnée ou indéfiniment."""
-    set_speed(rosa, speed, -speed)
+    set_speed(speed, -speed)
     if duration:
         sleep(duration)
-        stop(rosa)
+        stop()
 
-def turn_right(rosa, speed, duration=None):
+def turn_right(speed, duration=None):
     """Fait tourner le ROSA à droite à la vitesse donnée pendant une durée donnée ou indéfiniment."""
-    set_speed(rosa, -speed, speed)
+    set_speed(-speed, speed)
     if duration:
         sleep(duration)
-        stop(rosa)
-        
+        stop()
 
-def active_buzz(rosa, duration=1): 
+def active_buzz(duration=1):
     """Active le buzzer du ROSA pendant une durée donnée ou 1sec."""
+    global rosa
+    define_rosa()
     rosa.buzz(duration)
 
-def active_led(rosa, led, state):
-    """Met la led indiquéé à l'état indiquée """
+def active_led(led, state):
+    """Met la led indiquée à l'état indiqué"""
+    global rosa
+    define_rosa()
     if led == "left":
         if state == "on":
             rosa.left_led.on()
@@ -55,21 +70,23 @@ def active_led(rosa, led, state):
         elif state == "off":
             rosa.right_led.off()
 
-def control(rosa, command, speed=None):
+def control(command, speed=None):
     """Contrôle le ROSA en fonction de la commande et de la vitesse donnée."""
+    global rosa
+    define_rosa()
     speed = max(min(speed, 1), 0)  # Assure que la vitesse est entre 0 et 1
 
     if command == 'forward':
-        forward(rosa, speed)
+        forward(speed)
     elif command == 'backward':
-        backward(rosa, speed)
+        backward(speed)
     elif command == 'left':
-        turn_left(rosa, speed)
+        turn_left(speed)
     elif command == 'right':
-        turn_right(rosa, speed)
+        turn_right(speed)
     elif command == 'stop':
-        stop(rosa)
+        stop()
     elif command == "buzz":
-        active_buzz(rosa)
+        active_buzz()
     else:
         raise ValueError(f"Commande inconnue : {command}")

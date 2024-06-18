@@ -5,10 +5,9 @@ import threading
 from rosa import Rosa
 from flask import Blueprint, jsonify, request,  send_from_directory
 
-from controle.manuel import control
+#from ..controle.manuel import control
 
 interface = Blueprint('interface', __name__)
-rosa = Rosa('rosa.local')  # Initialisez Rosa correctement
 dir_available = ['forward', 'backward', 'left', 'right', 'stop']
 
 @interface.route('/manuel', methods=['GET'])
@@ -16,9 +15,11 @@ def activeManuel():
     try:
         dir = request.args.get('dir')
         speed = request.args.get('speed', default=0.2, type=float)
+        if not dir or not speed:
+            return jsonify({'error': 'Missing parameters'}), 400
         if dir in dir_available:
             try:
-                control(rosa, dir, speed)
+                control(dir, speed)
                 return jsonify({'message': 'Update successful'}), 200
             except ValueError as e:
                 return jsonify({'error': str(e)}), 500
@@ -28,6 +29,15 @@ def activeManuel():
         return jsonify({'error': str(e)}), 500
 
 
+def control(dir, speed):
+    # Exemple de contrôle basique
+    print(f"Direction: {dir}, Speed: {speed}")
+
+
+
+
+
+"""
 @interface.route('/execute', methods=['POST'])
 def execute_code():
     code = request.json.get('code', '')
@@ -46,4 +56,4 @@ def execute_code():
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-        
+"""    

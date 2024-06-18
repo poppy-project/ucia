@@ -4,9 +4,6 @@
 <div>
     <h1 class="text-2xl font-bold mb-4 text-center">Interface</h1>
 
-    <div class="header_controle">
-        <p class="txt-title">Contrôleur ROSA</p>
-    </div>
     <div class="mode_line">
         <button id="progButton"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
@@ -194,7 +191,7 @@
                 <div class="direction-box">
                     <p class="txt">Mouvements :</p>
                     <div class="arrow-grid">
-                        <button class="btn-av" onmousedown="sendDataGet('manuel', { 'dir': 'forward '})"
+                        <button class="btn-av" onmousedown="sendDataGet('manuel', { 'dir': 'forward'})"
                             onmouseup="sendDataGet('manuel', { 'dir': 'stop' })">
                         </button>
                         <button class="btn-g" onmousedown="sendDataGet('manuel', { 'dir': 'g' })"
@@ -285,29 +282,38 @@
     }
 
     async function sendDataGet(endpoint, data) {
-        data.speed = document.getElementById('speedSlider').value / 100;
-        let url = new URL(`http://rosa.local:8080/${endpoint}`);
-        Object.keys(data).forEach(key => url.searchParams.append(key, data[key]));
-
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
+        try {
+            data.speed = document.getElementById('speedSlider').value / 100;
+            let url = new URL(`http://rosa.local/interface/${endpoint}`);
+            Object.keys(data).forEach(key => url.searchParams.append(key, data[key]));
+    
+            console.log(`Request URL: ${url.toString()}`); // Ajoutez cette ligne pour vérifier l'URL
+    
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+    
+            const responseData = await response.json();
+            console.log(`Response Data:`, responseData); // Ajoutez cette ligne pour vérifier la réponse
+            return responseData;
+    
+        } catch (error) {
+            console.error('Error in fetch operation:', error); // Ajoutez cette ligne pour plus de détails sur l'erreur
+            throw error;
         }
-
-        return await response.json();
-
     }
 
     async function sendDataPost(endpoint, data) {
         try {
-            const response = await fetch(`http://rosa.local:8080/${endpoint}`, {
+            const response = await fetch(`http://rosa.local/interface/${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
