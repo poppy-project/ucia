@@ -6,7 +6,7 @@ from rosa import Rosa
 from flask import Blueprint, jsonify, request,  send_from_directory
 
 from ..controle.manuel import control
-from ..controle.manuel import rosa, define_rosa
+from ..controle.manuel import rosa, define_rosa, forward
 
 interface = Blueprint('interface', __name__)
 dir_available = ['forward', 'backward', 'left', 'right', 'stop', 'buzz']
@@ -35,13 +35,30 @@ def execute_code():
     code = request.json.get('code', '')
     try:
         define_rosa()
-        # Exécutez le code et capturez la sortie
+        # Créez le fichier de contexte
+        context_code = """
+import sys
+import os
+sys.path.append(os.path.abspath('/web/app/controle'))
+from controle.manuel import control, rosa, define_rosa, forward, backward, left, right, stop, buzz
+
+{}
+        """.format(code)
+
+        # Écrivez le code de contexte dans un fichier temporaire
+        with open('context_code.py', 'w') as f:
+            f.write(context_code)
+        
+        # Exécutez le fichier de contexte et capturez la sortie
         process = subprocess.Popen(
-            ['python3', '-c', code],
+            ['python3', 'context_code.py'],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
         stdout, stderr = process.communicate()
+
+        # Supprimez le fichier temporaire après l'exécution
+        os.remove('context_code.py')
             
         return jsonify({
             'stdout': stdout.decode('utf-8'),
@@ -49,4 +66,3 @@ def execute_code():
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
- 
