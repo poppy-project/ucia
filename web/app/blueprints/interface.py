@@ -5,10 +5,10 @@ import threading
 from rosa import Rosa
 from flask import Blueprint, jsonify, request,  send_from_directory
 
-#from ..controle.manuel import control
+from ..controle.manuel import control
 
 interface = Blueprint('interface', __name__)
-dir_available = ['forward', 'backward', 'left', 'right', 'stop']
+dir_available = ['forward', 'backward', 'left', 'right', 'stop', 'buzz']
 
 @interface.route('/manuel', methods=['GET'])
 def activeManuel():
@@ -27,12 +27,6 @@ def activeManuel():
             return jsonify({'error': 'Invalid direction'}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-
-def control(dir, speed):
-    # Exemple de contrôle basique
-    print(f"Direction: {dir}, Speed: {speed}")
-
 
 
 
