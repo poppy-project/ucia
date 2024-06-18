@@ -6,6 +6,7 @@ from rosa import Rosa
 from flask import Blueprint, jsonify, request,  send_from_directory
 
 from ..controle.manuel import control
+from ..controle.manuel import rosa, define_rosa
 
 interface = Blueprint('interface', __name__)
 dir_available = ['forward', 'backward', 'left', 'right', 'stop', 'buzz']
@@ -29,13 +30,11 @@ def activeManuel():
         return jsonify({'error': str(e)}), 500
 
 
-
-
-"""
 @interface.route('/execute', methods=['POST'])
 def execute_code():
     code = request.json.get('code', '')
     try:
+        define_rosa()
         # Exécutez le code et capturez la sortie
         process = subprocess.Popen(
             ['python3', '-c', code],
@@ -50,4 +49,4 @@ def execute_code():
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-"""    
+ 
