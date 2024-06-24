@@ -93,3 +93,29 @@ Blockly.Blocks['buzzer'] = {
       this.setHelpUrl('');
   }
 };
+
+Blockly.Blocks['distance_sensor'] = {
+  init: function() {
+      this.appendDummyInput()
+          .appendField("Distance avant");
+      this.setOutput(true, 'Number');
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(30);
+      this.setTooltip('');
+      this.setHelpUrl('');
+  }
+};
+
+Blockly.Blocks['ground_sensor'] = {
+  init: function() {
+      this.appendDummyInput()
+          .appendField("Distance du sol");
+      this.setOutput(true, 'Number');
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(30);
+      this.setTooltip('');
+      this.setHelpUrl('');
+  }
+};

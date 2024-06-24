@@ -57,3 +57,16 @@ python.pythonGenerator.forBlock['buzzer'] = function(block) {
   }
   return code;
 };
+
+
+python.pythonGenerator.forBlock['distance_sensor'] = function(block) {
+  var code = `get_distance()`
+  return code;
+};
+
+
+python.pythonGenerator.forBlock['ground_sensor'] = function(block) {
+  var code = `get_ground_distance()`
+  return code;
+};
+

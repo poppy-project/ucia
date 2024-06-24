@@ -31,13 +31,15 @@
                     <h1>Blocs :</h1>
                     <div id="blocklyDiv"></div>
                     <pre id="codeDisplay"></pre>
-                    <xml id="toolbox" style="display: none">
+                    <xml id="toolbox">
                         <category name="ROSA">
                             <block type="move"></block>
                             <block type="turn"></block>
                             <block type="stop_rosa"></block>
                             <block type="sleep"></block>
                             <block type="buzzer"></block>
+                            <block type="distance_sensor"></block>
+                            <block type="ground_sensor"></block>
                         </category>
                         <category name="Logique">
                             <block type="controls_if"></block>
@@ -57,19 +59,13 @@
                             <block type="controls_whileUntil"></block>
                             <block type="controls_for">
                                 <value name="FROM">
-                                    <block type="math_number">
-                                        <field name="NUM">1</field>
-                                    </block>
+                                    <block type="math_number">                                    </block>
                                 </value>
                                 <value name="TO">
-                                    <block type="math_number">
-                                        <field name="NUM">10</field>
-                                    </block>
+                                    <block type="math_number">                                    </block>
                                 </value>
                                 <value name="BY">
-                                    <block type="math_number">
-                                        <field name="NUM">1</field>
-                                    </block>
+                                    <block type="math_number">                                    </block>
                                 </value>
                             </block>
                             <block type="controls_forEach"></block>
@@ -329,7 +325,7 @@
             }
 
             const result = await response.json();
-            document.getElementById('output').textContent = 'stdout:\n' + result.stdout + '\nstderr:\n' + result.stderr;
+            document.getElementById('output').textContent = 'Sortie:\n' + result.stdout + '\nErreur:\n' + result.stderr;
             return result;
         } catch (error) {
             document.getElementById('output').textContent = 'Error: ' + error;

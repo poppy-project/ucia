@@ -51,6 +51,16 @@ def turn_right(speed, duration=None):
     if duration:
         sleep(duration)
         stop()
+        
+def get_distance():
+    global rosa
+    define_rosa() 
+    return(rosa.get_front_distances())
+    
+def get_ground_distance():
+    global rosa
+    define_rosa() 
+    return sum(rosa.get_distance('ground-front-left'), rosa.get_distance('ground-front-right')) /2
 
 def active_buzz(duration=1):
     """Active le buzzer du ROSA pendant une durée donnée ou 1sec."""
