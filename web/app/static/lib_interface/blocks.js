@@ -5,7 +5,7 @@ Blockly.Blocks['move'] = {
         .appendField(new Blockly.FieldDropdown([["avant", "FORWARD"], ["arrière", "BACKWARD"]]), "DIRECTION");
     this.appendValueInput("SPEED")
         .setCheck("Number")
-        .appendField("à la vitesse");
+        .appendField("à la vitesse (entre 0 et 100)");
     this.appendValueInput("DURATION")
         .setCheck("Number")
         .appendField("attendre pendant (seconds, optionnel)");
@@ -25,7 +25,7 @@ Blockly.Blocks['turn'] = {
         .appendField(new Blockly.FieldDropdown([["gauche", "LEFT"], ["droite", "RIGHT"]]), "DIRECTION");
     this.appendValueInput("SPEED")
         .setCheck("Number")
-        .appendField("à la vitesse");
+        .appendField("à la vitesse (entre 0 et 100)");
     this.appendValueInput("DURATION")
         .setCheck("Number")
         .appendField("attendre pendant (seconds, optionnel)");

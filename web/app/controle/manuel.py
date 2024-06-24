@@ -13,9 +13,12 @@ def define_rosa():
 def set_speed(ls, rs):
     """Réglez la vitesse des roues gauche et droite."""
     global rosa
-    define_rosa()
-    rosa.left_wheel.speed = ls
-    rosa.right_wheel.speed = rs
+    define_rosa()    
+    speedls = max(min(ls, 1), 0)  # Assure que la vitesse est entre 0 et 1
+    speedrs = max(min(rs, 1), 0)  # Assure que la vitesse est entre 0 et 1
+
+    rosa.left_wheel.speed = speedls
+    rosa.right_wheel.speed = speedrs
 
 def stop():
     """Arrêtez le ROSA."""
@@ -74,7 +77,6 @@ def control(command, speed=None):
     """Contrôle le ROSA en fonction de la commande et de la vitesse donnée."""
     global rosa
     define_rosa()
-    speed = max(min(speed, 1), 0)  # Assure que la vitesse est entre 0 et 1
 
     if command == 'forward':
         forward(speed)
