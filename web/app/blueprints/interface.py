@@ -34,13 +34,14 @@ def activeManuel():
 def execute_code():
     code = request.json.get('code', '')
     try:
-        define_rosa()
         # Créez le fichier de contexte
         context_code = """
+        
 import sys
 import os
-sys.path.append(os.path.abspath('/web/app/controle'))
-from controle.manuel import control, rosa, define_rosa, forward, backward, left, right, stop, buzz
+from time import sleep
+from app.controle.manuel import control, rosa, define_rosa, forward, backward, turn_left, turn_right, stop, buzz
+
 
 {}
         """.format(code)
