@@ -38,7 +38,7 @@
                             <block type="stop_rosa"></block>
                             <block type="sleep"></block>
                             <block type="buzzer"></block>
-                            <block type="distance_sensor"></block>
+                            <block type="led"></block>
                             <block type="ground_sensor"></block>
                         </category>
                         <category name="Logique">
@@ -51,9 +51,7 @@
                         <category name="Boucles">
                             <block type="controls_repeat_ext">
                                 <value name="TIMES">
-                                    <block type="math_number">
-                                        <field name="NUM">10</field>
-                                    </block>
+                                    <block type="math_number"></block>
                                 </value>
                             </block>
                             <block type="controls_whileUntil"></block>
@@ -328,7 +326,7 @@
             document.getElementById('output').textContent = 'Sortie:\n' + result.stdout + '\nErreur:\n' + result.stderr;
             return result;
         } catch (error) {
-            document.getElementById('output').textContent = 'Error: ' + error;
+            document.getElementById('output').textContent = error;
             throw error;
         }
     }

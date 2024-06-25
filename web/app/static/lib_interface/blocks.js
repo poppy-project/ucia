@@ -67,38 +67,12 @@ Blockly.Blocks['led'] = {
   init: function() {
       this.appendDummyInput()
           .appendField("Contrôler LED")
-          .appendField(new Blockly.FieldDropdown([["gauche", "left"], ["droite", "right"]]), "LED")
-          .appendField("état")
-          .appendField(new Blockly.FieldDropdown([["allumer", "on"], ["éteindre", "off"]]), "STATE");
-      this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null);
-      this.setColour(30);
-      this.setTooltip('');
-      this.setHelpUrl('');
-  }
-};
-
-
-Blockly.Blocks['buzzer'] = {
-  init: function() {
-      this.appendDummyInput()
-          .appendField("Activer le buzzer");
+          .appendField(new Blockly.FieldDropdown([["gauche", "left"], ["droite", "right"], ["toutes", "both"]]), "LED")
+          .appendField("couleur")
+          .appendField(new Blockly.FieldDropdown([["éteindre", "off"], ["rouge", "red"], ["vert", "green"], ["bleu", "blue"], ["jaune", "yellow"], ["violet", "purple"], ["cyan", "cyan"], ["blanc", "white"]]), "COLOR");
       this.appendValueInput("DURATION")
           .setCheck("Number")
-          .appendField("pendant la durée (secondes, optionnel)");
-      this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null);
-      this.setColour(30);
-      this.setTooltip('');
-      this.setHelpUrl('');
-  }
-};
-
-Blockly.Blocks['distance_sensor'] = {
-  init: function() {
-      this.appendDummyInput()
-          .appendField("Distance avant");
-      this.setOutput(true, 'Number');
+          .appendField("pendant la durée (secondes)");
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
       this.setColour(30);
@@ -109,9 +83,23 @@ Blockly.Blocks['distance_sensor'] = {
 
 Blockly.Blocks['ground_sensor'] = {
   init: function() {
+    this.appendDummyInput()
+        .appendField("Distance du capteur")
+        .appendField(new Blockly.FieldDropdown([["gauche", "LEFT"], ["droite", "RIGHT"]]), "DIRECTION");
+    this.setOutput(true, 'Number');
+    this.setColour(30);
+    this.setTooltip('Mesure la distance du capteur au sol pour le capteur gauche ou droit');
+    this.setHelpUrl('');
+  }
+};
+
+Blockly.Blocks['buzzer'] = {
+  init: function() {
       this.appendDummyInput()
-          .appendField("Distance du sol");
-      this.setOutput(true, 'Number');
+          .appendField("Activer le buzzer");
+      this.appendValueInput("DURATION")
+          .setCheck("Number")
+          .appendField("pendant la durée (secondes, optionnel)");
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
       this.setColour(30);

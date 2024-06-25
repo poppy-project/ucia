@@ -40,8 +40,7 @@ def execute_code():
 import sys
 import os
 from time import sleep
-from app.controle.manuel import control, rosa, define_rosa, forward, backward, turn_left, turn_right, stop, active_buzz, get_distance, get_ground_distance
-
+from app.controle.manuel import control, rosa, define_rosa, forward, backward, turn_left, turn_right, stop, active_buzz, active_led, get_ground_value
 
 {}
         """.format(code)

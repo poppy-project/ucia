@@ -44,7 +44,7 @@ def follow_marker(rosa, target, marker_size, max_speed=0.3, stop_size=700):
     turn = target_x
 
     if marker_size < stop_size:
-        print("marker size : " + marker_size)
+        print(f"marker size {marker_size}")
         if abs(target_x) > 0.4:  # Seulement si le marqueur n'est pas assez centré
             print("Non centré")
             set_speed_aruco(rosa, turn, speed)
@@ -90,6 +90,6 @@ def go_to_aruco(rosa, img):
         target = calculate_target_aruco(center, (1280, 960))
         print(target)
         print("fin else go to aruco")
-        change_state = follow_marker(rosa, target, marker_size, stop_size=400)
+        change_state = follow_marker(rosa, target, marker_size, stop_size=200)
     
     return change_state
