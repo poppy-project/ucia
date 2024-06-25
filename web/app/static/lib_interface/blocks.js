@@ -63,6 +63,19 @@ Blockly.Blocks['sleep'] = {
   }
 };
 
+
+Blockly.Blocks['ground_sensor'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Distance du capteur")
+        .appendField(new Blockly.FieldDropdown([["gauche", "left"], ["droite", "right"]]), "DIRECTION");
+    this.setOutput(true, 'Number');
+    this.setColour(30);
+    this.setTooltip('Mesure la distance du capteur au sol pour le capteur gauche ou droit');
+    this.setHelpUrl('');
+  }
+};
+
 Blockly.Blocks['led'] = {
   init: function() {
       this.appendDummyInput()
@@ -78,18 +91,6 @@ Blockly.Blocks['led'] = {
       this.setColour(30);
       this.setTooltip('');
       this.setHelpUrl('');
-  }
-};
-
-Blockly.Blocks['ground_sensor'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("Distance du capteur")
-        .appendField(new Blockly.FieldDropdown([["gauche", "LEFT"], ["droite", "RIGHT"]]), "DIRECTION");
-    this.setOutput(true, 'Number');
-    this.setColour(30);
-    this.setTooltip('Mesure la distance du capteur au sol pour le capteur gauche ou droit');
-    this.setHelpUrl('');
   }
 };
 

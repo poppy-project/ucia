@@ -208,7 +208,7 @@
     </div>
 </div>
 
-<script src="./lib_interface/blockly/msg/fr.js" id="blockly-msg" defer></script>
+<script src="../../static/lib_interface/blockly/msg/fr.js" id="blockly-msg" defer></script>
 
 
 <script>
@@ -240,7 +240,7 @@
 
         selectElement.addEventListener('change', (event) => {
             const selectedLanguage = event.target.value;
-            const newScriptSrc = `./lib_interface/blockly/msg/${selectedLanguage}.js`;
+            const newScriptSrc = `../../static/lib_interface/blockly/msg/${selectedLanguage}.js`;
 
             // Supprimez l'ancien script s'il existe
             const oldScript = document.getElementById(scriptId);

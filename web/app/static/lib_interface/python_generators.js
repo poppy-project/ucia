@@ -65,8 +65,8 @@ python.pythonGenerator.forBlock['buzzer'] = function(block) {
 
 
 python.pythonGenerator.forBlock['ground_sensor'] = function(block) {
-  var sensor = Blockly.Python.valueToCode(block, 'DIRECTION', Blockly.Python.ORDER_ATOMIC);
-  var code = `get_ground_value(${sensor})`
+  var sensor = block.getFieldValue('SENSOR');
+  var code = `get_ground_value(${sensor})\n`;
   return code;
 };
 
