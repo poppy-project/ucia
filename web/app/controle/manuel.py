@@ -65,7 +65,6 @@ def active_led(led, color, duration=2):
     duration = max(duration, 2)
 
     colors = {
-        "off": [0, 0, 0],
         "red": [32, 0, 0],
         "green": [0, 32, 0],
         "blue": [0, 0, 32],
@@ -87,7 +86,8 @@ def active_led(led, color, duration=2):
             rosa.leds.bottom.left.color = color_value
         sleep(duration)
 
-    else:
+    else:   
+        
         print(f"Couleur {color} non reconnue. Utilisez une des couleurs suivantes : {', '.join(colors.keys())}.")
 
 

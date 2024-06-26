@@ -68,7 +68,7 @@ Blockly.Blocks['ground_sensor'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Distance du capteur")
-        .appendField(new Blockly.FieldDropdown([["gauche", "left"], ["droite", "right"]]), "DIRECTION");
+        .appendField(new Blockly.FieldDropdown([["gauche", "left"], ["droite", "right"]]), "SENSOR");
     this.setOutput(true, 'Number');
     this.setColour(30);
     this.setTooltip('Mesure la distance du capteur au sol pour le capteur gauche ou droit');
@@ -82,7 +82,7 @@ Blockly.Blocks['led'] = {
           .appendField("Contrôler LED")
           .appendField(new Blockly.FieldDropdown([["gauche", "left"], ["droite", "right"], ["toutes", "both"]]), "LED")
           .appendField("couleur")
-          .appendField(new Blockly.FieldDropdown([["éteindre", "off"], ["rouge", "red"], ["vert", "green"], ["bleu", "blue"], ["jaune", "yellow"], ["violet", "purple"], ["cyan", "cyan"], ["blanc", "white"]]), "COLOR");
+          .appendField(new Blockly.FieldDropdown([["rouge", "red"], ["vert", "green"], ["bleu", "blue"], ["jaune", "yellow"], ["violet", "purple"], ["cyan", "cyan"], ["blanc", "white"]]), "COLOR");
       this.appendValueInput("DURATION")
           .setCheck("Number")
           .appendField("pendant la durée (secondes)");
