@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link rel="stylesheet" href="../../static/css/interface.css">
+
 <div>
     <h1 class="text-2xl font-bold mb-4 text-center">Interface</h1>
 
@@ -57,13 +59,13 @@
                             <block type="controls_whileUntil"></block>
                             <block type="controls_for">
                                 <value name="FROM">
-                                    <block type="math_number">                                    </block>
+                                    <block type="math_number"> </block>
                                 </value>
                                 <value name="TO">
-                                    <block type="math_number">                                    </block>
+                                    <block type="math_number"> </block>
                                 </value>
                                 <value name="BY">
-                                    <block type="math_number">                                    </block>
+                                    <block type="math_number"> </block>
                                 </value>
                             </block>
                             <block type="controls_forEach"></block>
@@ -123,17 +125,17 @@
         </div>
 
         <div class="code-side">
-            
+
             <div class="codeWbtn">
                 <div class="generated-code">
                     <h2>Code : </h2>
                     <div class="output" id="codeDiv"></div>
                 </div>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
-                onclick="runCode()">Exécuter
+                <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
+                    onclick="runCode()">Exécuter
                 </button>
             </div>
-           
 
             <div class="output-code">
                 <h2>Sortie : </h2>
@@ -142,70 +144,66 @@
 
         </div>
     </div>
-    </div>
-    <div class="manuel-mode" id="manualInt">
-        <div class="bot-front">
-            <div class="bot-shema">
-                <img src="/static/images/rosa_front.svg" alt="Image du Rosa de face">
-            </div>
-            <p class="value-front">
-                <span>200</span>
-                <span>200</span>
-                <span>200</span>
-                <span>200</span>
-                <span>200</span>
+</div>
+<div class="manuel-mode" id="manualInt">
+    <div class="bot-front">
+        <div class="bot-shema">
+            <img src="/static/images/rosa_front.svg" alt="Image du Rosa de face">
+        </div>
+        <p class="value-front">
+            <span>200</span>
+            <span>200</span>
+            <span>200</span>
+            <span>200</span>
+            <span>200</span>
 
-            </p>
-        </div>
-        <div class="bot-lat">
-            <p class="value-lat2">
+        </p>
+    </div>
+    <div class="bot-lat">
+        <p class="value-lat2">
+            <span>200</span>
+            <span>200</span>
+        </p>
+        <div>
+            <p class="value-lat1">
                 <span>200</span>
                 <span>200</span>
             </p>
-            <div>
-                <p class="value-lat1">
-                    <span>200</span>
-                    <span>200</span>
-                </p>
-                <div class="bot-shema">
-                    <img src="/static/images/rosa_lateral.svg" alt="Image du Rosa de côté">
+            <div class="bot-shema">
+                <img src="/static/images/rosa_lateral.svg" alt="Image du Rosa de côté">
+            </div>
+        </div>
+    </div>
+    <div class="move-controleur">
+        <div class="speed">
+            <div class="speed-box">
+                <p class="txt">Vitesse : <span id="slider-value">50</span></p>
+                <div class="speed-range">
+                    <input min="0" max="100" value="20" id="speedSlider" type="range" orient="vertical">
                 </div>
             </div>
         </div>
-        <div class="move-controleur">
-            <div class="speed">
-                <div class="speed-box">
-                    <p class="txt">Vitesse : <span id="slider-value">50</span></p>
-                    <div class="speed-range">
-                        <input min="0" max="100" value="20" id="speedSlider" type="range" orient="vertical">
-                    </div>
-                </div>
-            </div>
-            <div class="direction">
-                <div class="direction-box">
-                    <p class="txt">Mouvements :</p>
-                    <div class="arrow-grid">
-                        <button class="btn-av" onmousedown="sendDataGet('manuel', { 'dir': 'forward'})"
-                            onmouseup="sendDataGet('manuel', { 'dir': 'stop' })">
-                        </button>
-                        <button class="btn-g" onmousedown="sendDataGet('manuel', { 'dir': 'left' })"
-                            onmouseup="sendDataGet('manuel', { 'dir': 'stop' })">
-                        </button>
-                        <button class="btn-ar" onmousedown="sendDataGet('manuel', { 'dir': 'backward' })"
-                            onmouseup="sendDataGet('manuel', { 'dir': 'stop' })">
-                        </button>
-                        <button class="btn-d" onmousedown="sendDataGet('manuel', { 'dir': 'right' })"
-                            onmouseup="sendDataGet('manuel', { 'dir': 'stop' })">
-                        </button>
-                        <button class="btn-stop" onmousedown="sendDataGet('manuel', { 'dir': 'stop' })">
-                        </button>
-                        <button class="btn" onmousedown="sendDataGet('manuel', { 'dir': 'buzz' })">
-                        </button>
+        <div class="direction">
+            <div class="direction-box">
+                <p class="txt">Mouvements :</p>
+                <div class="joystick_zone">
+                    <div class="joystick">
+                        <div class="zone_j av" id="av"></div>
+                        <div class="zone_j avg" id="avg"></div>
+                        <div class="zone_j g" id="g"></div>
+                        <div class="zone_j arg" id="arg"></div>
+                        <div class="zone_j ar" id="ar"></div>
+                        <div class="zone_j ard" id="ard"></div>
+                        <div class="zone_j d" id="d"></div>
+                        <div class="zone_j avd" id="avd"></div>
+                        <div class="zone_j center" id="center"></div>
+                        <div class="cursor" id="cursorDiv"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <script src="../../static/lib_interface/blockly/msg/fr.js" id="blockly-msg" defer></script>
@@ -261,6 +259,95 @@
         });
     });
 
+    let lastDir = "st";
+    const cursor = document.querySelector(".cursor");
+
+    function getCursorPos() {
+        return document.querySelector(".cursor").getBoundingClientRect();
+    }
+
+    function InDiv(div, x, y) {
+        return x > div.left && x < div.right && y > div.top && y < div.bottom;
+    }
+
+    const lache_clique = (e) => {
+        e.style.left = "50%";
+        e.style.top = "50%";
+    }
+
+    const joystick = document.querySelector(".joystick");
+    const necessaire = joystick.scrollWidth;
+    let isMouseDown = false;
+
+    document.body.addEventListener('mousedown', (e) => {
+        console.log("mousedown");
+        const cursor_pos = getCursorPos();
+        let centreY = cursor_pos.top + cursor.scrollHeight / 2;
+        let centreX = cursor_pos.left + cursor.scrollWidth / 2;
+        let cursorDiv = document.getElementById("cursorDiv").getBoundingClientRect();
+        if (InDiv(cursorDiv, centreX, centreY)) {
+            console.log("inDiv");
+            isMouseDown = true;
+        }
+    });
+
+    document.body.addEventListener('mousemove', (e) => {
+        if (isMouseDown) {
+            const cursor = document.querySelector(".cursor");
+            const joystick_pos = joystick.getBoundingClientRect();
+            let xP = e.clientX;
+            let yP = e.clientY;
+            cursor.style.left = `${xP - joystick_pos.left}px`;
+            cursor.style.top = `${yP - joystick_pos.top}px`;
+
+            const cursor_pos = getCursorPos();
+
+            if (cursor_pos.top < joystick_pos.top) {
+                cursor.style.top = `${cursor.scrollWidth / 2}px`;
+            }
+            if (cursor_pos.bottom > joystick_pos.bottom) {
+                cursor.style.top = `${cursor.scrollWidth * 1.75}px`;
+            }
+            if (cursor_pos.right > joystick_pos.right) {
+                cursor.style.left = `${cursor.scrollWidth * 1.75 + necessaire}px`;
+            }
+            if (cursor_pos.left < joystick_pos.left) {
+                cursor.style.left = `${cursor.scrollWidth / 2}px`;
+            }
+
+            let centreY = cursor_pos.top + cursor.scrollHeight / 2;
+            let centreX = cursor_pos.left + cursor.scrollWidth / 2;
+
+            let av = document.getElementById("av").getBoundingClientRect();
+            let g = document.getElementById("g").getBoundingClientRect();
+            let ar = document.getElementById("ar").getBoundingClientRect();
+            let d = document.getElementById("d").getBoundingClientRect();
+
+            if (InDiv(av, centreX, centreY) && lastDir != "av") {
+                lastDir = "av";
+                sendDataGet('manuel', { 'dir': 'forward' });
+            } else if (InDiv(g, centreX, centreY) && lastDir != "g") {
+                lastDir = "g";
+                sendDataGet('manuel', { 'dir': 'left' });
+            } else if (InDiv(ar, centreX, centreY) && lastDir != "ar") {
+                lastDir = "ar";
+                sendDataGet('manuel', { 'dir': 'backward' });
+            } else if (InDiv(d, centreX, centreY) && lastDir != "d") {
+                lastDir = "d";
+                sendDataGet('manuel', { 'dir': 'right' });
+            }
+        }
+    });
+
+    document.body.addEventListener('mouseup', (e) => {
+        const cursor = document.querySelector(".cursor");
+        cursor.style.left = `50%`;
+        cursor.style.top = `50%`;
+        lastDir = "st";
+        sendDataGet('manuel', { 'dir': 'stop' });
+        isMouseDown = false;
+    });
+
 
     function showProg() {
         progInt.style.display = 'flex';
@@ -282,9 +369,9 @@
             data.speed = document.getElementById('speedSlider').value / 100;
             let url = new URL(`http://rosa.local/interface/${endpoint}`);
             Object.keys(data).forEach(key => url.searchParams.append(key, data[key]));
-    
+
             console.log(`Request URL: ${url.toString()}`); // Ajoutez cette ligne pour vérifier l'URL
-    
+
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -292,15 +379,15 @@
                     'Content-Type': 'application/json',
                 },
             });
-    
+
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
             }
-    
+
             const responseData = await response.json();
             console.log(`Response Data:`, responseData); // Ajoutez cette ligne pour vérifier la réponse
             return responseData;
-    
+
         } catch (error) {
             console.error('Error in fetch operation:', error); // Ajoutez cette ligne pour plus de détails sur l'erreur
             throw error;
