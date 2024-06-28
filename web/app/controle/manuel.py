@@ -52,12 +52,6 @@ def turn_right(speed, duration=None):
         sleep(duration)
         stop()
          
-def active_buzz(duration=1):
-    """Active le buzzer du ROSA pendant une durée donnée ou 1sec."""
-    global rosa
-    define_rosa()
-    rosa.buzz(duration)
-
 def active_led(led, color, duration=2):
     """Met la led indiquée à l'état indiqué"""
     global rosa
@@ -97,14 +91,18 @@ def get_ground_value(sensor):
     define_rosa()
     reflected = rosa.ground_reflected
     if sensor == "left":
-        print(f"valeur du capteur gauche : {reflected[0]}")
         return reflected[0]
     elif sensor == "right":
-        print(f"valeur du capteur droit : {reflected[1]}")
         return reflected[1]
     else :
         return (f"{sensor} non reconnue.")
     
+def get_distance_value(sensor):
+    """renvoit la valeur des capteurs avant"""
+    global rosa
+    define_rosa()
+    reflected = rosa.prox_horizontal[sensor]
+    return reflected
     
 def control(command, speed=None):
     """Contrôle le ROSA en fonction de la commande et de la vitesse donnée."""
@@ -121,7 +119,5 @@ def control(command, speed=None):
         turn_right(speed)
     elif command == 'stop':
         stop()
-    elif command == "buzz":
-        active_buzz()
     else:
         raise ValueError(f"Commande inconnue : {command}")

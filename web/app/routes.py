@@ -13,7 +13,6 @@ main.register_blueprint(programs, url_prefix='/program')
 main.register_blueprint(webcam, url_prefix='/webcam')
 main.register_blueprint(interface, url_prefix='/interface')
 
-
 @main.context_processor
 def inject_robot_config():
     return dict(version="0.1")

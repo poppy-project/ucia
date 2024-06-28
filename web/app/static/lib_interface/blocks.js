@@ -17,7 +17,6 @@ Blockly.Blocks['move'] = {
   }
 };
 
-
 Blockly.Blocks['turn'] = {
   init: function() {
     this.appendDummyInput()
@@ -36,7 +35,6 @@ Blockly.Blocks['turn'] = {
     this.setHelpUrl('');
   }
 };
-
 
 Blockly.Blocks['stop_rosa'] = {
   init: function() {
@@ -63,15 +61,26 @@ Blockly.Blocks['sleep'] = {
   }
 };
 
-
 Blockly.Blocks['ground_sensor'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("Distance du capteur")
+        .appendField("Valeur du capteur de ligne")
         .appendField(new Blockly.FieldDropdown([["gauche", "left"], ["droite", "right"]]), "SENSOR");
     this.setOutput(true, 'Number');
     this.setColour(30);
-    this.setTooltip('Mesure la distance du capteur au sol pour le capteur gauche ou droit');
+    this.setTooltip('Mesure la valeur du capteur de sol indiqué');
+    this.setHelpUrl('');
+  }
+};
+
+Blockly.Blocks['distance_sensor'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Valeur du capteur ")
+        .appendField(new Blockly.FieldDropdown([["av1", "4"], ["av2", "3"], ["av3", "2"], ["av4", "1"], ["av5", "0"], ["ar1", "5"], ["ar2", "6"]]), "SENSOR");
+    this.setOutput(true, 'Number');
+    this.setColour(30);
+    this.setTooltip('Mesure la distance du capteur de distance indiqué');
     this.setHelpUrl('');
   }
 };
@@ -86,21 +95,6 @@ Blockly.Blocks['led'] = {
       this.appendValueInput("DURATION")
           .setCheck("Number")
           .appendField("pendant la durée (secondes)");
-      this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null);
-      this.setColour(30);
-      this.setTooltip('');
-      this.setHelpUrl('');
-  }
-};
-
-Blockly.Blocks['buzzer'] = {
-  init: function() {
-      this.appendDummyInput()
-          .appendField("Activer le buzzer");
-      this.appendValueInput("DURATION")
-          .setCheck("Number")
-          .appendField("pendant la durée (secondes, optionnel)");
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
       this.setColour(30);

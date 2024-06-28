@@ -159,14 +159,15 @@
 }
 
 .manuel-mode {
-    display: none;
+    /*display: none;*/
+    display: flex;
     flex-direction: row;
     width: 100%;
     height: calc(100vh - 20vh);
 }
 
 .bot-front {
-    width: 40%;
+    width: 35%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -174,16 +175,25 @@
 }
 
 .value-front {
-    width: 50%;
+    width: 75%;
     display: flex;
     justify-content: space-between;
 }
 
+.ground {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: end;
+    padding-bottom: 6%;
+    width: 10%;
+}
+
 .bot-lat {
-    width: 40%;
+    width: 35%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     flex-direction: row;
 }
 
@@ -192,7 +202,7 @@
     display: flex;
     justify-content: start;
     gap: 2vw;
-    margin-left: 4vw;
+    margin-left: 20%;
 }
 
 .value-lat2 {
@@ -211,7 +221,7 @@
 
 .bot-shema img {
     aspect-ratio: 1/1;
-    width: 70%;
+    width: 100%;
 }
 
 .move-controleur {

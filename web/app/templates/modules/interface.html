@@ -25,7 +25,6 @@
                 <select id="languageSelect">
                     <option value="fr">Français</option>
                     <option value="en">English</option>
-                    <!-- Ajoutez d'autres options de langue si nécessaire -->
                 </select>
             </div>
             <div class="blockWtitle">
@@ -39,9 +38,9 @@
                             <block type="turn"></block>
                             <block type="stop_rosa"></block>
                             <block type="sleep"></block>
-                            <block type="buzzer"></block>
                             <block type="led"></block>
                             <block type="ground_sensor"></block>
+                            <block type="distance_sensor"></block>
                         </category>
                         <category name="Logique">
                             <block type="controls_if"></block>
@@ -151,23 +150,22 @@
             <img src="/static/images/rosa_front.svg" alt="Image du Rosa de face">
         </div>
         <p class="value-front">
-            <span>200</span>
-            <span>200</span>
-            <span>200</span>
-            <span>200</span>
-            <span>200</span>
-
+            <span id="sensorAv1">Av1</span>
+            <span id="sensorAv2">Av2</span>
+            <span id="sensorAv3">Av3</span>
+            <span id="sensorAv4">Av4</span>
+            <span id="sensorAv5">Av5</span>
         </p>
     </div>
+    <div class="ground">
+        <p id="sensorGR">GR</p>
+        <p id="sensorGL">GL</p>
+    </div>
     <div class="bot-lat">
-        <p class="value-lat2">
-            <span>200</span>
-            <span>200</span>
-        </p>
         <div>
             <p class="value-lat1">
-                <span>200</span>
-                <span>200</span>
+                <span id="sensorAr1">2000</span>
+                <span id="sensorAr2">2000</span>
             </p>
             <div class="bot-shema">
                 <img src="/static/images/rosa_lateral.svg" alt="Image du Rosa de côté">
@@ -278,67 +276,68 @@
     const joystick = document.querySelector(".joystick");
     const necessaire = joystick.scrollWidth;
     let isMouseDown = false;
-
-    document.body.addEventListener('mousedown', (e) => {
-        console.log("mousedown");
-        const cursor_pos = getCursorPos();
-        let centreY = cursor_pos.top + cursor.scrollHeight / 2;
-        let centreX = cursor_pos.left + cursor.scrollWidth / 2;
-        let cursorDiv = document.getElementById("cursorDiv").getBoundingClientRect();
-        if (InDiv(cursorDiv, centreX, centreY)) {
-            console.log("inDiv");
-            isMouseDown = true;
-        }
-    });
-
-    document.body.addEventListener('mousemove', (e) => {
-        if (isMouseDown) {
-            const cursor = document.querySelector(".cursor");
-            const joystick_pos = joystick.getBoundingClientRect();
-            let xP = e.clientX;
-            let yP = e.clientY;
-            cursor.style.left = `${xP - joystick_pos.left}px`;
-            cursor.style.top = `${yP - joystick_pos.top}px`;
-
+    /*
+        document.body.addEventListener('mousedown', (e) => {
+            console.log("mousedown");
             const cursor_pos = getCursorPos();
-
-            if (cursor_pos.top < joystick_pos.top) {
-                cursor.style.top = `${cursor.scrollWidth / 2}px`;
-            }
-            if (cursor_pos.bottom > joystick_pos.bottom) {
-                cursor.style.top = `${cursor.scrollWidth * 1.75}px`;
-            }
-            if (cursor_pos.right > joystick_pos.right) {
-                cursor.style.left = `${cursor.scrollWidth * 1.75 + necessaire}px`;
-            }
-            if (cursor_pos.left < joystick_pos.left) {
-                cursor.style.left = `${cursor.scrollWidth / 2}px`;
-            }
-
             let centreY = cursor_pos.top + cursor.scrollHeight / 2;
             let centreX = cursor_pos.left + cursor.scrollWidth / 2;
-
-            let av = document.getElementById("av").getBoundingClientRect();
-            let g = document.getElementById("g").getBoundingClientRect();
-            let ar = document.getElementById("ar").getBoundingClientRect();
-            let d = document.getElementById("d").getBoundingClientRect();
-
-            if (InDiv(av, centreX, centreY) && lastDir != "av") {
-                lastDir = "av";
-                sendDataGet('manuel', { 'dir': 'forward' });
-            } else if (InDiv(g, centreX, centreY) && lastDir != "g") {
-                lastDir = "g";
-                sendDataGet('manuel', { 'dir': 'left' });
-            } else if (InDiv(ar, centreX, centreY) && lastDir != "ar") {
-                lastDir = "ar";
-                sendDataGet('manuel', { 'dir': 'backward' });
-            } else if (InDiv(d, centreX, centreY) && lastDir != "d") {
-                lastDir = "d";
-                sendDataGet('manuel', { 'dir': 'right' });
+            let cursorDiv = document.getElementById("cursorDiv").getBoundingClientRect();
+            if (InDiv(cursorDiv, centreX, centreY)) {
+                console.log("inDiv");
+                isMouseDown = true;
             }
-        }
-    });
-
+        });
+    
+        document.body.addEventListener('mousemove', (e) => {
+            if (isMouseDown) {
+                const cursor = document.querySelector(".cursor");
+                const joystick_pos = joystick.getBoundingClientRect();
+                let xP = e.clientX;
+                let yP = e.clientY;
+                cursor.style.left = `${xP - joystick_pos.left}px`;
+                cursor.style.top = `${yP - joystick_pos.top}px`;
+    
+                const cursor_pos = getCursorPos();
+    
+                if (cursor_pos.top < joystick_pos.top) {
+                    cursor.style.top = `${cursor.scrollWidth / 2}px`;
+                }
+                if (cursor_pos.bottom > joystick_pos.bottom) {
+                    cursor.style.top = `${cursor.scrollWidth * 1.75}px`;
+                }
+                if (cursor_pos.right > joystick_pos.right) {
+                    cursor.style.left = `${cursor.scrollWidth * 1.75 + necessaire}px`;
+                }
+                if (cursor_pos.left < joystick_pos.left) {
+                    cursor.style.left = `${cursor.scrollWidth / 2}px`;
+                }
+    
+                let centreY = cursor_pos.top + cursor.scrollHeight / 2;
+                let centreX = cursor_pos.left + cursor.scrollWidth / 2;
+    
+                let av = document.getElementById("av").getBoundingClientRect();
+                let g = document.getElementById("g").getBoundingClientRect();
+                let ar = document.getElementById("ar").getBoundingClientRect();
+                let d = document.getElementById("d").getBoundingClientRect();
+    
+                if (InDiv(av, centreX, centreY) && lastDir != "av") {
+                    lastDir = "av";
+                    sendDataGet('manuel', { 'dir': 'forward' });
+                } else if (InDiv(g, centreX, centreY) && lastDir != "g") {
+                    lastDir = "g";
+                    sendDataGet('manuel', { 'dir': 'left' });
+                } else if (InDiv(ar, centreX, centreY) && lastDir != "ar") {
+                    lastDir = "ar";
+                    sendDataGet('manuel', { 'dir': 'backward' });
+                } else if (InDiv(d, centreX, centreY) && lastDir != "d") {
+                    lastDir = "d";
+                    sendDataGet('manuel', { 'dir': 'right' });
+                }
+            }
+        });
+        */
+    /*
     document.body.addEventListener('mouseup', (e) => {
         const cursor = document.querySelector(".cursor");
         cursor.style.left = `50%`;
@@ -347,7 +346,7 @@
         sendDataGet('manuel', { 'dir': 'stop' });
         isMouseDown = false;
     });
-
+*/
 
     function showProg() {
         progInt.style.display = 'flex';
@@ -363,6 +362,38 @@
         var code = Blockly.Python.workspaceToCode(workspace);
         sendDataPost('execute', { code: code });
     }
+
+    function updateSensorValues() {
+        fetch('http://rosa.local/interface/sensor_values')
+            .then(response => {
+                console.log(response)
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data)
+                document.getElementById('sensorAv1').innerText = data.Av1;
+                document.getElementById('sensorAv2').innerText = data.Av2;
+                document.getElementById('sensorAv3').innerText = data.Av3;
+                document.getElementById('sensorAv4').innerText = data.Av4;
+                document.getElementById('sensorAv5').innerText = data.Av5;
+
+                document.getElementById('sensorAr1').innerText = data.Ar1;
+                document.getElementById('sensorAr2').innerText = data.Ar2;
+
+                document.getElementById('sensorGL').innerText = data.GL;
+                document.getElementById('sensorGR').innerText = data.GR;
+                
+            })
+            .catch(error => console.error('Error:', error))
+            .finally(() => {
+                setTimeout(updateSensorValues, 5000); // Refaire la requête après 5 secondes
+            });
+    }
+
+    updateSensorValues();
 
     async function sendDataGet(endpoint, data) {
         try {

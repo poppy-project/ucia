@@ -38,7 +38,6 @@ python.pythonGenerator.forBlock['sleep'] = function(block) {
   return code;
 };
 
-
 python.pythonGenerator.forBlock['led'] = function(block) {
   var dropdown_led = block.getFieldValue('LED');
   var dropdown_color = block.getFieldValue('COLOR');
@@ -52,21 +51,15 @@ python.pythonGenerator.forBlock['led'] = function(block) {
   return code;
 };
 
-python.pythonGenerator.forBlock['buzzer'] = function(block) {
-  var value_duration = Blockly.Python.valueToCode(block, 'DURATION', Blockly.Python.ORDER_ATOMIC);
-  var code;
-  if (value_duration) {
-      code = `active_buzz(${value_duration})\n`;
-  } else {
-      code = `active_buzz()\n`;
-  }
-  return code;
-};
-
-
 python.pythonGenerator.forBlock['ground_sensor'] = function(block) {
   var sensor = block.getFieldValue('SENSOR');
   var code = `get_ground_value('${sensor}')`;
+  return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+};
+
+python.pythonGenerator.forBlock['distance_sensor'] = function(block) {
+  var sensor = parseInt(block.getFieldValue('SENSOR'));
+  var code = `get_distance_value(${sensor})`;
   return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
