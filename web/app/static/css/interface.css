@@ -61,7 +61,7 @@
 
 
 .prog-mode{
-    display: flex;
+    display: none;
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -159,7 +159,6 @@
 }
 
 .manuel-mode {
-    /*display: none;*/
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -297,7 +296,6 @@
     width: calc(30vh/3);
     height: calc(30vh/3);
     display: flex;
-    color: black;
     text-decoration: none;
     font-size: 30px;
     cursor: pointer;
@@ -351,5 +349,6 @@
     border-radius: 50%;
     left: 50%;
     top: 50%;
+    z-index: 0;
     transform: translate(-50%, -50%);
 }

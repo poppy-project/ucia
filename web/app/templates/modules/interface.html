@@ -257,11 +257,11 @@
         });
     });
 
-    let lastDir = "st";
+    let lastDir = "stop";
     const cursor = document.querySelector(".cursor");
 
     function getCursorPos() {
-        return document.querySelector(".cursor").getBoundingClientRect();
+        return cursor.getBoundingClientRect();
     }
 
     function InDiv(div, x, y) {
@@ -276,77 +276,67 @@
     const joystick = document.querySelector(".joystick");
     const necessaire = joystick.scrollWidth;
     let isMouseDown = false;
-    /*
-        document.body.addEventListener('mousedown', (e) => {
-            console.log("mousedown");
-            const cursor_pos = getCursorPos();
-            let centreY = cursor_pos.top + cursor.scrollHeight / 2;
-            let centreX = cursor_pos.left + cursor.scrollWidth / 2;
-            let cursorDiv = document.getElementById("cursorDiv").getBoundingClientRect();
-            if (InDiv(cursorDiv, centreX, centreY)) {
-                console.log("inDiv");
-                isMouseDown = true;
-            }
-        });
-    
-        document.body.addEventListener('mousemove', (e) => {
-            if (isMouseDown) {
-                const cursor = document.querySelector(".cursor");
-                const joystick_pos = joystick.getBoundingClientRect();
-                let xP = e.clientX;
-                let yP = e.clientY;
+
+    document.body.addEventListener('mousedown', (e) => {
+        console.log("mousedown");
+        const cursor_pos = getCursorPos();
+        let centreY = cursor_pos.top + cursor.scrollHeight / 2;
+        let centreX = cursor_pos.left + cursor.scrollWidth / 2;
+        if (InDiv(cursor_pos, e.clientX, e.clientY)) {
+            console.log("inDiv");
+            isMouseDown = true;
+        }
+    });
+
+    let direction = "stop"
+
+    let av = document.getElementById("av");
+    av.addEventListener('mouseover', (e)=> {direction = "forward";console.log("forward")});
+    let g = document.getElementById("g");
+    g.addEventListener('mouseover', (e)=> {direction = "left"});
+    let ar = document.getElementById("ar");
+    ar.addEventListener('mouseover', (e)=> {direction = "backward"});
+    let d = document.getElementById("d");
+    d.addEventListener('mouseover', (e)=> {direction = "right"});
+    let st = document.getElementById("center");
+    st.addEventListener('mouseover', (e)=> {direction = "stop"});
+
+    document.body.addEventListener('mousemove', (e) => {
+        if (isMouseDown) {
+            const cursor = document.querySelector(".cursor");
+            const joystick_pos = joystick.getBoundingClientRect();
+            let xP = e.clientX;
+            let yP = e.clientY;
+
+            if (xP-joystick_pos.left-cursor.scrollWidth*0.5 >= 0 && xP <= joystick_pos.right-cursor.scrollWidth/2){
                 cursor.style.left = `${xP - joystick_pos.left}px`;
-                cursor.style.top = `${yP - joystick_pos.top}px`;
-    
-                const cursor_pos = getCursorPos();
-    
-                if (cursor_pos.top < joystick_pos.top) {
-                    cursor.style.top = `${cursor.scrollWidth / 2}px`;
-                }
-                if (cursor_pos.bottom > joystick_pos.bottom) {
-                    cursor.style.top = `${cursor.scrollWidth * 1.75}px`;
-                }
-                if (cursor_pos.right > joystick_pos.right) {
-                    cursor.style.left = `${cursor.scrollWidth * 1.75 + necessaire}px`;
-                }
-                if (cursor_pos.left < joystick_pos.left) {
-                    cursor.style.left = `${cursor.scrollWidth / 2}px`;
-                }
-    
-                let centreY = cursor_pos.top + cursor.scrollHeight / 2;
-                let centreX = cursor_pos.left + cursor.scrollWidth / 2;
-    
-                let av = document.getElementById("av").getBoundingClientRect();
-                let g = document.getElementById("g").getBoundingClientRect();
-                let ar = document.getElementById("ar").getBoundingClientRect();
-                let d = document.getElementById("d").getBoundingClientRect();
-    
-                if (InDiv(av, centreX, centreY) && lastDir != "av") {
-                    lastDir = "av";
-                    sendDataGet('manuel', { 'dir': 'forward' });
-                } else if (InDiv(g, centreX, centreY) && lastDir != "g") {
-                    lastDir = "g";
-                    sendDataGet('manuel', { 'dir': 'left' });
-                } else if (InDiv(ar, centreX, centreY) && lastDir != "ar") {
-                    lastDir = "ar";
-                    sendDataGet('manuel', { 'dir': 'backward' });
-                } else if (InDiv(d, centreX, centreY) && lastDir != "d") {
-                    lastDir = "d";
-                    sendDataGet('manuel', { 'dir': 'right' });
-                }
             }
-        });
-        */
-    /*
+            if (yP-joystick_pos.top-cursor.scrollWidth*0.5 >= 0 && yP <= joystick_pos.bottom-cursor.scrollWidth/2){
+                cursor.style.top = `${yP - joystick_pos.top}px`;
+            }
+
+            const cursor_pos = getCursorPos();
+
+            if (lastDir != direction){
+                lastDir = direction;
+                sendDataGet('manuel', { 'dir': direction });
+            }
+
+        }
+    });
+
+
+
     document.body.addEventListener('mouseup', (e) => {
         const cursor = document.querySelector(".cursor");
         cursor.style.left = `50%`;
         cursor.style.top = `50%`;
-        lastDir = "st";
         sendDataGet('manuel', { 'dir': 'stop' });
+        direction = "stop";
+        lastDir = "stop";
         isMouseDown = false;
     });
-*/
+
 
     function showProg() {
         progInt.style.display = 'flex';
@@ -373,19 +363,18 @@
                 return response.json();
             })
             .then(data => {
-                console.log(data)
-                document.getElementById('sensorAv1').innerText = data.Av1;
-                document.getElementById('sensorAv2').innerText = data.Av2;
-                document.getElementById('sensorAv3').innerText = data.Av3;
-                document.getElementById('sensorAv4').innerText = data.Av4;
-                document.getElementById('sensorAv5').innerText = data.Av5;
+                document.getElementById('sensorAv1').innerText = data["Av1"];
+                document.getElementById('sensorAv2').innerText = data["Av2"];
+                document.getElementById('sensorAv3').innerText = data["Av3"];
+                document.getElementById('sensorAv4').innerText = data["Av4"];
+                document.getElementById('sensorAv5').innerText = data["Av5"];
 
-                document.getElementById('sensorAr1').innerText = data.Ar1;
-                document.getElementById('sensorAr2').innerText = data.Ar2;
+                document.getElementById('sensorAr1').innerText = data["Ar1"];
+                document.getElementById('sensorAr2').innerText = data["Ar2"];
 
-                document.getElementById('sensorGL').innerText = data.GL;
-                document.getElementById('sensorGR').innerText = data.GR;
-                
+                document.getElementById('sensorGL').innerText = data["GL"];
+                document.getElementById('sensorGR').innerText = data["GR"];
+
             })
             .catch(error => console.error('Error:', error))
             .finally(() => {

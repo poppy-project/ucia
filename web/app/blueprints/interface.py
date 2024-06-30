@@ -49,7 +49,7 @@ def sensor_values():
                     "Av5": str(valueAv5),
                     "Ar1": str(valueAr1),
                     "Ar2": str(valueAr2)}
-                   )
+                   ), 200
 
 
 @interface.route('/execute', methods=['POST'])

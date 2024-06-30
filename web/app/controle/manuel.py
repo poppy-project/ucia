@@ -14,8 +14,8 @@ def set_speed(ls, rs):
     """Réglez la vitesse des roues gauche et droite."""
     global rosa
     define_rosa()    
-    speedls = max(min(ls, 1), 0)  # Assure que la vitesse est entre 0 et 1
-    speedrs = max(min(rs, 1), 0)  # Assure que la vitesse est entre 0 et 1
+    speedls = max(min(ls, 1), -1)  # Assure que la vitesse est entre 0 et 1
+    speedrs = max(min(rs, 1), -1)  # Assure que la vitesse est entre 0 et 1
 
     rosa.left_wheel.speed = speedls
     rosa.right_wheel.speed = speedrs
@@ -40,14 +40,14 @@ def backward(speed, duration=None):
 
 def turn_left(speed, duration=None):
     """Fait tourner le ROSA à gauche à la vitesse donnée pendant une durée donnée ou indéfiniment."""
-    set_speed(speed, -speed)
+    set_speed(-speed, speed)
     if duration:
         sleep(duration)
         stop()
 
 def turn_right(speed, duration=None):
     """Fait tourner le ROSA à droite à la vitesse donnée pendant une durée donnée ou indéfiniment."""
-    set_speed(-speed, speed)
+    set_speed(speed, -speed)
     if duration:
         sleep(duration)
         stop()
@@ -90,6 +90,8 @@ def get_ground_value(sensor):
     global rosa
     define_rosa()
     reflected = rosa.ground_reflected
+    print(type(reflected), " Ceci est le type ground de ", reflected)
+    
     if sensor == "left":
         return reflected[0]
     elif sensor == "right":
@@ -102,6 +104,7 @@ def get_distance_value(sensor):
     global rosa
     define_rosa()
     reflected = rosa.prox_horizontal[sensor]
+    print(type(reflected), " Ceci est le type de ", reflected)
     return reflected
     
 def control(command, speed=None):
