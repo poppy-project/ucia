@@ -5,7 +5,7 @@ import threading
 from rosa import Rosa
 from flask import Blueprint, jsonify, request,  send_from_directory
 
-from ..controle.manuel import control, rosa, define_rosa, forward, backward, turn_left, turn_right, stop, active_led, get_ground_value, get_distance_value
+from ..controle.manuel import control, get_ground_value, get_distance_value
 
 interface = Blueprint('interface', __name__)
 dir_available = ['forward', 'backward', 'left', 'right', 'stop']
@@ -60,7 +60,7 @@ def execute_code():
         context_code = """
         
 from time import sleep
-from app.controle.manuel import control, rosa, define_rosa, forward, backward, turn_left, turn_right, stop, active_led, get_ground_value, get_distance_value
+from app.controle.manuel import control, rosa, define_rosa, forward, backward, turn_left, turn_right, stop, active_led, get_ground_value, get_distance_value, play_note, play_notes, make_musique
 
 {}
         """.format(code)

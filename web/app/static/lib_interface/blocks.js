@@ -102,3 +102,38 @@ Blockly.Blocks['led'] = {
       this.setHelpUrl('');
   }
 };
+
+
+Blockly.Blocks['sound'] = {
+  init: function() {
+    this.appendValueInput("FREQUENCY")
+        .setCheck("Number")
+        .appendField("Produire un son à la fréquence");
+    this.appendValueInput("DURATION")
+        .setCheck("Number")
+        .appendField("pendant (seconds)");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(30);
+    this.setTooltip('');
+    this.setHelpUrl('');
+  }
+};
+
+Blockly.Blocks['song'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Jouer la")
+        .appendField(new Blockly.FieldDropdown([
+          ["mélodie 1", "twinkle_twinkle"],
+          ["mélodie 2", "frere_jacques"],
+          ["mélodie 3", "mary_had_a_little_lamb"],
+          ["mélodie 4", "ode_to_joy"]
+        ]), "MELODIE");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(30);
+    this.setTooltip('Joue la mélodie indiquée');
+    this.setHelpUrl('');
+  }
+};

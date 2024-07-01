@@ -1,4 +1,5 @@
-python.pythonGenerator.forBlock['move'] = function(block) {  var dropdown_direction = block.getFieldValue('DIRECTION');
+python.pythonGenerator.forBlock['move'] = function(block) {  
+  var dropdown_direction = block.getFieldValue('DIRECTION');
   var value_speed = Blockly.Python.valueToCode(block, 'SPEED', Blockly.Python.ORDER_ATOMIC);
   var value_duration = Blockly.Python.valueToCode(block, 'DURATION', Blockly.Python.ORDER_ATOMIC);
 
@@ -13,7 +14,8 @@ python.pythonGenerator.forBlock['move'] = function(block) {  var dropdown_direct
   return code;
 };
 
-python.pythonGenerator.forBlock['turn'] = function(block) {  var dropdown_direction = block.getFieldValue('DIRECTION');
+python.pythonGenerator.forBlock['turn'] = function(block) {  
+  var dropdown_direction = block.getFieldValue('DIRECTION');
   var value_speed = Blockly.Python.valueToCode(block, 'SPEED', Blockly.Python.ORDER_ATOMIC);
   var value_duration = Blockly.Python.valueToCode(block, 'DURATION', Blockly.Python.ORDER_ATOMIC);
 
@@ -63,3 +65,14 @@ python.pythonGenerator.forBlock['distance_sensor'] = function(block) {
   return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
+python.pythonGenerator.forBlock['sound'] = function(block) {
+  var value_duration = Blockly.Python.valueToCode(block, 'DURATION', Blockly.Python.ORDER_ATOMIC);
+  var value_frequency = Blockly.Python.valueToCode(block, 'FREQUENCY', Blockly.Python.ORDER_ATOMIC);
+
+  return `play_note(${value_frequency},${value_duration})\n`;
+};
+
+python.pythonGenerator.forBlock['song'] = function(block) {  
+  var melodie  = block.getFieldValue('MELODIE');
+  return `make_musique('${melodie}')\n`;
+};
