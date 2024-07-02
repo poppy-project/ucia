@@ -1,0 +1,444 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="../../static/css/interface.css">
+
+<div>
+    <h1 class="text-2xl font-bold mb-4 text-center">Interface</h1>
+
+    <div class="mode_line">
+        <button id="progButton"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
+            onclick="showProg()">
+            Programmation
+        </button>
+        <button id="manualButton"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
+            onclick="showManual()">
+            Pilotage manuel
+        </button>
+    </div>
+    <div class="prog-mode" id="progInt">
+        <div class="block-side">
+            <div class="langue-selection">
+                <label for="languageSelect">Choississez la langue des blocs :</label>
+                <select id="languageSelect">
+                    <option value="fr">Français</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+            <div class="blockWtitle">
+                <div class="blockBox">
+                    <h1>Blocs :</h1>
+                    <div id="blocklyDiv"></div>
+                    <pre id="codeDisplay"></pre>
+                    <xml id="toolbox">
+                        <category name="ROSA">
+                            <block type="move"></block>
+                            <block type="turn"></block>
+                            <block type="stop_rosa"></block>
+                            <block type="sleep"></block>
+                            <block type="led"></block>
+                            <block type="ground_sensor"></block>
+                            <block type="distance_sensor"></block>
+                            <block type="sound"></block>
+                            <block type="song"></block>
+                        </category>
+                        <category name="Logique">
+                            <block type="controls_if"></block>
+                            <block type="logic_compare"></block>
+                            <block type="logic_operation"></block>
+                            <block type="logic_negate"></block>
+                            <block type="logic_boolean"></block>
+                        </category>
+                        <category name="Boucles">
+                            <block type="controls_repeat_ext">
+                                <value name="TIMES">
+                                    <block type="math_number"></block>
+                                </value>
+                            </block>
+                            <block type="controls_whileUntil"></block>
+                            <block type="controls_for">
+                                <value name="FROM">
+                                    <block type="math_number"> </block>
+                                </value>
+                                <value name="TO">
+                                    <block type="math_number"> </block>
+                                </value>
+                                <value name="BY">
+                                    <block type="math_number"> </block>
+                                </value>
+                            </block>
+                            <block type="controls_forEach"></block>
+                        </category>
+                        <category name="Mathématiques">
+                            <block type="math_number"></block>
+                            <block type="math_arithmetic"></block>
+                            <block type="math_single"></block>
+                            <block type="math_trig"></block>
+                            <block type="math_constant"></block>
+                            <block type="math_number_property"></block>
+                            <block type="math_round"></block>
+                            <block type="math_on_list"></block>
+                            <block type="math_modulo"></block>
+                            <block type="math_constrain"></block>
+                            <block type="math_random_int"></block>
+                            <block type="math_random_float"></block>
+                        </category>
+                        <category name="Texte">
+                            <block type="text"></block>
+                            <block type="text_join"></block>
+                            <block type="text_append">
+                                <value name="TEXT">
+                                    <block type="text"></block>
+                                </value>
+                            </block>
+                            <block type="text_length"></block>
+                            <block type="text_isEmpty"></block>
+                            <block type="text_indexOf">
+                                <value name="VALUE">
+                                    <block type="text"></block>
+                                </value>
+                            </block>
+                            <block type="text_charAt">
+                                <value name="VALUE">
+                                    <block type="text"></block>
+                                </value>
+                            </block>
+                            <block type="text_getSubstring">
+                                <value name="STRING">
+                                    <block type="text"></block>
+                                </value>
+                            </block>
+                            <block type="text_changeCase"></block>
+                            <block type="text_trim"></block>
+                            <block type="text_print"></block>
+                        </category>
+                        <category name="Variables" custom="VARIABLE"></category>
+                        <category name="Fonctions" custom="PROCEDURE"></category>
+                    </xml>
+                </div>
+            </div>
+        </div>
+
+        <div class="sep">
+            <div class="line"></div>
+        </div>
+
+        <div class="code-side">
+
+            <div class="codeWbtn">
+                <div class="generated-code">
+                    <h2>Code : </h2>
+                    <div class="output" id="codeDiv"></div>
+                </div>
+                <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full active:bg-blue-700"
+                    onclick="runCode()">Exécuter
+                </button>
+            </div>
+
+            <div class="output-code">
+                <h2>Sortie : </h2>
+                <pre class="output" id="output"></pre>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="manuel-mode" id="manualInt">
+    <div class="bot-front">
+        <div class="bot-shema">
+            <img src="/static/images/rosa_front.svg" alt="Image du Rosa de face">
+        </div>
+        <p class="value-front">
+            <span id="sensorAv1">Av1</span>
+            <span id="sensorAv2">Av2</span>
+            <span id="sensorAv3">Av3</span>
+            <span id="sensorAv4">Av4</span>
+            <span id="sensorAv5">Av5</span>
+        </p>
+    </div>
+    <div class="ground">
+        <p id="sensorGR">GR</p>
+        <p id="sensorGL">GL</p>
+    </div>
+    <div class="bot-lat">
+        <div>
+            <p class="value-lat1">
+                <span id="sensorAr1">2000</span>
+                <span id="sensorAr2">2000</span>
+            </p>
+            <div class="bot-shema">
+                <img src="/static/images/rosa_lateral.svg" alt="Image du Rosa de côté">
+            </div>
+        </div>
+    </div>
+    <div class="move-controleur">
+        <div class="speed">
+            <div class="speed-box">
+                <p class="txt">Vitesse : <span id="slider-value">50</span></p>
+                <div class="speed-range">
+                    <input min="0" max="100" value="20" id="speedSlider" type="range" orient="vertical">
+                </div>
+            </div>
+        </div>
+        <div class="direction">
+            <div class="direction-box">
+                <p class="txt">Mouvements :</p>
+                <div class="joystick_zone">
+                    <div class="joystick">
+                        <div class="zone_j av" id="av"></div>
+                        <div class="zone_j avg" id="avg"></div>
+                        <div class="zone_j g" id="g"></div>
+                        <div class="zone_j arg" id="arg"></div>
+                        <div class="zone_j ar" id="ar"></div>
+                        <div class="zone_j ard" id="ard"></div>
+                        <div class="zone_j d" id="d"></div>
+                        <div class="zone_j avd" id="avd"></div>
+                        <div class="zone_j center" id="center"></div>
+                        <div class="cursor" id="cursorDiv"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="../../static/lib_interface/blockly/msg/fr.js" id="blockly-msg" defer></script>
+
+
+<script>
+    const progInt = document.getElementById('progInt');
+    const manualInt = document.getElementById('manualInt');
+    const progButton = document.getElementById('progButton');
+    const manualButton = document.getElementById('manualButton');
+
+    const slider = document.getElementById('speedSlider');
+    const sliderValue = document.getElementById('slider-value');
+
+    sliderValue.textContent = slider.value;
+    slider.addEventListener('input', function () {
+        sliderValue.textContent = slider.value;
+    });
+
+    var workspace = Blockly.inject('blocklyDiv', {
+        toolbox: document.getElementById('toolbox')
+    });
+
+    workspace.addChangeListener(function (event) {
+        var code = Blockly.Python.workspaceToCode(workspace);
+        document.getElementById('codeDiv').innerText = code;
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const selectElement = document.getElementById('languageSelect');
+        const scriptId = 'blockly-msg';
+
+        selectElement.addEventListener('change', (event) => {
+            const selectedLanguage = event.target.value;
+            const newScriptSrc = `../../static/lib_interface/blockly/msg/${selectedLanguage}.js`;
+
+            // Supprimez l'ancien script s'il existe
+            const oldScript = document.getElementById(scriptId);
+            if (oldScript) {
+                oldScript.remove();
+            }
+
+            // Créez un nouveau script avec la nouvelle source
+            const newScript = document.createElement('script');
+            newScript.id = scriptId;
+            newScript.src = newScriptSrc;
+            newScript.defer = true;
+
+            // Ajoutez le nouveau script au document
+            document.body.appendChild(newScript);
+
+            console.log(`Script source changed to: ${newScriptSrc}`);
+        });
+    });
+
+    let lastDir = "stop";
+    const cursor = document.querySelector(".cursor");
+
+    function getCursorPos() {
+        return cursor.getBoundingClientRect();
+    }
+
+    function InDiv(div, x, y) {
+        return x > div.left && x < div.right && y > div.top && y < div.bottom;
+    }
+
+    const lache_clique = (e) => {
+        e.style.left = "50%";
+        e.style.top = "50%";
+    }
+
+    const joystick = document.querySelector(".joystick");
+    const necessaire = joystick.scrollWidth;
+    let isMouseDown = false;
+
+    document.body.addEventListener('mousedown', (e) => {
+        console.log("mousedown");
+        const cursor_pos = getCursorPos();
+        let centreY = cursor_pos.top + cursor.scrollHeight / 2;
+        let centreX = cursor_pos.left + cursor.scrollWidth / 2;
+        if (InDiv(cursor_pos, e.clientX, e.clientY)) {
+            console.log("inDiv");
+            isMouseDown = true;
+        }
+    });
+
+    let direction = "stop"
+
+    let av = document.getElementById("av");
+    av.addEventListener('mouseover', (e)=> {direction = "forward";console.log("forward")});
+    let g = document.getElementById("g");
+    g.addEventListener('mouseover', (e)=> {direction = "left"});
+    let ar = document.getElementById("ar");
+    ar.addEventListener('mouseover', (e)=> {direction = "backward"});
+    let d = document.getElementById("d");
+    d.addEventListener('mouseover', (e)=> {direction = "right"});
+    let st = document.getElementById("center");
+    st.addEventListener('mouseover', (e)=> {direction = "stop"});
+
+    document.body.addEventListener('mousemove', (e) => {
+        if (isMouseDown) {
+            const cursor = document.querySelector(".cursor");
+            const joystick_pos = joystick.getBoundingClientRect();
+            let xP = e.clientX;
+            let yP = e.clientY;
+
+            if (xP-joystick_pos.left-cursor.scrollWidth*0.5 >= 0 && xP <= joystick_pos.right-cursor.scrollWidth/2){
+                cursor.style.left = `${xP - joystick_pos.left}px`;
+            }
+            if (yP-joystick_pos.top-cursor.scrollWidth*0.5 >= 0 && yP <= joystick_pos.bottom-cursor.scrollWidth/2){
+                cursor.style.top = `${yP - joystick_pos.top}px`;
+            }
+
+            const cursor_pos = getCursorPos();
+
+            if (lastDir != direction){
+                lastDir = direction;
+                sendDataGet('manuel', { 'dir': direction });
+            }
+
+        }
+    });
+
+
+
+    document.body.addEventListener('mouseup', (e) => {
+        const cursor = document.querySelector(".cursor");
+        cursor.style.left = `50%`;
+        cursor.style.top = `50%`;
+        sendDataGet('manuel', { 'dir': 'stop' });
+        direction = "stop";
+        lastDir = "stop";
+        isMouseDown = false;
+    });
+
+
+    function showProg() {
+        progInt.style.display = 'flex';
+        manualInt.style.display = 'none';
+    }
+
+    function showManual() {
+        progInt.style.display = 'none';
+        manualInt.style.display = 'flex';
+    }
+
+    function runCode() {
+        var code = Blockly.Python.workspaceToCode(workspace);
+        sendDataPost('execute', { code: code });
+    }
+
+    function updateSensorValues() {
+        fetch('http://rosa.local/interface/sensor_values')
+            .then(response => {
+                console.log(response)
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('sensorAv1').innerText = data["Av1"];
+                document.getElementById('sensorAv2').innerText = data["Av2"];
+                document.getElementById('sensorAv3').innerText = data["Av3"];
+                document.getElementById('sensorAv4').innerText = data["Av4"];
+                document.getElementById('sensorAv5').innerText = data["Av5"];
+
+                document.getElementById('sensorAr1').innerText = data["Ar1"];
+                document.getElementById('sensorAr2').innerText = data["Ar2"];
+
+                document.getElementById('sensorGL').innerText = data["GL"];
+                document.getElementById('sensorGR').innerText = data["GR"];
+
+            })
+            .catch(error => console.error('Error:', error))
+            .finally(() => {
+                setTimeout(updateSensorValues, 5000); // Refaire la requête après 5 secondes
+            });
+    }
+
+    updateSensorValues();
+
+    async function sendDataGet(endpoint, data) {
+        try {
+            data.speed = document.getElementById('speedSlider').value / 100;
+            let url = new URL(`http://rosa.local/interface/${endpoint}`);
+            Object.keys(data).forEach(key => url.searchParams.append(key, data[key]));
+
+            console.log(`Request URL: ${url.toString()}`); // Ajoutez cette ligne pour vérifier l'URL
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+
+            const responseData = await response.json();
+            console.log(`Response Data:`, responseData); // Ajoutez cette ligne pour vérifier la réponse
+            return responseData;
+
+        } catch (error) {
+            console.error('Error in fetch operation:', error); // Ajoutez cette ligne pour plus de détails sur l'erreur
+            throw error;
+        }
+    }
+
+    async function sendDataPost(endpoint, data) {
+        try {
+            const response = await fetch(`http://rosa.local/interface/${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+
+            const result = await response.json();
+            document.getElementById('output').textContent = 'Sortie:\n' + result.stdout + '\nErreur:\n' + result.stderr;
+            return result;
+        } catch (error) {
+            document.getElementById('output').textContent = error;
+            throw error;
+        }
+    }
+</script>
+
+{% endblock %}

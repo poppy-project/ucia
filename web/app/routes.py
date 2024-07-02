@@ -5,11 +5,13 @@ from flask import Blueprint, render_template
 from .blueprints.api import api
 from .blueprints.programs import programs
 from .blueprints.webcam import webcam
+from .blueprints.interface import interface
 
 main = Blueprint("main", __name__)
 main.register_blueprint(api, url_prefix='/api')
 main.register_blueprint(programs, url_prefix='/program')
 main.register_blueprint(webcam, url_prefix='/webcam')
+main.register_blueprint(interface, url_prefix='/interface')
 
 @main.context_processor
 def inject_robot_config():
@@ -56,6 +58,7 @@ def program():
     
     return render_template("modules/program.html", programs=program_data['programs'])
 
+
 @main.route("/settings")
 def settings():
     return render_template("modules/settings.html")
@@ -79,3 +82,8 @@ def shutdown():
 @main.route("/reboot")
 def reboot():
     return None
+
+
+@main.route("/interface")
+def interface():
+    return render_template("modules/interface.html")
