@@ -123,12 +123,12 @@ Blockly.Blocks['sound'] = {
 Blockly.Blocks['song'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("Jouer la")
+        .appendField("Jouer")
         .appendField(new Blockly.FieldDropdown([
-          ["mélodie 1", "twinkle_twinkle"],
-          ["mélodie 2", "frere_jacques"],
-          ["mélodie 3", "mary_had_a_little_lamb"],
-          ["mélodie 4", "ode_to_joy"]
+          ["Super Mario", "super_mario"],
+          ["Joyeux Anniversaire", "joyeux_anniversaire"],
+          ["Frere Jacques", "frere_jacques"],
+          ["Twinkle Twinkle", "twinkle_twinkle"]
         ]), "MELODIE");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
