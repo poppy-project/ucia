@@ -90,6 +90,6 @@ def go_to_aruco(rosa, img):
         target = calculate_target_aruco(center, (1280, 960))
         print(target)
         print("fin else go to aruco")
-        change_state = follow_marker(rosa, target, marker_size, stop_size=320)
+        change_state = follow_marker(rosa, target, marker_size, stop_size=270)
     
     return change_state
